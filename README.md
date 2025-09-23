@@ -3,8 +3,8 @@
 > Schrap hierboven eventueel wat niet past
 
 - Student: NICOLAS NEIRYNCK
-- Studentennummer: xxxxxxxxx
-- E-mailadres: <voornaam.naam@student.hogent.be>
+- Studentennummer: 201095919
+- E-mailadres: nicolas.neirynck2@student.hogent.be
 
 ## Vereisten
 
