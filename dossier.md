@@ -51,9 +51,15 @@
 
 > **Instructie:** Voeg hier een afbeelding van jouw ERD toe en licht de belangrijkste entiteiten en relaties kort toe.
 
-![ERD](pad/naar/erd-afbeelding.png)
+![ERD](https://kroki.io/erd/svg/eNp1kcFugzAMhs_1U3AG9bBX2HapNPXQqSfUQxZcZAkCcpxNvP0SkkLo2Ikff7__OE59tcg3KKkB59VZ9QijsvZn4AbuxFbmUqeS0IMzwhNgr6gDqC-oacQYYIKBetXilTsQ8n-VZlSCzet0OHj3m9ftwFPmf0RsUcVz8eSVTsBrqE-mZWwIjexEPEPVh2HBGZI8kBZbirTCTgsNJrZZwfHs-i9kaNBqpjGwLAHqT_WNzXL1RD7IhsRyNZpB0C7jBZ5NXYV9exPZd7wr18livCjxM96A568PTM4sGcKzFS_HY1nEnj-FcBqsMqJs7sRifQM25HmzG5itbqcpXmMHPJ66AFiD_zkOFvNOwC8Ak-qF)
 
-[Korte toelichting bij het ERD...]
+**Recipe:** houdt recepten bij  
+ **SavedRecipe:** houdt de recepten bij die door een user zijn opgeslaan in een lijst en eventuele notities daarbij  
+ **RecipeList:** als een gebruiker een recept opslaat komt deze in een lijst terecht, er zal een default lijst “Favorieten” voorzien zijn.  
+ **Ingrediënt:** houdt ingrediënten bij in de database, zal gebruikt worden om autocomplete te gebruiken bij de zoekfunctie op basis van ingrediënten  
+ **RecipeIngredient:** houdt een ingrediënt bij voor een recept samen met het aantal en de meeteenheid.  
+ **Category:** er bestaan verschillende categorieën (hoofgerecht, vegetarisch,..)  
+ **RecipeCategory:** linkt een recept met een of meerdere categorieën  
 
 ## ✅ Ontvankelijkheidscriteria
 
