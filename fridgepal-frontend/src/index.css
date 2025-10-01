@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
 
 @theme{
   --font-display: "Roboto", sans-serif;
@@ -11,4 +11,6 @@
   --brand-light: #fffbeb;  /* lichte achtergrond */
   --brand-gray-dark: #4b5563; /* titels */
   --brand-gray-light: #6b7280; /* subtiele tekst */
+  --input: #f9fafb; /* lichte wit/grijze achtergrond input veld */
+
 }

@@ -9,10 +9,10 @@
 
 ## 📋 Studentgegevens
 
-- **Student:** Voornaam Naam
-- **Studentennummer:** xxxxxxxx
-- **E-mailadres:** <voornaam.naam@student.hogent.be>
-- **GitHub repository:** <LINK_NAAR_GITHUB_REPO>
+- **Student:** Nicolas Neirynck
+- **Studentennummer:** 201095919
+- **E-mailadres:** nicolas.neirynck2@student.hogent.be
+- **GitHub repository:** https://github.com/HOGENT-frontendweb/frontendweb-2526-neiryncknicolas
 - **Online versies:**
   - **Back-end:** <LINK_NAAR_ONLINE_BACKEND>
   - **Front-end:** <LINK_NAAR_ONLINE_FRONTEND>
