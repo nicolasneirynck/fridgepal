@@ -41,6 +41,11 @@
 ## 📖 Projectbeschrijving
 
 > **Instructie:** Beschrijf hier duidelijk en beknopt waarover jouw project gaat. Wat is het doel? Wie is de doelgroep? Welke functionaliteiten biedt het?
+>
+> Ik ga een recepten-applicatie maken waar de hoofdfunctie is dat je ingrediënten kan ingeven die je in huis hebt (of in je fridge) en dan krijg je een lijst terug van recepten. Deze lijst is gesorteerd op recepten met minst ontbrekende ingrediënten.
+> Het is dus bedoeld voor mensen die geen zin hebben om uren na te denken over wat ze gaan koken maar heel snel - op basis van wat ze in huis hebben - tussen hun opgeslagen recepten kunnen kijken wat ze willen koken.
+>
+> Users kunnen zelf een recept toevoegen of recepten van anderen opslaan. Je kan recepten een rating geven, toevoegen aan een zelfgemaakte lijst (doordeweeks, comfort food, gezonde snacks,..).
 
 [Beschrijf hier je project...]
 
@@ -99,54 +104,3 @@
 
 [Suggesties voor verbetering...]
 
-### Reflectie groepswerk
-
-> **Instructies:**
->
-> - Vul dit eerlijk in, we controleren ook de GitHub contributions en pull requests.
-> - Verwijder deze sectie als je alleen hebt gewerkt.
-
-**Hoe verliep het groepswerk?**
-
-> **Instructie:** Vink voor elk groepslid één van de drie opties aan door een 'x' tussen de vierkante haken te plaatsen: `[x]`
-
-- **[Naam student 1]:**
-
-  - [ ] Ik heb minder bijgedragen dan mijn groepsgenoot
-  - [ ] Ik heb evenveel bijgedragen als mijn groepsgenoot
-  - [ ] Ik heb meer bijgedragen dan mijn groepsgenoot
-
-- **[Naam student 2]:**
-  - [ ] Ik heb minder bijgedragen dan mijn groepsgenoot
-  - [ ] Ik heb evenveel bijgedragen als mijn groepsgenoot
-  - [ ] Ik heb meer bijgedragen dan mijn groepsgenoot
-
-**Welke functionaliteiten heeft elk groepslid toegevoegd voor Web Services?**
-
-> **Instructie:** Geef per persoon een duidelijk overzicht van wat die heeft geïmplementeerd voor het project voor het olod Web Services.
-
-- **[Naam student 1]:**
-
-  - [Bijvoorbeeld: Gebruikersregistratie en login systeem]
-  - [Bijvoorbeeld: Dashboard met overzicht functionaliteit]
-  - [Bijvoorbeeld: Integratietesten voor product endpoints]
-
-- **[Naam student 2]:**
-  - [Bijvoorbeeld: Productcatalogus met zoek- en filterfunctionaliteit]
-  - [Bijvoorbeeld: Winkelwagen en checkout proces]
-  - [Bijvoorbeeld: Integratietesten voor winkelwagen endpoints]
-
-**Welke functionaliteiten heeft elk groepslid toegevoegd voor Front-end Web Development?**
-
-> **Instructie:** Geef per persoon een duidelijk overzicht van wat die heeft geïmplementeerd voor het project voor het olod Front-end Web Development.
-
-- **[Naam student 1]:**
-
-  - [Bijvoorbeeld: Gebruikersregistratie en login systeem]
-  - [Bijvoorbeeld: Dashboard met overzicht functionaliteit]
-  - [Bijvoorbeeld: Integratietesten voor product endpoints]
-
-- **[Naam student 2]:**
-  - [Bijvoorbeeld: Productcatalogus met zoek- en filterfunctionaliteit]
-  - [Bijvoorbeeld: Winkelwagen en checkout proces]
-  - [Bijvoorbeeld: Integratietesten voor winkelwagen endpoints]
