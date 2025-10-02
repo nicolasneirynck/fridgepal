@@ -2,7 +2,7 @@ export default function InstructionBadge(){
   return(
     
     <div className="bg-gray-50 border border-[var(--brand-dark)]/20 rounded-xl
-                  h-15 w-150 flex items-center p-3 gap-5 mb-3"> {/** TODO FLEXibele grote van deze badge!! */}
+                flex items-center p-3 gap-5 mb-3 basis-full">
       <div className="h-8 w-8 bg-[var(--brand-dark)] rounded-full text-white flex items-center justify-center"> 
         <span >1</span></div>
      

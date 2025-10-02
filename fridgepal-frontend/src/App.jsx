@@ -1,22 +1,18 @@
 import './index.css';
 
 import Header from './components/Header';
-import FilterSection from './components/FilterSection';
-import AddIngredientSection from './components/AddIngredientSection';
+import AddIngredientSection from './components/searchRecipe/AddIngredientSection';
+import RecipeCardList from './components/searchRecipe/RecipeCardList';
 
-import RecipeCard from './components/RecipeCard';
+import RECIPE_DATA from './api/mock_data';
 
 function App() {
-
   return (
-    <div className='ml-4'>
-      <Header/>
+    <div>
+      <Header />
       <AddIngredientSection />
-      <FilterSection />
-      <div className="grid gap-6 p-6 [grid-template-columns:repeat(auto-fit,minmax(250px,250px))]">
-        <RecipeCard />
-        <RecipeCard />
-      </div>
+      {/*<FilterSection />*/}
+      <RecipeCardList recipes={RECIPE_DATA} />
     </div>
   );
 }

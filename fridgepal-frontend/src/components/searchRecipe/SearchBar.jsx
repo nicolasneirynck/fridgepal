@@ -4,10 +4,10 @@ export default function SearchBar(){
       <input
         type="text"
         placeholder="Add ingredients you have..."
-        className="flex-1 grow bg-[var(--input)] border rounded-lg border-gray-300 text-sm p-2"
+        className="flex-1 bg-[var(--input)] border rounded-lg border-gray-300 text-sm p-2"
       />
       <button 
-        className="bg-[var(--brand-orange)] flex w-10 h-10 
+        className="bg-[var(--brand-orange)] flex basis-10 shrink-0 h-10 
         justify-center items-center text-white rounded-lg text-2xl ml-2 
           font-extralight">
         +

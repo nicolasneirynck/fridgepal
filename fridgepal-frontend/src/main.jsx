@@ -8,8 +8,8 @@ import Recipe from './Recipe.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* <App /> */}
-    <Recipe/>
+    <App />
+    {/*<Recipe/>*/}
 
   </StrictMode>,
 );

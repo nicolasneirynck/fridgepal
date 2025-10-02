@@ -1,7 +1,6 @@
 export default function IngredientsCard(){
   return(
-    <div className="p-3 bg-[var(--brand-light)] border-[#e5e7eb] border rounded-xl
-                  w-75">
+    <div className="max-w-100 p-3 bg-[var(--brand-light)] border-[#e5e7eb] border rounded-xl">
       
       <h3 className="text-[var(--brand-gray-dark)] text-lg font-bold" >Ingredients</h3>
       <div className="flex items-center gap-5 ">
