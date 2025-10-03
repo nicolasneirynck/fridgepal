@@ -2,9 +2,14 @@ export default function RecipeCard({recipe}){
 
   const {imageUrl,name, createdBy} = recipe;
 
+  const handleClick = () => {
+    alert(`choose recipe ${name}`);
+  };
+
   return(
     <div className="bg-[var(--brand-light)] border-[#e5e7eb] border rounded-xl
-    hover:shadow-lg transition-all duration-200 cursor-pointer">
+    hover:shadow-lg transition-all duration-200 cursor-pointer"
+    onClick={handleClick}>
       <img src={imageUrl}
         className="w-full h-55 object-cover rounded-t-xl"/>
       <h3 className="text-[var(--brand-gray-dark)] text-lg font-bold pl-3 pt-3" >{name}</h3>
