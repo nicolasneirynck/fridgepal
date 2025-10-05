@@ -2,10 +2,6 @@ import IngredientButton from './IngredientButton';
 
 export default function IngredientList({ ingredients = [],handleDeleteIngredient }) {
 
-  const handleClick = () => {
-    alert('delete ingredient');
-  };
-
   if (ingredients.length === 0) {
     return (
       <p className="text-gray-400 text-sm italic mt-3 mb-2">

@@ -1,4 +1,4 @@
-export default function RecipeCard({recipe}){
+export default function RecipeCard({recipe,MatchingIngredients}){
 
   const {imageUrl,name, createdBy} = recipe;
 
@@ -14,7 +14,9 @@ export default function RecipeCard({recipe}){
         className="w-full h-55 object-cover rounded-t-xl"/>
       <h3 className="text-[var(--brand-gray-dark)] text-lg font-bold pl-3 pt-3" >{name}</h3>
       <p className="ml-3 text-sm text-[var(--brand-gray-light)]">by {createdBy.userName}</p>
-      <p className="p-3 text-[var(--brand-orange)] font-semibold">All ingredients!</p>
+      <p className="p-3 text-[var(--brand-orange)] font-semibold">
+        {MatchingIngredients}/{recipe.ingredients.length} ingredients in your fridge!
+      </p>
     </div>
   );
 }
