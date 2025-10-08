@@ -51,7 +51,7 @@
 
 > **Instructie:** Voeg hier een afbeelding van jouw ERD toe en licht de belangrijkste entiteiten en relaties kort toe.
 
-![ERD](https://kroki.io/erd/svg/eNp1kcFugzAMhs_1U3AG9bBX2HapNPXQqSfUQxZcZAkCcpxNvP0SkkLo2Ikff7__OE59tcg3KKkB59VZ9QijsvZn4AbuxFbmUqeS0IMzwhNgr6gDqC-oacQYYIKBetXilTsQ8n-VZlSCzet0OHj3m9ftwFPmf0RsUcVz8eSVTsBrqE-mZWwIjexEPEPVh2HBGZI8kBZbirTCTgsNJrZZwfHs-i9kaNBqpjGwLAHqT_WNzXL1RD7IhsRyNZpB0C7jBZ5NXYV9exPZd7wr18livCjxM96A568PTM4sGcKzFS_HY1nEnj-FcBqsMqJs7sRifQM25HmzG5itbqcpXmMHPJ66AFiD_zkOFvNOwC8Ak-qF)
+![ERD](https://kroki.io/erd/svg/eNp1kcFugzAMhs_1U3AG9bBX2HapNPXQqSfUQxZcZAkCcpxNvP0SkkLo2Cm__P3-4zj11SLfoKQGnFdn1SOMytqfgRu4E1uZS51KQg_OCE-AvaIOoL6gphFjgAmGBq1mGoUGA9SrFq_cgZAnlWZUgs3rdDj4zjev24GnrPcRt0UVz8WTVzoBr6E-mZaxITSyE_EMVR8GB2dI8kBabCnSCjsdho9tVnA8u_4LefOwNQHqT_WNzbKGRD7IhsRyNZpB0C7jBZ5NXYXdexPZd7wr18livCjxM96A59MHJmeWDOELi5fjsSxiz59CuA1WGVE2d2KxvgEb8rzZDcxWt9MUn7EDHl9dAKzB_1wHi3kn4BfIKe8z)
 
 **Recipe:** houdt recepten bij  
  **SavedRecipe:** houdt de recepten bij die door een user zijn opgeslaan in een lijst en eventuele notities daarbij  
