@@ -1,14 +1,19 @@
-export default function Header(){
+import { Link } from 'react-router'; // 👈
 
-  const handleClick = () => {
-    alert('back to home');
-  };
+export default function Navbar(){
 
   return(
-    <header className="flex min-h-18 items-center border-b-1 border-gray-300">
-      <h1 className="ml-4 text-xl font-bold text-[var(--brand-dark)] font-display
-      cursor-pointer"
-      onClick={handleClick}>FridgePal</h1>
+    <header className="flex items-center relative min-h-18  border-b-1 border-gray-300">
+      <Link className='absolute left-4'>
+        <h1 
+          className="text-xl font-bold text-[var(--brand-dark)] font-display cursor-pointer"
+          to='/'
+        >FridgePal</h1></Link>   
+      <nav className="mx-auto">
+        <Link className="text-[var(--brand-gray-light)] px-3 py-1 rounded-xl
+                        hover:bg-[var(--brand-orange)] hover:text-white"
+        to='/add-recipe'>+ Voeg Recept Toe</Link>
+      </nav>
     </header>
   );
 }

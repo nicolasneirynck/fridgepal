@@ -1,13 +1,12 @@
-import './index.css';
+import '../index.css';
 
-import Header from './components/Header';
-import IngredientSection from './components/searchRecipe/IngredientSection';
-import RecipeCardList from './components/searchRecipe/RecipeCardList';
+import IngredientSection from '../components/searchRecipe/IngredientSection';
+import RecipeCardList from '../components/searchRecipe/RecipeCardList';
 import {useState,useEffect} from 'react';
 
-import {INGREDIENTS_DATA, RECIPE_DATA} from './api/mock_data';
+import {INGREDIENTS_DATA, RECIPE_DATA} from '../api/mock_data';
 
-function App() {
+export default function SearchRecipe() {
 
   const [searchText, setSearchText] = useState('');
   const [ingredients, setIngredients] = useState([]);
@@ -67,7 +66,6 @@ function App() {
 
   return (
     <div>
-      <Header />
       <IngredientSection 
         onChange={handleSearch} 
         searchText={searchText}
@@ -83,5 +81,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
