@@ -1,10 +1,10 @@
-import '../index.css';
-import IngredientsCard from '../components/recipe/IngredientsCard';
-import InstructionsSection from '../components/recipe/InstructionsSection';
-import RecipeInformation from '../components/recipe/RecipeInformation';
+import '../../index.css';
+import IngredientsCard from '../../components/recipe/IngredientsCard';
+import InstructionsSection from '../../components/recipe/InstructionsSection';
+import RecipeInformation from '../../components/recipe/RecipeInformation';
 import { useParams } from 'react-router';
 
-import {RECIPE_DETAIL} from '../api/mock_data';
+import {RECIPE_DETAIL} from '../../api/mock_data';
 
 export default function RecipeDetail(){
   console.log('params:', useParams());

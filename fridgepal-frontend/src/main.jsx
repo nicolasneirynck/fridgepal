@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import SearchRecipe from './pages/SearchRecipe.jsx';
-import RecipeDetail from './pages/RecipeDetail.jsx';
+import SearchRecipe from './pages/search-recipe/SearchRecipe.jsx';
+import RecipeDetail from './pages/recipe/RecipeDetail.jsx';
 import AddRecipe from './pages/add-recipe/AddRecipe.jsx';
 import NotFound from './pages/NotFound.jsx';
 import './index.css';

@@ -1,10 +1,10 @@
-import '../index.css';
+import '../../index.css';
 
-import IngredientSection from '../components/searchRecipe/IngredientSection';
-import RecipeCardList from '../components/searchRecipe/RecipeCardList';
+import IngredientSection from './IngredientSection';
+import RecipeCardList from './RecipeCardList';
 import {useState,useEffect} from 'react';
 
-import {INGREDIENTS_DATA, RECIPE_DATA} from '../api/mock_data';
+import {INGREDIENTS_DATA, RECIPE_DATA} from '../../api/mock_data';
 
 export default function SearchRecipe() {
 
@@ -31,8 +31,10 @@ export default function SearchRecipe() {
   const handleAddIngredient = (ingredientName) => {
     const name = ingredientName.trim() || searchText.trim();
     if (!name) return;
-
-    setIngredients([...ingredients, name.toLowerCase()]);
+    
+    if(!ingredients.includes(name.toLowerCase()))
+      setIngredients([...ingredients, name.toLowerCase()]);
+    
     setSearchText('');
   };
 
