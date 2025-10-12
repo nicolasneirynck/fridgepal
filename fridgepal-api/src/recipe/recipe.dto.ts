@@ -22,7 +22,16 @@ export class CreateRecipeRequestDto extends RecipeDto {
   }[];
 }
 
-export class UpdateRecipeRequestDto extends CreateRecipeRequestDto {}
+export class UpdateRecipeRequestDto extends CreateRecipeRequestDto {
+  id: number;
+  ratings: {
+    userId: number;
+    userName: string;
+    rating: number;
+  }[];
+  ingredients: string[];
+  ratingSummary: { average: number; count: number };
+}
 
 // response
 export class RecipeShortResponseDto extends RecipeDto {

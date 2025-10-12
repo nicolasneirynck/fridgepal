@@ -11,7 +11,6 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { CreateRecipeRequestDto, UpdateRecipeRequestDto } from './recipe.dto';
 import { PaginationQuery } from '../common/common.dto';
 import { RecipeService } from './recipe.service';
 
@@ -52,13 +51,13 @@ export class RecipeController {
   @Put(':id')
   updateRecipe(
     @Param('id') id: string,
-    @Body() UpdateRecipeDto: UpdateRecipeRequestDto,
-  ) {
-    return `This action updates the recipe ${UpdateRecipeDto.name} with #${id}`;
+    @Body() updateRecipeDto: UpdateRecipeRequestDto,
+  ): RecipeDetailResponseDto {
+    return this.recipeService.updateById(Number(id), updateRecipeDto);
   }
 
   @Delete(':id')
-  deleteRecipe(@Param('id') id: string) {
-    return `This action removes the recipe with id #${id}`;
+  deleteRecipe(@Param('id') id: void) {
+    this.recipeService.deleteById(Number(id));
   }
 }

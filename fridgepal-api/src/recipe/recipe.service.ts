@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   RECIPES,
   Recipe,
@@ -9,7 +9,6 @@ import {
   CreateRecipeRequestDto,
   UpdateRecipeRequestDto,
   RecipeListResponseDto,
-  RecipeShortResponseDto,
   RecipeDetailResponseDto,
 } from './recipe.dto';
 
@@ -19,8 +18,14 @@ export class RecipeService {
     return { items: RECIPES }; // later uit database
   }
 
-  getById(id: number): RecipeDetailResponseDto | undefined {
-    return RECIPES_DETAIL.find((item: RecipeDetail) => item.id === id);
+  getById(id: number): RecipeDetailResponseDto {
+    const recipe = RECIPES_DETAIL.find((item: RecipeDetail) => item.id === id);
+
+    if (!recipe) {
+      throw new NotFoundException('No recipe with this id exists');
+    }
+
+    return recipe;
   }
 
   create({
@@ -62,12 +67,39 @@ export class RecipeService {
       createdBy,
       ingredientsDetailed,
       instructions,
-    }: CreateRecipeRequestDto,
-  ): RecipeDetailResponseDto {
-    throw new Error('not yet implemented');
+      ratings,
+      ingredients,
+      ratingSummary,
+    }: UpdateRecipeRequestDto,
+  ): UpdateRecipeRequestDto {
+    let existingRecipe = this.getById(id);
+
+    if (existingRecipe) {
+      existingRecipe = {
+        id: id,
+        name,
+        description,
+        imageUrl,
+        time,
+        categories,
+        createdBy,
+        ingredientsDetailed,
+        instructions,
+        ratings,
+        ingredients,
+        ratingSummary,
+      };
+    }
+    return existingRecipe;
   }
 
   deleteById(id: number): void {
-    throw new Error('not yet implemented');
+    const index = RECIPES_DETAIL.findIndex(
+      (item: RecipeDetail) => item.id === id,
+    );
+    if (index >= 0) {
+      RECIPES_DETAIL.splice(index, 1);
+      //zolang geen connectie met database zou beter ook RECIPE.splice(xx) doen
+    }
   }
 }

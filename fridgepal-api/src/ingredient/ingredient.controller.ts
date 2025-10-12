@@ -1,9 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
+import { IngredientService } from './ingredient.service';
+import { IngredientListResponseDto } from './ingredient.dto';
 
 @Controller('ingredients')
 export class IngredientController {
+  constructor(private readonly ingredientService: IngredientService) {}
+
   @Get()
-  getAllIngredients(): string {
-    return 'this action returns all ingredients';
+  getAllIngredients(): IngredientListResponseDto {
+    return this.ingredientService.getAll();
   }
 }

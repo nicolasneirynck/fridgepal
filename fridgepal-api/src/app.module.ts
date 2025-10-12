@@ -2,19 +2,21 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HealthController } from './health/health.controller';
-import { RecipeController } from './recipe/recipe.controller';
-import { IngredientController } from './ingredient/ingredient.controller';
-import { RecipeService } from './recipe/recipe.service';
-import { IngredientService } from './ingredient/ingredient.service';
+import { RecipeModule } from './recipe/recipe.module';
+import { IngredientModule } from './ingredient/ingredient.module';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
-  imports: [],
-  controllers: [
-    AppController,
-    HealthController,
-    RecipeController,
-    IngredientController,
+  imports: [
+    RecipeModule,
+    IngredientModule,
+    ConfigModule.forRoot({
+      load: [configuration],
+      isGlobal: true,
+    }),
   ],
-  providers: [AppService, RecipeService, IngredientService],
+  controllers: [AppController, HealthController],
+  providers: [AppService],
 })
 export class AppModule {}
