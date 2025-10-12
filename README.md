@@ -33,6 +33,14 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 ## Opstarten
 
 > Schrijf hier hoe we de applicatie starten (.env bestanden aanmaken, commando's om uit te voeren...)
+>
+> Maak een .env bestand aan in de roots met volgende gegevens:
+> 
+> ```
+> NODE_ENV=development
+> PORT=3000
+> CORS_ORIGINS=["http://localhost:5173"]
+> CORS_MAX_AGE=10800
 
 ## Testen
 
