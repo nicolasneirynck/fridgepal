@@ -22,7 +22,12 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 
 ## Opstarten
 
-> Schrijf hier hoe we de applicatie starten (.env bestanden aanmaken, commando's om uit te voeren...)
+> Maak een .env bestand aan in de roots met volgende gegevens:
+> 
+> ```
+> VITE_API_URL='http://localhost:3000/api'
+
+
 
 ## Testen
 
