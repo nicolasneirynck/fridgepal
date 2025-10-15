@@ -14,8 +14,20 @@ import {
 
 @Injectable()
 export class RecipeService {
-  getAll(): RecipeListResponseDto {
-    return { items: RECIPES }; // later uit database
+  getAll(filters?: { ingredient?: string[] }): RecipeListResponseDto {
+    let results = RECIPES;
+
+    if (filters?.ingredient) {
+      const ingredients = filters.ingredient.map((i) => i.toLowerCase());
+
+      results = results.filter((recipe) =>
+        recipe.ingredients.some((ing) =>
+          ingredients.includes(ing.toLowerCase()),
+        ),
+      );
+    }
+
+    return { items: results };
   }
 
   getById(id: number): RecipeDetailResponseDto {

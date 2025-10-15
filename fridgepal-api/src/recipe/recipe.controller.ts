@@ -30,9 +30,21 @@ export class RecipeController {
     const { page = 1, limit = 10 } = paginationQuery;
     return `This action returns all recipes. Limit ${limit}, page: ${page}`;
   } */
+  /*TODO ik kan hier voor de query's ook een DTO filter maken
+ bv export class RecipeFilterQuery {
+  category?: string;
+  ingredient?: string;
+  search?: string;
+
+  en dan:
+  getAllRecipes(@Query() filters: RecipeFilterQuery)
+}*/
+
   @Get()
-  getAllRecipes(): RecipeListResponseDto {
-    return this.recipeService.getAll();
+  getAllRecipes(
+    @Query('ingredient') ingredient?: string[],
+  ): RecipeListResponseDto {
+    return this.recipeService.getAll({ ingredient });
   }
 
   @Get(':id')
