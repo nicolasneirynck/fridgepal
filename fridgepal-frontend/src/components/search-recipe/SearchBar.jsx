@@ -3,7 +3,7 @@ import { INGREDIENTS_DATA } from '../../api/mock_data';
 export default function SearchBar({
   searchText,
   onChange,
-  filteredSuggestions = [],
+  ingredientSuggestions = [],
   handleSelect,
 }) {
   return (
@@ -28,7 +28,7 @@ export default function SearchBar({
       {searchText.length > 0 && (
         <ul className="absolute top-full left-0 w-full bg-white border border-gray-300 
         border-t-0 rounded-b-md shadow-md list-none p-0 m-0 z-50">
-          {filteredSuggestions.map((suggestion, index) => (
+          {ingredientSuggestions.map((suggestion, index) => (
             <li
               key={index}
               onClick={() => handleSelect(suggestion)}

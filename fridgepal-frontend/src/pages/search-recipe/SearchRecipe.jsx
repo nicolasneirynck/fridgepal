@@ -2,40 +2,52 @@ import '../../index.css';
 
 import IngredientSection from './IngredientSection';
 import RecipeCardList from './RecipeCardList';
-import {useState,useEffect} from 'react';
+import AsyncData from '../../components/AsyncData';
 
-import {INGREDIENTS_DATA, RECIPE_DATA} from '../../api/mock_data';
+import {useState, useMemo} from 'react';
+import useSWR from 'swr';
+import { getAll } from '../../api';
 
 export default function SearchRecipe() {
 
   const [searchText, setSearchText] = useState('');
+  const [ingredientSuggestions, setingredientSuggestions] = useState([]);
   const [ingredients, setIngredients] = useState([]);
-  const [recipes, setRecipes] = useState(RECIPE_DATA);
-  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-  
-  const suggestions = INGREDIENTS_DATA.ingredients.map((ing) => ing.name);
+
+  const{data:allIngredients = []} = useSWR('ingredients', getAll);
+  const suggestions = useMemo(
+    () => allIngredients.map((ing) => ing.name.toLowerCase()),
+    [allIngredients],
+  );
+
+  const {
+    data: recipes = [],
+    isLoading,
+    error,
+  } = useSWR('recipes', getAll);
 
   const handleSearch = (e) =>{
     setSearchText(e.target.value);
 
-    const filteredSuggestions = suggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(searchText.toLowerCase()),
-    );
-    setFilteredSuggestions(filteredSuggestions);
+    const filteredSuggestions = suggestions
+      .filter((ing) => ing.includes(e.target.value))
+      .slice(0,8);
+
+    setingredientSuggestions(filteredSuggestions);
   };
 
   const handleSelect = (suggestion) => {
-    handleAddIngredient(suggestion);
+    handleAddIngredient(suggestion); // TODO nog nodig of rechtstreeks fixen? 
   };
 
   const handleAddIngredient = (ingredientName) => {
-    const name = ingredientName.trim() || searchText.trim();
-    if (!name) return;
+    // const name = ingredientName.trim() || searchText.trim(); 
+    // if (!name) return;
     
-    if(!ingredients.includes(name.toLowerCase()))
-      setIngredients([...ingredients, name.toLowerCase()]);
+    //  if(!ingredients.includes(name.toLowerCase()))
+    setIngredients([...ingredients, ingredientName]); // TODO is dit nog nodig?
     
-    setSearchText('');
+    setSearchText(''); 
   };
 
   const handleDeleteIngredient = (ing) =>{
@@ -50,21 +62,18 @@ export default function SearchRecipe() {
       recipeIngredients.includes(ing) ? count + 1 : count
     ), 0);
   }; 
-
-  useEffect(() => {
-    if (ingredients.length === 0) {
-      setRecipes([...RECIPE_DATA]);
-      return;
-    }
-
+  
+  const sortedRecipes = useMemo(() => {
+   
     const sorted = [...recipes].sort((r1, r2) => {
       const a = countMatchingIngredients(r1.ingredients);
       const b = countMatchingIngredients(r2.ingredients);
       return b - a;
     });
 
-    setRecipes(sorted);
-  }, [ingredients]);
+    return sorted;
+    
+  }, [ingredients,recipes]);
 
   return (
     <div>
@@ -74,12 +83,17 @@ export default function SearchRecipe() {
         ingredients={ingredients}
         handleAddIngredient={handleAddIngredient}
         handleDeleteIngredient={handleDeleteIngredient}
-        filteredSuggestions={filteredSuggestions}
+        ingredientSuggestions={ingredientSuggestions}
         handleSelect={handleSelect}/>
       {/*<FilterSection />*/}
-      <RecipeCardList 
-        recipes={recipes} 
-        countMatchingIngredients={countMatchingIngredients}/>
+      <AsyncData loading={isLoading} error={error}>
+        {!error
+          ?(<RecipeCardList 
+            recipes={sortedRecipes} 
+            countMatchingIngredients={countMatchingIngredients}/>)
+          :null}
+        
+      </AsyncData>
     </div>
   );
 }
