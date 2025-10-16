@@ -7,14 +7,21 @@ export default () => ({
       : [],
     maxAge: parseInt(process.env.CORS_MAX_AGE || String(3 * 60 * 60)),
   },
+  database: {
+    url: process.env.DATABASE_URL,
+  },
 });
 
 export interface ServerConfig {
   env: string;
   port: number;
+  database: DatabaseConfig;
 }
 
 export interface CorsConfig {
   origins: string[];
   maxAge: number;
+}
+export interface DatabaseConfig {
+  url: string;
 }
