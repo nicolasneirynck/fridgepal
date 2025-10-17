@@ -7,7 +7,7 @@ export class IngredientController {
   constructor(private readonly ingredientService: IngredientService) {}
 
   @Get()
-  getAllIngredients(): IngredientListResponseDto {
+  async getAllIngredients(): Promise<IngredientListResponseDto> {
     return this.ingredientService.getAll();
   }
 }

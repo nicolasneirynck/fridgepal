@@ -1,12 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { INGREDIENTS } from '../data/mock_data';
+import { IngredientListResponseDto } from './ingredient.dto';
+
 import {
-  IngredientResponseDto,
-  IngredientListResponseDto,
-} from './ingredient.dto';
+  type DatabaseProvider,
+  InjectDrizzle,
+} from '../drizzle/drizzle.provider';
+
 @Injectable()
 export class IngredientService {
-  getAll(): IngredientListResponseDto {
-    return { items: INGREDIENTS };
+  constructor(
+    @InjectDrizzle()
+    private readonly db: DatabaseProvider,
+  ) {}
+
+  getAll(): Promise<IngredientListResponseDto> {
+    const items = await this.db.query.places.findMany();
+    return { items };
   }
 }
