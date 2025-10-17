@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { INGREDIENTS } from '../data/mock_data';
 import { IngredientListResponseDto } from './ingredient.dto';
 
 import {
   type DatabaseProvider,
   InjectDrizzle,
 } from '../drizzle/drizzle.provider';
+
+import { like } from 'drizzle-orm';
+import { ingredients } from '../drizzle/schema';
 
 @Injectable()
 export class IngredientService {
@@ -14,8 +16,18 @@ export class IngredientService {
     private readonly db: DatabaseProvider,
   ) {}
 
-  getAll(): Promise<IngredientListResponseDto> {
-    const items = await this.db.query.places.findMany();
+  async getAll(filters?: {
+    input?: string;
+  }): Promise<IngredientListResponseDto> {
+    const input = filters?.input ?? '';
+
+    const searchString = input
+      ? like(ingredients.name, `${input}%`)
+      : undefined;
+
+    const items = await this.db.query.ingredients.findMany({
+      where: searchString,
+    });
     return { items };
   }
 }
