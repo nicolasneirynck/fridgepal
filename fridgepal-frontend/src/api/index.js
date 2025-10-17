@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
-export async function getAll(url){
-  const {data} = await axios.get(`${baseUrl}/${url}`);
+export async function getAll(url,params ={}){
+  const {data} = await axios.get(`${baseUrl}/${url}`, {params});
   return data.items;
 };
 

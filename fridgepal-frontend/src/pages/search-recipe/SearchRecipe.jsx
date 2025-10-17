@@ -7,17 +7,24 @@ import AsyncData from '../../components/AsyncData';
 import {useState, useMemo} from 'react';
 import useSWR from 'swr';
 import { getAll } from '../../api';
+import { useDebounce } from 'use-debounce';
 
 export default function SearchRecipe() {
 
+  // automatische zoekbalk
   const [searchText, setSearchText] = useState('');
-  const [ingredientSuggestions, setingredientSuggestions] = useState([]);
+  const [debouncedSearch] = useDebounce(searchText, 400);
+  // ingrediënten om recepten te filteren
   const [ingredients, setIngredients] = useState([]);
 
-  const{data:allIngredients = []} = useSWR('ingredients', getAll);
+  // auto-suggestie ingredienten (zoekbalk)
+  const{data:ingSuggested = []} = useSWR(
+    debouncedSearch ? ['ingredients', { search: debouncedSearch }] : null,
+    ([url, params]) => getAll(url, params));
+
   const suggestions = useMemo(
-    () => allIngredients.map((ing) => ing.name.toLowerCase()),
-    [allIngredients],
+    () => ingSuggested.map((ing) => ing.name.toLowerCase()),
+    [ingSuggested],
   );
 
   const {
@@ -28,12 +35,6 @@ export default function SearchRecipe() {
 
   const handleSearch = (e) =>{
     setSearchText(e.target.value);
-
-    const filteredSuggestions = suggestions
-      .filter((ing) => ing.includes(e.target.value))
-      .slice(0,8);
-
-    setingredientSuggestions(filteredSuggestions);
   };
 
   const handleSelect = (suggestion) => {
@@ -83,7 +84,7 @@ export default function SearchRecipe() {
         ingredients={ingredients}
         handleAddIngredient={handleAddIngredient}
         handleDeleteIngredient={handleDeleteIngredient}
-        ingredientSuggestions={ingredientSuggestions}
+        ingredientSuggestions={suggestions}
         handleSelect={handleSelect}/>
       {/*<FilterSection />*/}
       <AsyncData loading={isLoading} error={error}>
