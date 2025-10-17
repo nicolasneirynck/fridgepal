@@ -47,6 +47,14 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 > CORS_ORIGINS=["http://localhost:5173"]
 > CORS_MAX_AGE=10800
 
+> In terminal:
+>````
+>
+>pnpm install
+>db-migrate
+>db-seed
+>pnpm start:dev
+
 ## Testen
 
 > Schrijf hier hoe we de testen uitvoeren (.env bestanden aanmaken, commando's om uit te voeren...)
