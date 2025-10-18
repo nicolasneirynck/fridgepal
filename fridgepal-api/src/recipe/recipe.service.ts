@@ -41,17 +41,25 @@ export class RecipeService {
         ? [ingredient] // ja -> maak er een array van
         : []; // nee -> lege array
 
-    const matches = await this.db
-      .select({
-        recipeId: recipes.id,
-        matchCount: sql<number>`COUNT(${ingredients.id})`,
-      })
-      .from(recipes)
-      .leftJoin(recipeIngredients, eq(recipeIngredients.recipeId, recipes.id))
-      .leftJoin(ingredients, eq(ingredients.id, recipeIngredients.ingredientId))
-      .where(inArray(ingredients.name, input))
-      .groupBy(recipes.id)
-      .orderBy(desc(sql`COUNT(${ingredients.id})`));
+    const matches = input.length // als ingredienten -> filteren, anders alles teruggeven
+      ? await this.db
+          .select({
+            recipeId: recipes.id,
+            matchCount: sql<number>`COUNT(${ingredients.id})`,
+          })
+          .from(recipes)
+          .leftJoin(
+            recipeIngredients,
+            eq(recipeIngredients.recipeId, recipes.id),
+          )
+          .leftJoin(
+            ingredients,
+            eq(ingredients.id, recipeIngredients.ingredientId),
+          )
+          .where(inArray(ingredients.name, input))
+          .groupBy(recipes.id)
+          .orderBy(desc(sql`COUNT(${ingredients.id})`))
+      : await this.db.select({ recipeId: recipes.id }).from(recipes);
 
     const recipeIds = matches.map((m) => m.recipeId);
 
