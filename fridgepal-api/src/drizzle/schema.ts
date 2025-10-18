@@ -86,21 +86,69 @@ export const userRecipeRatings = mysqlTable(
   (table) => [primaryKey({ columns: [table.recipeId, table.userId] })],
 );
 
-export const userRecipeLists = mysqlTable('user_recipe_lists', {
-  id: int('id', { unsigned: true }).primaryKey().autoincrement(),
-  name: varchar('name', { length: 255 }).notNull(),
-  userId: int('user_id', { unsigned: true })
-    .references(() => users.id, { onDelete: 'cascade' })
-    .notNull(),
-  isDefault: tinyint('is_default').default(0).notNull(), // 0 = false, 1 = true
-});
+// export const userRecipeLists = mysqlTable('user_recipe_lists', {
+//   id: int('id', { unsigned: true }).primaryKey().autoincrement(),
+//   name: varchar('name', { length: 255 }).notNull(),
+//   userId: int('user_id', { unsigned: true })
+//     .references(() => users.id, { onDelete: 'cascade' })
+//     .notNull(),
+//   isDefault: tinyint('is_default').default(0).notNull(), // 0 = false, 1 = true
+// });
 
 export const savedRecipes = mysqlTable('saved_recipes', {
-  recipeListId: int('recipe_list_id', { unsigned: true })
-    .references(() => userRecipeLists.id, { onDelete: 'cascade' })
-    .notNull(),
+  // recipeListId: int('recipe_list_id', { unsigned: true })
+  //   .references(() => userRecipeLists.id, { onDelete: 'cascade' })
+  //   .notNull(),
   recipeId: int('recipe_id', { unsigned: true })
     .references(() => recipes.id, { onDelete: 'cascade' })
     .notNull(),
   notes: text('notes'),
 });
+
+export const recipesRelations = relations(recipes, ({ many, one }) => ({
+  recipeCategories: many(recipeCategories),
+  recipeIngredients: many(recipeIngredients),
+  instructions: many(instructions),
+  userRecipeRating: many(userRecipeRatings),
+  savedRecipes: many(savedRecipes),
+  createdBy: one(users, {
+    fields: [recipes.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  recipeCategories: many(recipeCategories),
+}));
+
+export const recipeCategoriesRelations = relations(
+  recipeCategories,
+  ({ one }) => ({
+    recipe: one(recipes, {
+      fields: [recipeCategories.recipeId],
+      references: [recipes.id],
+    }),
+    category: one(categories, {
+      fields: [recipeCategories.categoryId],
+      references: [categories.id],
+    }),
+  }),
+);
+
+export const ingredientRelations = relations(ingredients, ({ many }) => ({
+  recipeIngredients: many(recipeIngredients),
+}));
+
+export const recipeIngredientsRelations = relations(
+  recipeIngredients,
+  ({ one }) => ({
+    recipe: one(recipes, {
+      fields: [recipeIngredients.recipeId],
+      references: [recipes.id],
+    }),
+    ingredient: one(ingredients, {
+      fields: [recipeIngredients.ingredientId],
+      references: [ingredients.id],
+    }),
+  }),
+);

@@ -1,7 +1,7 @@
 export class RecipeDto {
   name: string;
   description: string;
-  imageUrl: string;
+  imageUrl: string | null; // niet verplicht -> default afbeelding tonen
   time: number;
   categories: { id: number; name: string }[];
 }

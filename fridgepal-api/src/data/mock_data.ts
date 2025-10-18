@@ -2,7 +2,7 @@ export interface Recipe {
   id: number;
   name: string;
   description: string;
-  imageUrl: string;
+  imageUrl: string | null;
   time: number;
   createdBy: { id: number; userName: string };
   ingredients: string[];

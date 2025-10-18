@@ -5,29 +5,84 @@ import {
   RECIPES_DETAIL,
   RecipeDetail,
 } from '../data/mock_data';
+
+import { recipes, ingredients, recipeIngredients } from '../drizzle/schema';
+
 import {
   CreateRecipeRequestDto,
   UpdateRecipeRequestDto,
   RecipeListResponseDto,
+  RecipeShortResponseDto,
   RecipeDetailResponseDto,
 } from './recipe.dto';
 
+import {
+  type DatabaseProvider,
+  InjectDrizzle,
+} from '../drizzle/drizzle.provider';
+
+import { eq, inArray, sql, desc } from 'drizzle-orm';
+
 @Injectable()
 export class RecipeService {
-  getAll(filters?: { ingredient?: string[] }): RecipeListResponseDto {
-    let results = RECIPES;
+  constructor(
+    @InjectDrizzle()
+    private readonly db: DatabaseProvider,
+  ) {}
 
-    if (filters?.ingredient) {
-      const ingredients = filters.ingredient.map((i) => i.toLowerCase());
+  async getAll({
+    ingredient,
+  }: {
+    ingredient?: string[];
+  }): Promise<RecipeListResponseDto> {
+    const input = Array.isArray(ingredient) // is ingredient al een array? (meerdere ingredienten)
+      ? ingredient // ja ? gebruik maar zoals het is
+      : ingredient // nee (1 of 0 ingredienten) -> bestaat er wel een waarde?
+        ? [ingredient] // ja -> maak er een array van
+        : []; // nee -> lege array
 
-      results = results.filter((recipe) =>
-        recipe.ingredients.some((ing) =>
-          ingredients.includes(ing.toLowerCase()),
-        ),
-      );
-    }
+    const matches = await this.db
+      .select({
+        recipeId: recipes.id,
+        matchCount: sql<number>`COUNT(${ingredients.id})`,
+      })
+      .from(recipes)
+      .leftJoin(recipeIngredients, eq(recipeIngredients.recipeId, recipes.id))
+      .leftJoin(ingredients, eq(ingredients.id, recipeIngredients.ingredientId))
+      .where(inArray(ingredients.name, input))
+      .groupBy(recipes.id)
+      .orderBy(desc(sql`COUNT(${ingredients.id})`));
 
-    return { items: results };
+    const recipeIds = matches.map((m) => m.recipeId);
+
+    const recipesDb = await this.db.query.recipes.findMany({
+      with: {
+        recipeIngredients: { with: { ingredient: true } },
+        createdBy: true,
+      },
+      where: inArray(recipes.id, recipeIds),
+    });
+
+    const sortedRecipes = recipeIds.map(
+      (id) => recipesDb.find((r) => r.id === id)!, // miss niet zo super veilig zo, later eens bekijken
+    );
+
+    const items: RecipeShortResponseDto[] = sortedRecipes.map((recipe) => ({
+      id: recipe.id,
+      name: recipe.name,
+      description: recipe.description,
+      imageUrl: recipe.imageUrl,
+      time: recipe.time ?? 0,
+      createdBy: {
+        id: recipe.createdBy.id,
+        userName: recipe.createdBy.userName,
+      },
+      ingredients: recipe.recipeIngredients.map((ri) => ri.ingredient.name),
+      categories: [],
+      ratingSummary: { average: 0, count: 0 },
+    }));
+
+    return { items };
   }
 
   getById(id: number): RecipeDetailResponseDto {

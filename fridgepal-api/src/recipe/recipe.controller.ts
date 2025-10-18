@@ -42,7 +42,7 @@ export class RecipeController {
   @Get()
   getAllRecipes(
     @Query('ingredient') ingredient?: string[],
-  ): RecipeListResponseDto {
+  ): Promise<RecipeListResponseDto> {
     return this.recipeService.getAll({ ingredient });
   }
 

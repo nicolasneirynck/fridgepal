@@ -15,7 +15,16 @@ const db = drizzle(connection, {
 async function resetDatabase() {
   console.log('🗑️ Resetting database...');
 
+  await db.delete(schema.userRecipeRatings);
+  await db.delete(schema.savedRecipes);
+  await db.delete(schema.recipeIngredients);
+  await db.delete(schema.recipeCategories);
+  await db.delete(schema.instructions);
+
   await db.delete(schema.recipes);
+  await db.delete(schema.ingredients);
+  await db.delete(schema.categories);
+  await db.delete(schema.users);
 
   console.log('✅ Database reset completed\n');
 }
@@ -110,12 +119,188 @@ async function seedIngredients() {
   console.log('✅ Ingredients seeded successfully\n');
 }
 
+async function seedUsers() {
+  console.log('📍 Seeding users...');
+
+  await db.insert(schema.users).values([
+    {
+      id: 1,
+      userName: 'veggieQueen',
+      passwordHash: 'hashedpassword1',
+      firstName: 'Sofie',
+      lastName: 'Vermeulen',
+      country: 'Belgium',
+      email: 'sofie@example.com',
+    },
+    {
+      id: 2,
+      userName: 'chefMario',
+      passwordHash: 'hashedpassword2',
+      firstName: 'Mario',
+      lastName: 'Rossi',
+      country: 'Italy',
+      email: 'mario@example.com',
+    },
+    {
+      id: 3,
+      userName: 'saladMaster',
+      passwordHash: 'hashedpassword3',
+      firstName: 'Lucas',
+      lastName: 'Jansen',
+      country: 'Netherlands',
+      email: 'lucas@example.com',
+    },
+  ]);
+
+  console.log('✅ Users seeded successfully\n');
+}
+
+async function seedCategories() {
+  console.log('📍 Seeding categories...');
+
+  await db.insert(schema.categories).values([
+    { id: 1, name: 'Italiaans' },
+    { id: 2, name: 'Hoofdgerecht' },
+    { id: 3, name: 'Aziatisch' },
+    { id: 4, name: 'Vegetarisch' },
+    { id: 5, name: 'Salade' },
+    { id: 6, name: 'Lunch' },
+    { id: 7, name: 'Ontbijt' },
+    { id: 8, name: 'Dessert' },
+    { id: 9, name: 'Mexicaans' },
+  ]);
+
+  console.log('✅ Categories seeded successfully\n');
+}
+
+async function seedRecipeCategories() {
+  console.log('📍 Seeding recipeCategories...');
+
+  await db.insert(schema.recipeCategories).values([
+    { id: 1, recipeId: 1, categoryId: 1 }, // Spaghetti - Italiaans
+    { id: 2, recipeId: 1, categoryId: 2 }, // Spaghetti - Hoofdgerecht
+    { id: 3, recipeId: 2, categoryId: 3 }, // Curry - Aziatisch
+    { id: 4, recipeId: 2, categoryId: 4 }, // Curry - Vegetarisch
+    { id: 5, recipeId: 3, categoryId: 5 }, // Caesar Salad - Salade
+    { id: 6, recipeId: 3, categoryId: 6 }, // Caesar Salad - Lunch
+    { id: 7, recipeId: 4, categoryId: 7 }, // Pancakes - Ontbijt
+    { id: 8, recipeId: 4, categoryId: 8 }, // Pancakes - Dessert
+    { id: 9, recipeId: 5, categoryId: 9 }, // Chili - Mexicaans
+    { id: 10, recipeId: 5, categoryId: 2 }, // Chili - Hoofdgerecht
+  ]);
+
+  console.log('✅ Recipe categories seeded successfully\n');
+}
+
+async function seedRecipeIngredients() {
+  console.log('📍 Seeding recipeIngredients...');
+
+  await db.insert(schema.recipeIngredients).values([
+    // Spaghetti Bolognese
+    { id: 1, amount: 200, unit: 'g', recipeId: 1, ingredientId: 1 },
+    { id: 2, amount: 150, unit: 'g', recipeId: 1, ingredientId: 2 },
+    { id: 3, amount: 200, unit: 'ml', recipeId: 1, ingredientId: 3 },
+    { id: 4, amount: 1, unit: 'stuk', recipeId: 1, ingredientId: 4 },
+    { id: 5, amount: 2, unit: 'teentjes', recipeId: 1, ingredientId: 5 },
+
+    // Curry
+    { id: 6, amount: 150, unit: 'g', recipeId: 2, ingredientId: 6 },
+    { id: 7, amount: 200, unit: 'ml', recipeId: 2, ingredientId: 7 },
+    { id: 8, amount: 50, unit: 'g', recipeId: 2, ingredientId: 8 },
+    { id: 9, amount: 1, unit: 'stuk', recipeId: 2, ingredientId: 4 },
+    { id: 10, amount: 2, unit: 'el', recipeId: 2, ingredientId: 9 },
+
+    // Caesar Salad
+    { id: 11, amount: 1, unit: 'krop', recipeId: 3, ingredientId: 10 },
+    { id: 12, amount: 100, unit: 'g', recipeId: 3, ingredientId: 11 },
+    { id: 13, amount: 50, unit: 'g', recipeId: 3, ingredientId: 12 },
+    { id: 14, amount: 30, unit: 'g', recipeId: 3, ingredientId: 13 },
+    { id: 15, amount: 2, unit: 'el', recipeId: 3, ingredientId: 14 },
+  ]);
+
+  console.log('✅ Recipe ingredients seeded successfully\n');
+}
+
+async function seedInstructions() {
+  console.log('📍 Seeding instructions...');
+
+  await db.insert(schema.instructions).values([
+    // Spaghetti Bolognese
+    {
+      id: 1,
+      stepNumber: 1,
+      description: 'Kook de spaghetti beetgaar.',
+      recipeId: 1,
+    },
+    {
+      id: 2,
+      stepNumber: 2,
+      description: 'Bak de ui en knoflook glazig.',
+      recipeId: 1,
+    },
+    {
+      id: 3,
+      stepNumber: 3,
+      description: 'Voeg het gehakt toe en bak rul.',
+      recipeId: 1,
+    },
+    {
+      id: 4,
+      stepNumber: 4,
+      description: 'Roer de tomatensaus erdoor en laat 15 minuten sudderen.',
+      recipeId: 1,
+    },
+
+    // Pancakes
+    {
+      id: 5,
+      stepNumber: 1,
+      description: 'Meng bloem, melk en eieren tot een glad beslag.',
+      recipeId: 4,
+    },
+    {
+      id: 6,
+      stepNumber: 2,
+      description: 'Smelt wat boter in een pan en bak kleine hoopjes beslag.',
+      recipeId: 4,
+    },
+    {
+      id: 7,
+      stepNumber: 3,
+      description: 'Serveer met ahornsiroop.',
+      recipeId: 4,
+    },
+  ]);
+
+  console.log('✅ Instructions seeded successfully\n');
+}
+
+async function seedUserRecipeRatings() {
+  console.log('📍 Seeding ratings...');
+
+  await db.insert(schema.userRecipeRatings).values([
+    { recipeId: 1, userId: 1, rating: 5 },
+    { recipeId: 1, userId: 2, rating: 4 },
+    { recipeId: 1, userId: 3, rating: 5 },
+    { recipeId: 2, userId: 1, rating: 4 },
+    { recipeId: 3, userId: 3, rating: 5 },
+  ]);
+
+  console.log('✅ Ratings seeded successfully\n');
+}
+
 async function main() {
   console.log('🌱 Starting database seeding...\n');
 
   await resetDatabase();
+  await seedUsers();
   await seedRecipes();
   await seedIngredients();
+  await seedCategories();
+  await seedRecipeCategories();
+  await seedRecipeIngredients();
+  await seedInstructions();
+  await seedUserRecipeRatings();
 
   console.log('🎉 Database seeding completed successfully!');
 }
