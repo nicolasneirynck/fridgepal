@@ -31,7 +31,10 @@ export default function SearchRecipe() {
     data: recipes = [],
     isLoading,
     error,
-  } = useSWR('recipes', getAll);
+  } = useSWR(
+    ['recipes', ingredients.length ? { ingredient: ingredients } : {}],
+    ([url, params]) => getAll(url, params),
+  );
 
   const handleSearch = (e) =>{
     setSearchText(e.target.value);
@@ -64,17 +67,17 @@ export default function SearchRecipe() {
     ), 0);
   }; 
   
-  const sortedRecipes = useMemo(() => {
+  // const sortedRecipes = useMemo(() => {
    
-    const sorted = [...recipes].sort((r1, r2) => {
-      const a = countMatchingIngredients(r1.ingredients);
-      const b = countMatchingIngredients(r2.ingredients);
-      return b - a;
-    });
+  //   const sorted = [...recipes].sort((r1, r2) => {
+  //     const a = countMatchingIngredients(r1.ingredients);
+  //     const b = countMatchingIngredients(r2.ingredients);
+  //     return b - a;
+  //   });
 
-    return sorted;
+  //   return sorted;
     
-  }, [ingredients,recipes]);
+  // }, [ingredients,recipes]);
 
   return (
     <div>
@@ -90,7 +93,7 @@ export default function SearchRecipe() {
       <AsyncData loading={isLoading} error={error}>
         {!error
           ?(<RecipeCardList 
-            recipes={sortedRecipes} 
+            recipes={recipes} 
             countMatchingIngredients={countMatchingIngredients}/>)
           :null}
         
