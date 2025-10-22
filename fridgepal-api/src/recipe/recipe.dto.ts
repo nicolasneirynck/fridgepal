@@ -77,13 +77,11 @@ export class CreateRecipeRequestDto {
     unit: string;
   }[];
   instructions: {
-    id: number;
     stepNumber: number;
     description: string;
   }[];
   categories: {
     id: number;
-    name: string;
   }[];
 }
 

@@ -179,7 +179,7 @@ export class RecipeService {
       })
       .where(eq(recipes.id, id));
 
-    // voelt wat omslachtig aan maar vindt momenteel geen betere oplossing
+    // voelt wat omslachtig aan maar vind momenteel geen betere oplossing
     await this.db
       .delete(recipeIngredients)
       .where(eq(recipeIngredients.recipeId, id));
