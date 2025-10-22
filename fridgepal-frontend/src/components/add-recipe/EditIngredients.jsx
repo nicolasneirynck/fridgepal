@@ -1,15 +1,23 @@
-import { useState, useMemo} from 'react';
+import { useState, useMemo,useEffect} from 'react';
 import { useDebounce } from 'use-debounce';
 import { getAll } from '../../api';
 import useSWR from 'swr';
 import SearchBar from '../search-recipe/SearchBar';
+import { useFormContext } from 'react-hook-form';
 
 export default function EditIngredients(){
 
   const [searchText, setSearchText] = useState('');
   const [debouncedSearch] = useDebounce(searchText, 400);
-  // ingrediënten om recepten te filteren
+
   const [ingredients, setIngredients] = useState([]);
+
+  const { setValue } = useFormContext();
+
+  //juist gebruik useEffect?
+  useEffect(() => {
+    setValue('ingredients', ingredients);
+  }, [ingredients, setValue]);
 
   // auto-suggestie ingredienten (zoekbalk)
   const{data:ingSuggested = []} = useSWR(
@@ -17,7 +25,7 @@ export default function EditIngredients(){
     ([url, params]) => getAll(url, params));
 
   const suggestions = useMemo(
-    () => ingSuggested.map((ing) => ing.name.toLowerCase()),
+    () => ingSuggested.map((ing) => ({ id: ing.id, name: ing.name.toLowerCase() })),
     [ingSuggested],
   );
 
@@ -27,8 +35,7 @@ export default function EditIngredients(){
 
   const handleSelect = (suggestion) => {
     setSearchText('');
-    setIngredients((prev) => [...prev, { name: suggestion, amount: '', unit: '' }]);
-
+    setIngredients((prev) => [...prev, { ingredientId: suggestion.id, name: suggestion.name, amount: '', unit: '' }]);
   };
 
   function updateIngredient(index, newValue) {
@@ -53,7 +60,7 @@ export default function EditIngredients(){
   };
 
   return(
-    <div>
+    <div className='w-full'>
       <h1 className="text-[var(--brand-gray-dark)] text-xl">Voeg ingrediënten toe</h1>
       <p className="text-[var(--brand-gray-light)] text-sm">Reken telkens voor 4 porties</p>
       <SearchBar

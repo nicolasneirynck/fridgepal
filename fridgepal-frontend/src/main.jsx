@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'add-recipe',
-        Component: AddRecipe,
+        Component: AddRecipe, 
       },
       {
         path: '*', 

@@ -28,11 +28,11 @@ export default function SearchBar({
         border-t-0 rounded-b-md shadow-md list-none p-0 m-0 z-50">
           {ingredientSuggestions.map((suggestion, index) => (
             <li
-              key={index}
+              key={suggestion.id}
               onClick={() => handleSelect(suggestion)}
               className="px-3 py-2 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
             >
-              {suggestion}
+              {suggestion.name}
             </li>
           ))}
         </ul>

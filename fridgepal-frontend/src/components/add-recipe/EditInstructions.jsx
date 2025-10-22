@@ -1,9 +1,17 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 export default function EditInstructions() {
   const [instructions, setInstructions] = useState([
     { stepNumber: 1, description: '' },
   ]);
+
+  const { setValue } = useFormContext();
+
+  //TODO juist gebruik useEffect?
+  useEffect(() => {
+    setValue('instructions', instructions);
+  }, [instructions, setValue]);
 
   function addStep() {
     setInstructions([

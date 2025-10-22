@@ -23,7 +23,7 @@ export default function SearchRecipe() {
     ([url, params]) => getAll(url, params));
 
   const suggestions = useMemo(
-    () => ingSuggested.map((ing) => ing.name.toLowerCase()),
+    () => ingSuggested.map((ing) => ({ id: ing.id, name: ing.name.toLowerCase() })),
     [ingSuggested],
   );
 
@@ -41,7 +41,8 @@ export default function SearchRecipe() {
   };
 
   const handleSelect = (suggestion) => {
-    handleAddIngredient(suggestion); // TODO nog nodig of rechtstreeks fixen? 
+    handleAddIngredient(suggestion.name); // TODO nog nodig of rechtstreeks fixen? 
+    
   };
 
   const handleAddIngredient = (ingredientName) => {
