@@ -1,5 +1,3 @@
-import { INGREDIENTS_DATA } from '../../api/mock_data';
-
 export default function SearchBar({
   searchText,
   onChange,
