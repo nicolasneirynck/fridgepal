@@ -16,7 +16,7 @@ async function resetDatabase() {
   console.log('🗑️ Resetting database...');
 
   await db.delete(schema.userRecipeRatings);
-  await db.delete(schema.savedRecipes);
+  await db.delete(schema.userFavoriteRecipes);
   await db.delete(schema.recipeIngredients);
   await db.delete(schema.recipeCategories);
   await db.delete(schema.instructions);
@@ -177,16 +177,16 @@ async function seedRecipeCategories() {
   console.log('📍 Seeding recipeCategories...');
 
   await db.insert(schema.recipeCategories).values([
-    { id: 1, recipeId: 1, categoryId: 1 }, // Spaghetti - Italiaans
-    { id: 2, recipeId: 1, categoryId: 2 }, // Spaghetti - Hoofdgerecht
-    { id: 3, recipeId: 2, categoryId: 3 }, // Curry - Aziatisch
-    { id: 4, recipeId: 2, categoryId: 4 }, // Curry - Vegetarisch
-    { id: 5, recipeId: 3, categoryId: 5 }, // Caesar Salad - Salade
-    { id: 6, recipeId: 3, categoryId: 6 }, // Caesar Salad - Lunch
-    { id: 7, recipeId: 4, categoryId: 7 }, // Pancakes - Ontbijt
-    { id: 8, recipeId: 4, categoryId: 8 }, // Pancakes - Dessert
-    { id: 9, recipeId: 5, categoryId: 9 }, // Chili - Mexicaans
-    { id: 10, recipeId: 5, categoryId: 2 }, // Chili - Hoofdgerecht
+    { recipeId: 1, categoryId: 1 }, // Spaghetti - Italiaans
+    { recipeId: 1, categoryId: 2 }, // Spaghetti - Hoofdgerecht
+    { recipeId: 2, categoryId: 3 }, // Curry - Aziatisch
+    { recipeId: 2, categoryId: 4 }, // Curry - Vegetarisch
+    { recipeId: 3, categoryId: 5 }, // Caesar Salad - Salade
+    { recipeId: 3, categoryId: 6 }, // Caesar Salad - Lunch
+    { recipeId: 4, categoryId: 7 }, // Pancakes - Ontbijt
+    { recipeId: 4, categoryId: 8 }, // Pancakes - Dessert
+    { recipeId: 5, categoryId: 9 }, // Chili - Mexicaans
+    { recipeId: 5, categoryId: 2 }, // Chili - Hoofdgerecht
   ]);
 
   console.log('✅ Recipe categories seeded successfully\n');

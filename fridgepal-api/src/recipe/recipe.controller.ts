@@ -39,6 +39,7 @@ export class RecipeController {
   getAllRecipes(@Query() filters: RecipeFilterQuery)
 }*/
 
+  // TODO nog niet dringend maar miss wel zorgen dat je paginationQuery kan doen hier
   @Get()
   getAllRecipes(
     @Query('ingredient') ingredient?: string[],
@@ -47,7 +48,7 @@ export class RecipeController {
   }
 
   @Get(':id')
-  getRecipeById(@Param('id') id: string): RecipeDetailResponseDto {
+  getRecipeById(@Param('id') id: string): Promise<RecipeDetailResponseDto> {
     return this.recipeService.getById(Number(id));
   }
 
@@ -55,7 +56,7 @@ export class RecipeController {
   @HttpCode(HttpStatus.CREATED)
   createRecipe(
     @Body() createRecipeDto: CreateRecipeRequestDto,
-  ): RecipeDetailResponseDto {
+  ): Promise<RecipeDetailResponseDto> {
     return this.recipeService.create(createRecipeDto);
   }
 
@@ -63,12 +64,12 @@ export class RecipeController {
   updateRecipe(
     @Param('id') id: string,
     @Body() updateRecipeDto: UpdateRecipeRequestDto,
-  ): RecipeDetailResponseDto {
-    return this.recipeService.updateById(Number(id), updateRecipeDto);
+  ): Promise<RecipeDetailResponseDto> {
+    return this.recipeService.update(Number(id), updateRecipeDto);
   }
 
   @Delete(':id')
   deleteRecipe(@Param('id') id: void) {
-    this.recipeService.deleteById(Number(id));
+    this.recipeService.delete(Number(id));
   }
 }

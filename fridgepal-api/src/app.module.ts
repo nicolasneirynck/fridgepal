@@ -6,6 +6,7 @@ import { RecipeModule } from './recipe/recipe.module';
 import { IngredientModule } from './ingredient/ingredient.module';
 import { ConfigModule } from '@nestjs/config';
 import { DrizzleModule } from './drizzle/drizzle.module';
+import { UserModule } from './user/user.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -17,6 +18,7 @@ import configuration from './config/configuration';
       isGlobal: true,
     }),
     DrizzleModule,
+    UserModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService],

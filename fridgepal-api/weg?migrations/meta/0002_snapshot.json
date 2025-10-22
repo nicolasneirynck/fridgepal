@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "a7e3d2bb-133b-44c6-a00f-5bdbc59976b7",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "8a707d9a-5466-437b-9f35-f87f1934a4cb",
+  "prevId": "51f794d7-06f0-4a19-a725-eef07d079204",
   "tables": {
     "categories": {
       "name": "categories",
@@ -538,8 +538,12 @@
   "views": {},
   "_meta": {
     "schemas": {},
-    "tables": {},
-    "columns": {}
+    "tables": {
+      "\"saved_recipes\"": "\"user_favorite_recipes\""
+    },
+    "columns": {
+      "\"recipe_ingredients\".\"firstName\"": "\"recipe_ingredients\".\"unit\""
+    }
   },
   "internal": {
     "tables": {},
