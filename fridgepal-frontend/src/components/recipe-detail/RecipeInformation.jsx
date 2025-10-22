@@ -3,7 +3,8 @@ import Rating from '@mui/material/Rating';
 import {useState} from 'react';
 
 export default function RecipeInformation({recipe}){
-  const {name, createdBy:{userName}, ratingSummary:{average,count}, categories, description} = recipe;  
+  // const {name, createdBy:{userName}, ratingSummary:{average,count}, categories, description} = recipe;  
+  const {name, createdBy:{userName}, categories, description} = recipe;  
 
   const [tempRating, setTempRating] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -42,7 +43,8 @@ export default function RecipeInformation({recipe}){
           onClick={() => setIsFavorite(!isFavorite)}>
             <Heart className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500':'text-[var(--brand-dark)]'}`} />
           </button>
-          {tempRating === 0
+          {/* TODO RATING eerst back-end implementeren -> user nodig */}
+          {/* {tempRating === 0
             ? <button className='text-[var(--brand-dark)] text-sm
                         rounded-full hover:bg-[var(--brand-dark)]/5 px-4 py-2'
             onClick={() => setShowRatingDialog(true)}>
@@ -62,7 +64,7 @@ export default function RecipeInformation({recipe}){
                     :'text-gray-300'}`} />))}
           
                 <span className='text-m ml-2 pt-0.5'></span>
-              </div></button>}
+              </div></button>} */}
         </div>
         <div className='flex items-center gap-2'>
           <div className='w-8 h-8 bg-[var(--brand-orange)]/10 rounded-full
@@ -72,7 +74,7 @@ export default function RecipeInformation({recipe}){
           <span className='text-sm text-[var(--brand-gray-light)]'>by {userName}</span>
         </div>
 
-        <div className='mt-2 flex items-center gap-1 
+        {/* <div className='mt-2 flex items-center gap-1 
                     text-sm text-[var(--brand-gray-light)]'>
           {[1,2,3,4,5].map((star) => (
             <Star key={star} className={`h-4 w-4 
@@ -81,7 +83,7 @@ export default function RecipeInformation({recipe}){
               :'text-gray-300'}`} />))}
           
           <span className='text-m ml-2 pt-0.5'>{average} ({count} votes)</span>
-        </div>
+        </div> */}
 
         <div className='mt-2 flex gap-4'>
           {categories.map((cat) => 

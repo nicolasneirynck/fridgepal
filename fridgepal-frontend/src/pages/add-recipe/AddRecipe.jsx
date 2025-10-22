@@ -7,7 +7,7 @@ export default function AddRecipe(){
 
   return(
     <main className="flex justify-center">
-      <StepsBar/>
+      <StepsBar currentStep={currentStep}/>
     </main>
   );
 }

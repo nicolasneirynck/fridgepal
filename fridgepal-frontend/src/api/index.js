@@ -15,6 +15,11 @@ export async function getAll(url,params ={}){
   return data.items;
 }
 
+export async function getById(url) {
+  const {data} = await axios.get(`${baseUrl}/${url}`);
+  return data;
+}
+
 // voor later -> interessant bij opgeslagen recepten 
 // HFDST 4
 export const deleteById = async (url, { arg: id }) => {
