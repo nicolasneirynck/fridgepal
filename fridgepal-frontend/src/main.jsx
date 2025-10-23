@@ -14,10 +14,10 @@ const router = createBrowserRouter([
     children:[
       {
         path: '/',
-        element: <Navigate to='/search-recipe' replace />,
+        element: <Navigate to='/search' replace />,
       },
       {
-        path: '/search-recipe',
+        path: '/search',
         Component: SearchRecipe,
       },
       {
@@ -30,6 +30,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'add-recipe',
+        Component: AddRecipe, 
+      },
+      {
+        path: 'recipes/edit/:id',
         Component: AddRecipe, 
       },
       {

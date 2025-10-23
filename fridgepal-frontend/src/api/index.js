@@ -20,6 +20,14 @@ export async function getById(url) {
   return data;
 }
 
+export async function save(url, { arg: { id, ...data } }) {
+  await axios({
+    method: id ? 'PUT' : 'POST',
+    url: `${baseUrl}/${url}/${id ?? ''}`,
+    data,
+  });
+}
+
 // voor later -> interessant bij opgeslagen recepten 
 // HFDST 4
 export const deleteById = async (url, { arg: id }) => {

@@ -49,7 +49,7 @@ export default function IngredientsCard({ingredients}){
       <div>
         <ul className="mt-2 list-none">
           {ingredients.map((ing) => 
-            <IngredientBadge key={ing.id} ingredient={ing}/>,
+            <IngredientBadge key={ing.name} ingredient={ing}/>,
           )}
         </ul>
       </div>

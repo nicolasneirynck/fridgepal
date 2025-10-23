@@ -9,15 +9,18 @@ export default function EditIngredients(){
 
   const [searchText, setSearchText] = useState('');
   const [debouncedSearch] = useDebounce(searchText, 400);
+  const { watch,setValue,register ,formState: { errors }, clearErrors} = useFormContext();
 
-  const [ingredients, setIngredients] = useState([]);
+  const ingredients = watch('ingredients') || [];
 
-  const { setValue } = useFormContext();
-
-  //juist gebruik useEffect?
+  // TODO juist gebruik useEffect?
   useEffect(() => {
-    setValue('ingredients', ingredients);
-  }, [ingredients, setValue]);
+    register('ingredients', {
+      validate: (value) =>
+        value && value.length > 0 && value.some((ing) => ing.name?.trim()) ||
+      'Voeg minstens één ingrediënt toe',
+    });
+  }, [register]);
 
   // auto-suggestie ingredienten (zoekbalk)
   const{data:ingSuggested = []} = useSWR(
@@ -35,28 +38,21 @@ export default function EditIngredients(){
 
   const handleSelect = (suggestion) => {
     setSearchText('');
-    setIngredients((prev) => [...prev, { ingredientId: suggestion.id, name: suggestion.name, amount: '', unit: '' }]);
+    const updated = [...ingredients, { id: suggestion.id, name: suggestion.name, amount: '', unit: '' }];
+    setValue('ingredients', updated, { shouldValidate: true });
+  
+    // vanaf een ingredient toegevoegd mogen errors weg
+    clearErrors('ingredients');
   };
 
   function updateIngredient(index, newValue) {
-    setIngredients((prev) =>
-      prev.map((ing, i) => (i === index ? newValue : ing)),
-    );
+    const updated = ingredients.map((ing, i) => (i === index ? newValue : ing));
+    setValue('ingredients', updated, { shouldValidate: true });
   }
 
-  const handleAddIngredient = (ingredientName) => {
-    // const name = ingredientName.trim() || searchText.trim(); 
-    // if (!name) return;
-    
-    //  if(!ingredients.includes(name.toLowerCase()))
-    setIngredients([...ingredients, ingredientName]); // TODO is dit nog nodig?
-    
-    setSearchText(''); 
-  };
-
   const handleDeleteIngredient = (ing) =>{
-    const newIngredientsList = ingredients.filter((ingredient) => ingredient != ing);
-    setIngredients(newIngredientsList);
+    const updated = ingredients.filter((i) => i !== ing);
+    setValue('ingredients', updated, { shouldValidate: true });
   };
 
   return(
@@ -97,6 +93,9 @@ export default function EditIngredients(){
             onClick={() => handleDeleteIngredient(ing)}>x</button>
         </div>
       ))}
+      {errors.ingredients && (
+        <p className="text-red-500 text-sm mt-2">{errors.ingredients.message}</p>
+      )}
     </div>
   );
   

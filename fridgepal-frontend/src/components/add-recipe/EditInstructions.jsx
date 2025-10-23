@@ -2,11 +2,29 @@ import { useState,useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export default function EditInstructions() {
-  const [instructions, setInstructions] = useState([
-    { stepNumber: 1, description: '' },
-  ]);
 
-  const { setValue } = useFormContext();
+  const { watch,register,setValue,formState: { errors },clearErrors}= useFormContext();
+  const formInstructions = watch('instructions') || [];
+  const [instructions, setInstructions] = useState(
+    formInstructions.length > 0 ? formInstructions : [{ stepNumber: 1, description: '' }],
+  );
+
+  // TODO juist gebruik useEffect?
+  useEffect(() => {
+ 
+    if (formInstructions.length > 0 && instructions.length === 1 && !instructions[0].description) {
+      setInstructions(formInstructions);
+    }
+  }, [formInstructions]);
+
+  // TODO juist gebruik useEffect?
+  useEffect(() => {
+    register('instructions', {
+      validate: (value) =>
+        value && value.length > 0 && value.some((s) => s.description.trim()) ||
+        'Voeg minstens één instructie toe',
+    });
+  }, [register]);
 
   //TODO juist gebruik useEffect?
   useEffect(() => {
@@ -18,6 +36,7 @@ export default function EditInstructions() {
       ...instructions,
       { stepNumber: instructions.length + 1, description: '' },
     ]);
+    clearErrors('instructions');
   }
 
   function updateInstruction(index, newValue) {
@@ -61,7 +80,6 @@ export default function EditInstructions() {
               className="bg-[var(--input)] rounded-lg border border-gray-300 
               text-sm p-2 outline-none focus:border-[var(--brand-orange)] w-3/5"
               placeholder="Voer de instructies in..."
-              required
             />
             {step.stepNumber > 1 && <button
               type="button"
@@ -74,7 +92,9 @@ export default function EditInstructions() {
           
         </div>
       ))}
-
+      {errors.instructions && (
+        <p className="text-red-500 text-sm mt-2">{errors.instructions.message}</p>
+      )}
       <button
         type="button"
         onClick={addStep}
