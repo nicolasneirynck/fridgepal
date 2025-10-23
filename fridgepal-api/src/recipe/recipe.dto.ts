@@ -11,10 +11,7 @@ export class RecipeShortResponseDto {
   };
   ingredients: string[];
   time: number; // voor later filter
-  categories: {
-    id: number; //id nodig?
-    name: string;
-  }[]; // voor later filter;
+  categories: number[]; // voor later filter;
   // ratings?:
   //   | {
   //       userId: number;
@@ -80,9 +77,7 @@ export class CreateRecipeRequestDto {
     stepNumber: number;
     description: string;
   }[];
-  categories: {
-    id: number;
-  }[];
+  categories: number[];
 }
 
 export class UpdateRecipeRequestDto extends CreateRecipeRequestDto {}

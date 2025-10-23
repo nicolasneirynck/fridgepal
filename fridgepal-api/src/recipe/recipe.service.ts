@@ -131,7 +131,7 @@ export class RecipeService {
         name: dto.name,
         description: dto.description,
         imageUrl: dto.imageUrl,
-        time: dto.time,
+        time: Number(dto.time),
         createdBy: dto.createdBy.id,
       })
       .$returningId();
@@ -142,7 +142,7 @@ export class RecipeService {
       dto.ingredients.map((ing) => ({
         recipeId,
         ingredientId: ing.id,
-        amount: ing.amount,
+        amount: ing.amount ? Number(ing.amount) : null,
         unit: ing.unit,
       })),
     );
@@ -157,8 +157,8 @@ export class RecipeService {
 
     await this.db.insert(recipeCategories).values(
       dto.categories.map((cat) => ({
-        recipeId,
-        categoryId: cat.id,
+        recipeId: newRecipe.id,
+        categoryId: cat,
       })),
     );
 
@@ -175,7 +175,7 @@ export class RecipeService {
         name: recipe.name,
         description: recipe.description,
         imageUrl: recipe.imageUrl,
-        time: recipe.time,
+        time: Number(recipe.time),
       })
       .where(eq(recipes.id, id));
 
@@ -211,7 +211,7 @@ export class RecipeService {
       await this.db.insert(recipeCategories).values(
         recipe.categories.map((cat) => ({
           recipeId: id,
-          categoryId: cat.id,
+          categoryId: cat,
         })),
       );
 
@@ -226,15 +226,29 @@ export class RecipeService {
     }
   }
 
-  // deleteById(id: number): void {
-  //   const index = RECIPES_DETAIL.findIndex(
-  //     (item: RecipeDetail) => item.id === id,
-  //   );
-  //   if (index >= 0) {
-  //     RECIPES_DETAIL.splice(index, 1);
-  //     //zolang geen connectie met database zou beter ook RECIPE.splice(xx) doen
-  //   }
-  // }
+  async deleteById(id: number): Promise<void> {
+    const existingRecipe = await this.db.query.recipes.findFirst({
+      where: eq(recipes.id, id),
+    });
+
+    if (!existingRecipe) {
+      throw new NotFoundException('No recipe with this id exists');
+    }
+
+    await this.db
+      .delete(recipeIngredients)
+      .where(eq(recipeIngredients.recipeId, id));
+    await this.db.delete(instructions).where(eq(instructions.recipeId, id));
+    await this.db
+      .delete(recipeCategories)
+      .where(eq(recipeCategories.recipeId, id));
+    await this.db
+      .delete(userFavoriteRecipes)
+      .where(eq(userFavoriteRecipes.recipeId, id));
+    // eventueel later ook: userRecipeRating
+
+    await this.db.delete(recipes).where(eq(recipes.id, id));
+  }
 
   async getRecipeIdsByIngredient(ingredient: string[]): Promise<number[]> {
     const ingredientsArray = Array.isArray(ingredient) // checken of in array zit. Is pas vanaf 2 ingredienten.
@@ -284,10 +298,7 @@ export class RecipeService {
         userName: fav.recipe.createdBy.userName,
       },
       ingredients: fav.recipe.recipeIngredients.map((ri) => ri.ingredient.name),
-      categories: fav.recipe.recipeCategories.map((rc) => ({
-        id: rc.category.id,
-        name: rc.category.name,
-      })),
+      categories: fav.recipe.recipeCategories.map((rc) => rc.category.id),
     }));
   }
 }
