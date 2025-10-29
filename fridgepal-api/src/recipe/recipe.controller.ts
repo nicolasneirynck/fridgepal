@@ -9,6 +9,7 @@ import {
   Put,
   Delete,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { RecipeService } from './recipe.service';
@@ -48,8 +49,10 @@ export class RecipeController {
   }
 
   @Get(':id')
-  getRecipeById(@Param('id') id: string): Promise<RecipeDetailResponseDto> {
-    return this.recipeService.getById(Number(id));
+  getRecipeById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<RecipeDetailResponseDto> {
+    return this.recipeService.getById(id);
   }
 
   @Post()
@@ -57,19 +60,21 @@ export class RecipeController {
   createRecipe(
     @Body() createRecipeDto: CreateRecipeRequestDto,
   ): Promise<RecipeDetailResponseDto> {
+    console.log(createRecipeDto instanceof CreateRecipeRequestDto);
     return this.recipeService.create(createRecipeDto);
   }
 
   @Put(':id')
   updateRecipe(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateRecipeDto: UpdateRecipeRequestDto,
   ): Promise<RecipeDetailResponseDto> {
-    return this.recipeService.update(Number(id), updateRecipeDto);
+    return this.recipeService.update(id, updateRecipeDto);
   }
 
+  //TODO validatie?
   @Delete(':id')
-  async deleteRecipe(@Param('id') id: Promise<void>) {
-    await this.recipeService.deleteById(Number(id));
+  async deleteRecipe(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.recipeService.deleteById(id);
   }
 }
