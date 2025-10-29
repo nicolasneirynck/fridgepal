@@ -1,4 +1,4 @@
-import { useState, useMemo,useEffect} from 'react';
+import { useState, useMemo} from 'react';
 import { useDebounce } from 'use-debounce';
 import { getAll } from '../../api';
 import useSWR from 'swr';
@@ -9,18 +9,9 @@ export default function EditIngredients(){
 
   const [searchText, setSearchText] = useState('');
   const [debouncedSearch] = useDebounce(searchText, 400);
+
   const { watch,setValue,register ,formState: { errors }, clearErrors} = useFormContext();
-
   const ingredients = watch('ingredients') || [];
-
-  // TODO juist gebruik useEffect?
-  useEffect(() => {
-    register('ingredients', {
-      validate: (value) =>
-        value && value.length > 0 && value.some((ing) => ing.name?.trim()) ||
-      'Voeg minstens één ingrediënt toe',
-    });
-  }, [register]);
 
   // auto-suggestie ingredienten (zoekbalk)
   const{data:ingSuggested = []} = useSWR(
@@ -38,12 +29,14 @@ export default function EditIngredients(){
 
   const handleSelect = (suggestion) => {
     setSearchText('');
-    const updated = [...ingredients, { id: suggestion.id, name: suggestion.name, amount: '', unit: '' }];
+    const updated = [...ingredients, { id: suggestion.id, name: suggestion.name, amount: null, unit: null }]; 
     setValue('ingredients', updated, { shouldValidate: true });
   
     // vanaf een ingredient toegevoegd mogen errors weg
     clearErrors('ingredients');
   };
+
+  // INGREDIENTEN
 
   function updateIngredient(index, newValue) {
     const updated = ingredients.map((ing, i) => (i === index ? newValue : ing));
@@ -96,6 +89,15 @@ export default function EditIngredients(){
       {errors.ingredients && (
         <p className="text-red-500 text-sm mt-2">{errors.ingredients.message}</p>
       )}
+      {/* ingredienten registeren en valideren*/}
+      <input
+        type="hidden"
+        {...register('ingredients', {
+          validate: (value) =>
+            (value && value.length > 0 && value.some((ing) => ing.name?.trim())) ||
+      'Voeg minstens één ingrediënt toe',
+        })}
+      />
     </div>
   );
   

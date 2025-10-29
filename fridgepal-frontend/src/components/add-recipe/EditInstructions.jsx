@@ -1,62 +1,34 @@
-import { useState,useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export default function EditInstructions() {
 
-  const { watch,register,setValue,formState: { errors },clearErrors}= useFormContext();
-  const formInstructions = watch('instructions') || [];
-  const [instructions, setInstructions] = useState(
-    formInstructions.length > 0 ? formInstructions : [{ stepNumber: 1, description: '' }],
-  );
-
-  // TODO juist gebruik useEffect?
-  useEffect(() => {
- 
-    if (formInstructions.length > 0 && instructions.length === 1 && !instructions[0].description) {
-      setInstructions(formInstructions);
-    }
-  }, [formInstructions]);
-
-  // TODO juist gebruik useEffect?
-  useEffect(() => {
-    register('instructions', {
-      validate: (value) =>
-        value && value.length > 0 && value.some((s) => s.description.trim()) ||
-        'Voeg minstens één instructie toe',
-    });
-  }, [register]);
-
-  //TODO juist gebruik useEffect?
-  useEffect(() => {
-    setValue('instructions', instructions);
-  }, [instructions, setValue]);
+  const { watch,setValue,formState: { errors },clearErrors}= useFormContext();
+  const instructions = watch('instructions') || [
+    { stepNumber: 1, description: '' },
+  ];
 
   function addStep() {
-    setInstructions([
+    const updated = [
       ...instructions,
       { stepNumber: instructions.length + 1, description: '' },
-    ]);
+    ];
+    setValue('instructions', updated, { shouldValidate: true });
     clearErrors('instructions');
   }
 
   function updateInstruction(index, newValue) {
-    setInstructions((prev) =>
-      prev.map((step, i) =>
-        i === index ? { ...step, description: newValue } : step,
-      ),
+    const updated = instructions.map((step, i) =>
+      i === index ? { ...step, description: newValue } : step,
     );
+    setValue('instructions', updated, { shouldValidate: true });
   }
 
   function deleteStep(index) {
-    setInstructions((prev) => {
-      if (prev.length === 1) return prev; 
-      const updated = prev.filter((_, i) => i !== index);
-      // hernummeren
-      return updated.map((step, i) => ({
-        ...step,
-        stepNumber: i + 1,
-      }));
-    });
+    if (instructions.length === 1) return;
+    const updated = instructions
+      .filter((_, i) => i !== index)
+      .map((s, i) => ({ ...s, stepNumber: i + 1 }));
+    setValue('instructions', updated, { shouldValidate: true });
   }
 
   return (

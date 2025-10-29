@@ -21,7 +21,7 @@ export default function AddOrEditRecipe(){
   } = useSWR(id ? `recipes/${id}` : null, getById);
   
   // centrale useForm zodat hij die op alle pagina's kan bijhouden
-  const form = useForm({
+  const methods = useForm({
     mode:'onBlur', // valideren on blur
     defaultValues: {
       name: recipe?.name,
@@ -35,31 +35,10 @@ export default function AddOrEditRecipe(){
     },
   });
 
-  const { handleSubmit, reset,trigger} = form;
-
-  async function handleNextStep() {
-    let isValid = true;
-
-    if (currentStep === 1) {
-      isValid = await trigger(['name', 'description', 'time', 'categories']);
-    } else if (currentStep === 2) {
-      isValid = await trigger(['ingredients']);
-
-      const ingredients = form.getValues('ingredients');
-      if (!ingredients || ingredients.length === 0) {
-        form.setError('ingredients', {
-          type: 'manual',
-          message: 'Voeg minstens één ingrediënt toe',
-        });
-        isValid = false;
-      }
-    }
-
-    if (isValid) setCurrentStep(currentStep + 1);
-  }
+  const { reset,formState:{isSubmitting},handleSubmit,trigger} = methods;
 
   const onSubmit = async (values) => {
-    // conversie waar nodig
+    // conversie van gevalideerde gegevens
     const body = {
       name: values.name,
       description: values.description || null,
@@ -70,7 +49,7 @@ export default function AddOrEditRecipe(){
       ingredients: values.ingredients.map((i) => ({
         id: i.id,
         name: i.name,
-        amount: i.amount ? parseInt(i.amount, 10) : null,
+        amount: i.amount ? parseInt(i.amount) : null,
         unit: i.unit || null,
       })),
 
@@ -89,12 +68,35 @@ export default function AddOrEditRecipe(){
       reset(); 
       navigate('/search');  
     } catch (error) {
-      alert('Opslaan mislukt');
+      alert('Opslaan mislukt'); // TODO miss UI vriendelijkere manier om te doen? 
       console.log('Foutstatus:', error.response?.status);
       console.log('Foutmelding:', error.response?.data);
     }
   };
 
+  async function handleNextStep() {
+    let isValid = true;
+
+    if (currentStep === 1) {
+      // trigger gaat kijken in de registervelden (van de subcomponenten) of validation klopt
+      isValid = await trigger(['name', 'description', 'time', 'categories']);
+    } else if (currentStep === 2) {
+      isValid = await trigger(['ingredients']);
+
+      const ingredients = methods.getValues('ingredients');
+      if (!ingredients || ingredients.length === 0) {
+        methods.setError('ingredients', {
+          type: 'manual',
+          message: 'Voeg minstens één ingrediënt toe',
+        });
+        isValid = false;
+      }
+    }
+
+    if (isValid) setCurrentStep(currentStep + 1);
+  }
+
+  //TODO niet de bedoeling van useEffect, andere oplossing?
   // zorgen dat bij verlaten en terugkomen naar deze pagina hij currentstep opnieuw op 1 zet
   useEffect(() => {
     setCurrentStep(1);
@@ -104,14 +106,15 @@ export default function AddOrEditRecipe(){
     <main className="flex flex-col items-center gap-5">
       <StepsBar currentStep={currentStep}/>
       <AsyncData error={recipeError} loading={recipeLoading}>
-        <FormProvider {...form}>
+        {/* Formprovider zorgt dat de subcomponenten kunnen praten met gedeelde formstate */}
+        <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col items-center w-full">
         
             <div className="bg-[var(--brand-light)] w-2/3 border border-[#e5e7eb] rounded-xl p-6">
-              {currentStep==1 && <EditDetails recipe={recipe}/>}
-              {currentStep==2 && <EditIngredients recipe={recipe}/>}
-              {currentStep==3 && <EditInstructions recipe={recipe}/>}
+              {currentStep==1 ? <EditDetails recipe={recipe}/> 
+                :currentStep==2 ? <EditIngredients recipe={recipe}/> 
+                  :currentStep==3 && <EditInstructions recipe={recipe}/>}
             </div>
         
             <div className="flex gap-4 mt-6 justify-center">
@@ -122,7 +125,7 @@ export default function AddOrEditRecipe(){
                 className="bg-[var(--brand-dark)] rounded-xl px-10 py-3 text-white font-medium hover:cursor-pointer"
                 onClick={handleNextStep}>Volgende Stap</button>
               }
-              {currentStep == 3 && <button type="submit" 
+              {currentStep == 3 && <button disabled={isSubmitting} type="submit" 
                 className="bg-[var(--brand-dark)] rounded-xl px-10 py-3 text-white font-medium hover:cursor-pointer"
               >{recipe?.id?'Opslaan':'Toevoegen'}</button>
               }

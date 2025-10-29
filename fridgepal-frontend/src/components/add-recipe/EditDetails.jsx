@@ -9,11 +9,14 @@ import { useEffect } from 'react';
 
 export default function EditDetails(){
 
+  // alles rond form
+  const { register,setValue,watch,formState: { errors } } = useFormContext();
+  //afbeeldingen uploaden
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
+  // categorieën ophalen
   const { data, error, isLoading } = useSWR('categories', getAll);
-  const { register,setValue,watch,formState: { errors } } = useFormContext();
-
+  // validaties form
   const validationRules = {
     name: {
       required: 'Receptnaam is verplicht',
@@ -32,18 +35,9 @@ export default function EditDetails(){
     },
   };
 
-  const formCategories = watch('categories') || [];
-  const [selectedCategories, setSelectedCategories] = useState([]);
-
-  useEffect(() => {
-    if (formCategories.length > 0 && selectedCategories.length === 0) {
-      setSelectedCategories(formCategories);
-    }
-  }, [formCategories]);
-
+  // AFBEELDINGEN VIA CLOUDINARY
   const imageUrl = watch('imageUrl');
 
-  // Cloudinary -> afbeelding uploaden
   const CLOUD_NAME = 'dyssxogz5';
   const UPLOAD_PRESET = 'fridgepal';
 
@@ -52,20 +46,6 @@ export default function EditDetails(){
       setPreview(imageUrl);
     }
   }, [imageUrl, preview]);
-
-  function toggleCategory(id) {
-    const updated = selectedCategories.includes(id)
-      ? selectedCategories.filter((c) => c !== id)
-      : [...selectedCategories, id];
-
-    setSelectedCategories(updated);
-    setValue('categories', updated, { shouldValidate: true });
-  }
-
-  // TODO juist gebruik vna use Effect?
-  // useEffect(() => {
-  //   setValue('categories', selectedCategories);
-  // }, [selectedCategories, setValue]);
 
   async function handleFileChange(e) {
     const file = e.target.files[0];
@@ -96,11 +76,25 @@ export default function EditDetails(){
     }
   }
 
+  // CATEGORIEEN
+
+  // telkens setValue('categories') iets doet wordt formCategories geupdate
+  // bij leegrecept begin je met een lege array
+  const formCategories = watch('categories') || []; 
+
+  function toggleCategory(id) {
+    const updated = formCategories.includes(id)
+      ? formCategories.filter((c) => c !== id)
+      : [...formCategories, id];
+
+    setValue('categories', updated, { shouldValidate: true });
+  }
+
   return(
     <div className="flex justify-around w-full">
       <div className="w-2/5">
         <div className="flex flex-col gap-1">
-          <label htmlFor='recipeName' className="text-[var(--brand-gray-dark)] text-sm">
+          <label htmlFor='name' className="text-[var(--brand-gray-dark)] text-sm">
             Recept Naam*
           </label>
           <input
@@ -118,7 +112,7 @@ export default function EditDetails(){
         </div>
 
         <div className="flex flex-col gap-1 mt-5">
-          <label htmlFor='recipeDescription' className="text-[var(--brand-gray-dark)] text-sm">
+          <label htmlFor='description' className="text-[var(--brand-gray-dark)] text-sm">
             Beschrijving*
           </label>
           <textarea
@@ -135,7 +129,7 @@ export default function EditDetails(){
           )}
         </div>
         <div className="flex flex-col gap-1 mt-5">
-          <label htmlFor='recipeTime' className="text-[var(--brand-gray-dark)] text-sm">
+          <label htmlFor='time' className="text-[var(--brand-gray-dark)] text-sm">
             Bereidingstijd*
           </label>
 
@@ -184,15 +178,13 @@ export default function EditDetails(){
             )}
             <input
               id="recipeImage"
+              name="recipeImage"
               type="file"
               accept="image/*"
               onChange={handleFileChange}
               className="hidden"
             />
           </label>
-
-          {/* hidden input voor imageUrl */}
-          <input type="hidden" {...register('imageUrl')} />
         </div>
 
         <div>
@@ -208,7 +200,7 @@ export default function EditDetails(){
                     type="button"
                     onClick={()=>toggleCategory(cat.id)}
                     className={`px-5 py-1 rounded-md border-2 
-                      ${selectedCategories.includes(cat.id)
+                      ${formCategories.includes(cat.id)
       ? 'bg-[var(--brand-orange)] text-white border-[var(--brand-orange)]'
       : 'bg-white text-[var(--brand-orange)] border-[var(--brand-dark)]'
     }`}
@@ -221,6 +213,8 @@ export default function EditDetails(){
               )}
             </div>
           </AsyncData>
+          {/*  hidden input zodat de waarden toch geregistreerd worden in formdata  */}
+          <input type="hidden" {...register('imageUrl')} />
           <input type="hidden" {...register('categories',validationRules.categories)} />
         </div>
       </div>
