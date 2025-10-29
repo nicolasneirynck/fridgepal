@@ -3,41 +3,26 @@ import StepsBar from '../../components/add-recipe/StepsBar';
 import EditDetails from '../../components/add-recipe/EditDetails';
 import EditIngredients from '../../components/add-recipe/EditIngredients';
 import EditInstructions from '../../components/add-recipe/EditInstructions';
-import useSWRMutation from 'swr/mutation'; 
 import { save, getById } from '../../api';
 import { useNavigate, useParams } from 'react-router';
 import AsyncData from '../../components/AsyncData';
 import useSWR from 'swr';
-
 import { useForm,FormProvider } from 'react-hook-form';
 
-const EMPTY_RECIPE = {
-  name: undefined,
-  description: undefined,
-  imageUrl: undefined,
-  time: undefined,
-  createdBy: {
-    id: '1',
-  },
-  ingredients: [], // id nummers
-  instructions:[],
-  categories: [],
-};
-
-export default function AddRecipe(){
+export default function AddOrEditRecipe(){
   const { id } = useParams();
   const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(1);
+
   const {
     data: recipe,
     error: recipeError,
     isLoading: recipeLoading,
   } = useSWR(id ? `recipes/${id}` : null, getById);
-
-  const [currentStep, setCurrentStep] = useState(1);
   
   // centrale useForm zodat hij die op alle pagina's kan bijhouden
-  const methods = useForm({
-    mode:'onBlur',
+  const form = useForm({
+    mode:'onBlur', // valideren on blur
     defaultValues: {
       name: recipe?.name,
       recipeId: recipe?.recipeId,
@@ -50,12 +35,7 @@ export default function AddRecipe(){
     },
   });
 
-  const { trigger: saveRecipe, error: saveError } = useSWRMutation(
-    'recipes',
-    save,
-  );
-
-  const { handleSubmit, reset,trigger} = methods;
+  const { handleSubmit, reset,trigger} = form;
 
   async function handleNextStep() {
     let isValid = true;
@@ -65,9 +45,9 @@ export default function AddRecipe(){
     } else if (currentStep === 2) {
       isValid = await trigger(['ingredients']);
 
-      const ingredients = methods.getValues('ingredients');
+      const ingredients = form.getValues('ingredients');
       if (!ingredients || ingredients.length === 0) {
-        methods.setError('ingredients', {
+        form.setError('ingredients', {
           type: 'manual',
           message: 'Voeg minstens één ingrediënt toe',
         });
@@ -79,21 +59,40 @@ export default function AddRecipe(){
   }
 
   const onSubmit = async (values) => {
-    console.log(JSON.stringify(values));
+    // conversie waar nodig
+    const body = {
+      name: values.name,
+      description: values.description || null,
+      imageUrl: values.imageUrl || null,
+      time: parseInt(values.time),
+      createdBy: { id: 1 },
 
-    // validatie gebeurt elders
+      ingredients: values.ingredients.map((i) => ({
+        id: i.id,
+        name: i.name,
+        amount: i.amount ? parseInt(i.amount, 10) : null,
+        unit: i.unit || null,
+      })),
 
-    await saveRecipe(
-      
-      {...values, // TODO niet dringend maar description mag in backend ook null zijn
-        imageUrl:values.imageUrl? values.imageUrl : null,
-        createdBy:{id:1},
-      }
-      , {
-        throwOnError: false,
-        onSuccess: () => navigate('/search'),
-      });      
-    reset(); 
+      instructions: values.instructions.map((s, index) => ({
+        stepNumber: s.stepNumber ?? index + 1,
+        description: s.description,
+      })),
+
+      categories: values.categories.map(Number),
+    };
+
+    try{
+      await save(
+        'recipes',{arg:body},
+      );
+      reset(); 
+      navigate('/search');  
+    } catch (error) {
+      alert('Opslaan mislukt');
+      console.log('Foutstatus:', error.response?.status);
+      console.log('Foutmelding:', error.response?.data);
+    }
   };
 
   // zorgen dat bij verlaten en terugkomen naar deze pagina hij currentstep opnieuw op 1 zet
@@ -104,8 +103,8 @@ export default function AddRecipe(){
   return(
     <main className="flex flex-col items-center gap-5">
       <StepsBar currentStep={currentStep}/>
-      <AsyncData error={saveError || recipeError} loading={recipeLoading}>
-        <FormProvider {...methods}>
+      <AsyncData error={recipeError} loading={recipeLoading}>
+        <FormProvider {...form}>
           <form onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col items-center w-full">
         

@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import SearchRecipe from './pages/search-recipe/SearchRecipe.jsx';
 import RecipeDetail from './pages/recipe-detail/RecipeDetail.jsx';
-import AddRecipe from './pages/add-recipe/AddRecipe.jsx';
+import AddOrEditRecipe from './pages/add-recipe/AddOrEditRecipe.jsx';
 import NotFound from './pages/NotFound.jsx';
 import './index.css';
 import {createBrowserRouter, Navigate} from 'react-router';
@@ -30,11 +30,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'add-recipe',
-        Component: AddRecipe, 
+        Component: AddOrEditRecipe, 
       },
       {
         path: 'recipes/edit/:id',
-        Component: AddRecipe, 
+        Component: AddOrEditRecipe, 
       },
       {
         path: '*', 
@@ -46,7 +46,5 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router} />
-    {/*<Recipe/>*/}
-
   </StrictMode>,
 );
