@@ -20,6 +20,7 @@ export default function RecipeInformation({recipe, onDelete}){
     );
   };
 
+  //TODO apart zetten buiten component?
   const Button = (element)=> {
     return(
       <button className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
@@ -36,27 +37,29 @@ export default function RecipeInformation({recipe, onDelete}){
 
   return(
     <div>
-      <main className='basis-100'>
-        
-        <h2 className='mb-3 text-3xl text-[var(--brand-gray-dark)] font-bold'>{name}</h2>
-        
+      <main>
+        <div className='flex justify-between'>
+          <h2 className='mb-3 text-3xl text-[var(--brand-gray-dark)] font-bold'>{name}</h2>
+          <div className='flex gap-2'>
+            <Link to={`/recipes/edit/${id}`}
+              className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
+                          border-2 border-[var(--brand-dark)]/20'>
+              <Pencil className='h-4 w-4 text-[var(--brand-dark)]'></Pencil>
+            </Link>
+            {/* // TODO warning!! */}
+            <button
+              onClick={() => onDelete(recipe.id)}
+              className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
+                          border-2 border-[var(--brand-dark)]/20'>
+              <Trash className='h-4 w-4 text-[var(--brand-dark)]'></Trash>
+            </button>
+          </div>
+        </div>
         <div className='flex gap-3 mb-2'>
           <button className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
                           border-2 border-[var(--brand-dark)]/20'
           onClick={() => setIsFavorite(!isFavorite)}>
             <Heart className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500':'text-[var(--brand-dark)]'}`} />
-          </button>
-          <Link to={`/recipes/edit/${id}`}
-            className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
-                          border-2 border-[var(--brand-dark)]/20'>
-            <Pencil className='h-4 w-4 text-[var(--brand-dark)]'></Pencil>
-          </Link>
-          {/* // TODO warning!! */}
-          <button
-            onClick={() => onDelete(recipe.id)}
-            className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
-                          border-2 border-[var(--brand-dark)]/20'>
-            <Trash className='h-4 w-4 text-[var(--brand-dark)]'></Trash>
           </button>
           
           {/* TODO RATING eerst back-end implementeren -> user nodig */}

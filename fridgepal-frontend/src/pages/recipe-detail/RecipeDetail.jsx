@@ -5,7 +5,6 @@ import RecipeInformation from '../../components/recipe-detail/RecipeInformation'
 import { useParams } from 'react-router';
 import useSWR from 'swr';
 import AsyncData from '../../components/AsyncData';
-import useSWRMutation from 'swr/mutation'; 
 import { useNavigate } from 'react-router';
 
 import { getById, deleteById } from '../../api';
@@ -22,8 +21,6 @@ export default function RecipeDetail(){
     isLoading: recipeLoading,
   } = useSWR(idAsNumber ? `recipes/${idAsNumber}` : null, getById);
 
-  const { trigger: deleteRecipe, error: deleteError } = useSWRMutation('recipes', deleteById);
-
   if (!recipe) {
     return (
       <div>
@@ -36,7 +33,7 @@ export default function RecipeDetail(){
   async function handleDelete(id) {
     if (window.confirm('Zeker dat je dit recept wilt verwijderen?')) {
       try {
-        await deleteRecipe(id);
+        await deleteById('recipes',{arg:id});
         navigate('/search');
       } catch (error) {
         console.error('Verwijderen mislukt:', error);
@@ -45,25 +42,37 @@ export default function RecipeDetail(){
   }
 
   return(
-    <div>
-      <AsyncData loading={recipeLoading} error={recipeError || deleteError}>
-        <div className='mt-7 ml-4 flex gap-8 flex-col lg:flex-row'>
-          <div className='max-w-150'>
-            <img 
-              src={recipe.imageUrl} 
-              className='object-cover rounded-2xl'/>
+    <AsyncData loading={recipeLoading} error={recipeError}>
+      {/* pagina centreren + breedte beperken (max-w-6xl) */}
+      <div className='flex flex-col items-center min-h-screen'>
+        <div className='w-full max-w-6xl px-4'>
+          {/* bovenste blok: 2x flex-1 = elk kind krijgt evenveel ruimte*/}
+          <div className="flex flex-col lg:flex-row gap-20 mt-10">
+            <div className="flex-1">
+              <img 
+                src={recipe.imageUrl} 
+                // w-full + object cover = elke img evenveel breedte innemen
+                className='rounded-2xl w-full object-cover max-h-96'/> 
+            </div>
+            <div className="flex-1">
+              <RecipeInformation 
+                recipe={recipe}
+                onDelete={handleDelete}/>
+            </div>
           </div>
-          <RecipeInformation 
-            recipe={recipe}
-            onDelete={handleDelete}/>
-            
+          {/* onderste blok */}
+          <div className='flex flex-col md:flex-row gap-6 mt-10'>
+            <div className="md:basis-1/3">
+              <IngredientsCard ingredients={recipe.ingredients}/>
+            </div>
+            <div className="md:basis-2/3">
+              <InstructionsSection instructions={recipe.instructions}/>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div className='mt-5 ml-4 flex-col md:flex-row flex gap-6'>
-          <IngredientsCard ingredients={recipe.ingredients}/>
-          <InstructionsSection instructions={recipe.instructions}/>
-        </div>
-      </AsyncData>
-    </div>
+    </AsyncData>
+
   );
 }

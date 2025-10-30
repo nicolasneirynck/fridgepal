@@ -7,6 +7,24 @@ import useSWR from 'swr';
 import AsyncData from '../../components/AsyncData';
 import { useEffect } from 'react';
 
+const validationRules = {
+  name: {
+    required: 'Receptnaam is verplicht',
+    minLength: { value: 3, message: 'Minstens 3 tekens' },
+  },
+  description: {
+    required: 'Beschrijving is verplicht',
+    minLength: { value: 10, message: 'Minstens 10 tekens' },
+  },
+  time: {
+    required: 'Bereidingstijd is verplicht',
+    pattern: { value: /^[0-9]+$/, message: 'Enkel cijfers' },
+  },
+  categories:{
+    required: 'Kies minstens 1 categorie',
+  },
+};
+
 export default function EditDetails(){
 
   // alles rond form
@@ -16,24 +34,6 @@ export default function EditDetails(){
   const [uploading, setUploading] = useState(false);
   // categorieën ophalen
   const { data, error, isLoading } = useSWR('categories', getAll);
-  // validaties form
-  const validationRules = {
-    name: {
-      required: 'Receptnaam is verplicht',
-      minLength: { value: 3, message: 'Minstens 3 tekens' },
-    },
-    description: {
-      required: 'Beschrijving is verplicht',
-      minLength: { value: 10, message: 'Minstens 10 tekens' },
-    },
-    time: {
-      required: 'Bereidingstijd is verplicht',
-      pattern: { value: /^[0-9]+$/, message: 'Enkel cijfers' },
-    },
-    categories:{
-      required: 'Kies minstens 1 categorie',
-    },
-  };
 
   // AFBEELDINGEN VIA CLOUDINARY
   const imageUrl = watch('imageUrl');
