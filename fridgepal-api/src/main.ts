@@ -1,6 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import {
+  ValidationPipe,
+  ValidationError,
+  BadRequestException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ServerConfig, CorsConfig } from './config/configuration';
 
@@ -18,6 +22,21 @@ async function bootstrap() {
       whitelist: true, // verwijdert de properties die niet in de DTO staan
       forbidNonWhitelisted: true, // gooit fout als er foute properties binnenkomen
       forbidUnknownValues: true, // gooit fout bij onbekende types/waarden
+      transform: true,
+
+      exceptionFactory: (errors: ValidationError[] = []) => {
+        const formattedErrors = errors.reduce(
+          (acc, err) => {
+            acc[err.property] = Object.values(err.constraints || {});
+            return acc;
+          },
+          {} as Record<string, string[]>,
+        );
+
+        return new BadRequestException({
+          details: { body: formattedErrors },
+        });
+      },
     }),
   );
 
