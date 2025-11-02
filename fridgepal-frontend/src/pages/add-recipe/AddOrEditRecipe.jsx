@@ -21,21 +21,39 @@ export default function AddOrEditRecipe(){
   } = useSWR(id ? `recipes/${id}` : null, getById);
   
   // centrale useForm zodat hij die op alle pagina's kan bijhouden
+  // stabiele lege default waardes, anders soms miserie met undefined.map()..
   const methods = useForm({
-    mode:'onBlur', // valideren on blur
+    mode: 'onBlur',
     defaultValues: {
-      name: recipe?.name,
-      recipeId: recipe?.recipeId,
-      description: recipe?.description,
-      imageUrl: recipe?.imageUrl,
-      time: recipe?.time,
-      categories: recipe?.categories?.map((c) => c.id) ?? [], // enkel id nodig
-      ingredients: recipe?.ingredients,
-      instructions: recipe?.instructions,
+      name: '',
+      recipeId: null,
+      description: '',
+      imageUrl: '',
+      time: '',
+      categories: [],
+      ingredients: [],
+      instructions: [{ stepNumber: 1, description: '' }],
     },
   });
 
   const { reset,formState:{isSubmitting},handleSubmit,trigger} = methods;
+
+  useEffect(() => {
+    if (recipe) {
+      reset({
+        name: recipe.name ?? '',
+        recipeId: recipe.recipeId ?? null,
+        description: recipe.description ?? '',
+        imageUrl: recipe.imageUrl ?? '',
+        time: recipe.time ?? '',
+        categories: recipe.categories?.map((c) => c.id) ?? [],
+        ingredients: recipe.ingredients ?? [],
+        instructions: recipe.instructions?.length
+          ? recipe.instructions
+          : [{ stepNumber: 1, description: '' }],
+      });
+    }
+  }, [recipe, reset]); // zodra eventueel recept is binnengehaald api -> reset van formvormulieren met die waardes
 
   const onSubmit = async (values) => {
     // conversie van gevalideerde gegevens
@@ -54,8 +72,8 @@ export default function AddOrEditRecipe(){
       })),
 
       instructions: values.instructions.map((s, index) => ({
-        stepNumber: s.stepNumber ?? index + 1,
-        description: s.description,
+        stepNumber: index + 1,
+        description: s.description.trim(),
       })),
 
       categories: values.categories.map(Number),
@@ -78,16 +96,33 @@ export default function AddOrEditRecipe(){
     let isValid = true;
 
     if (currentStep === 1) {
-      // trigger gaat kijken in de registervelden (van de subcomponenten) of validation klopt
+      //details
       isValid = await trigger(['name', 'description', 'time', 'categories']);
     } else if (currentStep === 2) {
+      //ingredienten
       isValid = await trigger(['ingredients']);
+      const ingredients = methods.getValues('ingredients') ?? [];
 
-      const ingredients = methods.getValues('ingredients');
-      if (!ingredients || ingredients.length === 0) {
+      const hasIngredients = ingredients.length > 0;
+
+      if (!hasIngredients) {
         methods.setError('ingredients', {
           type: 'manual',
           message: 'Voeg minstens één ingrediënt toe',
+        });
+        isValid = false;
+      }
+      
+    } else if (currentStep === 3) {
+      isValid = await trigger(['instructions']);
+      const instructions = methods.getValues('instructions') ?? [];
+      const hasValidStep = instructions.some(
+        (step) => step.description && step.description.trim() !== '',
+      );
+      if (!hasValidStep) {
+        methods.setError('instructions', {
+          type: 'manual',
+          message: 'Voeg minstens één stap toe',
         });
         isValid = false;
       }

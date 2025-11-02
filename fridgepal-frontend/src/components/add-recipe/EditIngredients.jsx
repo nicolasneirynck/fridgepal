@@ -3,15 +3,20 @@ import { useDebounce } from 'use-debounce';
 import { getAll } from '../../api';
 import useSWR from 'swr';
 import SearchBar from '../search-recipe/SearchBar';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext,useFieldArray } from 'react-hook-form';
 
 export default function EditIngredients(){
 
   const [searchText, setSearchText] = useState('');
   const [debouncedSearch] = useDebounce(searchText, 400);
 
-  const { watch,setValue,register ,formState: { errors }, clearErrors} = useFormContext();
-  const ingredients = watch('ingredients') || [];
+  // const { watch,setValue,register ,formState: { errors }, clearErrors} = useFormContext();
+  // const ingredients = watch('ingredients') || [];
+  const { control, register,clearErrors, formState: { errors } } = useFormContext();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'ingredients',
+  });
 
   // auto-suggestie ingredienten (zoekbalk)
   const{data:ingSuggested = []} = useSWR(
@@ -29,23 +34,8 @@ export default function EditIngredients(){
 
   const handleSelect = (suggestion) => {
     setSearchText('');
-    const updated = [...ingredients, { id: suggestion.id, name: suggestion.name, amount: null, unit: null }]; 
-    setValue('ingredients', updated, { shouldValidate: true });
-  
-    // vanaf een ingredient toegevoegd mogen errors weg
+    append({ id: suggestion.id, name: suggestion.name, amount: '', unit: '' });
     clearErrors('ingredients');
-  };
-
-  // INGREDIENTEN
-
-  function updateIngredient(index, newValue) {
-    const updated = ingredients.map((ing, i) => (i === index ? newValue : ing));
-    setValue('ingredients', updated, { shouldValidate: true });
-  }
-
-  const handleDeleteIngredient = (ing) =>{
-    const updated = ingredients.filter((i) => i !== ing);
-    setValue('ingredients', updated, { shouldValidate: true });
   };
 
   return(
@@ -58,32 +48,22 @@ export default function EditIngredients(){
         ingredientSuggestions={suggestions}
         handleSelect={handleSelect}
       />
-      {ingredients.length > 0 &&
-      ingredients.map((ing, idx) => (
-        <div key={idx} className="flex items-center gap-4 mt-2">
-          <span className="w-32 font-medium text-[var(--brand-gray-dark)]">{ing.name}</span>
+      {fields.map((field, index) => (
+        <div key={field.id} className="flex items-center gap-4 mt-2">
+          <span className="w-32 font-medium text-[var(--brand-gray-dark)]">
+            {field.name}
+          </span>
           <input
-            id={`amount-${ing.name}`}
-            name={`amount-${ing.name}`}
-            value={ing.amount}
-            onChange={(e) =>
-              updateIngredient(idx, { ...ing, amount: e.target.value })
-            }
+            {...register(`ingredients.${index}.amount`)}
             className="w-28 bg-white border p-1 rounded"
             placeholder="hoeveelheid..."
           />
           <input
-            id={`unit-${ing.name}`}
-            name={`unit-${ing.name}`}
-            value={ing.unit}
-            onChange={(e) =>
-              updateIngredient(idx, { ...ing, unit: e.target.value })
-            }
+            {...register(`ingredients.${index}.unit`)}
             className="w-20 bg-white border p-1 rounded"
             placeholder="gr, liter..."
           />
-          <button type="button"
-            onClick={() => handleDeleteIngredient(ing)}>x</button>
+          <button type="button" onClick={() => remove(index)}>x</button>
         </div>
       ))}
       {errors.ingredients && (
