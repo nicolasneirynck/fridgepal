@@ -5,15 +5,13 @@ import {
   ValidationError,
   BadRequestException,
 } from '@nestjs/common';
+import CustomLogger from './core/customLogger';
 import { ConfigService } from '@nestjs/config';
-import { ServerConfig, CorsConfig } from './config/configuration';
+import { ServerConfig, CorsConfig, LogConfig } from './config/configuration';
+import { HttpExceptionFilter } from './lib/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  const config = app.get(ConfigService<ServerConfig | CorsConfig>);
-  const port = config.get<number>('port')!;
-  const cors = config.get<CorsConfig>('cors')!;
 
   app.setGlobalPrefix('api');
 
@@ -37,6 +35,19 @@ async function bootstrap() {
           details: { body: formattedErrors },
         });
       },
+    }),
+  );
+
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  const config = app.get(ConfigService<ServerConfig | CorsConfig>);
+  const port = config.get<number>('port')!;
+  const cors = config.get<CorsConfig>('cors')!;
+  const log = config.get<LogConfig>('log')!;
+
+  app.useLogger(
+    new CustomLogger({
+      logLevels: log.levels,
     }),
   );
 
