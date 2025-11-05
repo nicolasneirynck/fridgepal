@@ -222,7 +222,7 @@ export class RecipeService {
     const [result] = await this.db.delete(recipes).where(eq(recipes.id, id));
 
     if (result.affectedRows === 0) {
-      throw new NotFoundException('No place with this id exists');
+      throw new NotFoundException('No recipe with this id exists');
     }
   }
 

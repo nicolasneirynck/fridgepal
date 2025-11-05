@@ -1,0 +1,1 @@
+ALTER TABLE `instructions` RENAME COLUMN `amount` TO `stepNumber`;

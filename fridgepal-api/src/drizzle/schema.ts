@@ -58,7 +58,7 @@ export const categories = mysqlTable('categories', {
 
 export const instructions = mysqlTable('instructions', {
   id: int('id', { unsigned: true }).primaryKey().autoincrement(),
-  stepNumber: int('amount', { unsigned: true }).notNull(),
+  stepNumber: int('stepNumber', { unsigned: true }).notNull(),
   description: text('description').notNull(),
   recipeId: int('recipe_id', { unsigned: true })
     .references(() => recipes.id, { onDelete: 'cascade' })
