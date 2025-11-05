@@ -45,7 +45,8 @@ export default function EditInstructions() {
             )}
           </div>
           {errors?.instructions?.[index]?.description && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-500 text-sm mt-1"
+              data-cy="instruction_error">
               {errors.instructions[index].description.message}
             </p>
           )}

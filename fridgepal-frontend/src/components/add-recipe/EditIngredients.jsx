@@ -54,8 +54,12 @@ export default function EditIngredients(){
             {field.name}
           </span>
           <input
-            {...register(`ingredients.${index}.amount`)}
+            {...register(`ingredients.${index}.amount`, {
+              validate: (value) =>
+                value === '' || value === null || Number(value) > 0 || 'Hoeveelheid moet groter dan 0 zijn',
+            })}
             className="w-28 bg-white border p-1 rounded"
+            type='number'
             placeholder="hoeveelheid..."
             data-cy={`amount${index}-input`}
           />
@@ -66,10 +70,18 @@ export default function EditIngredients(){
             data-cy={`unit${index}-input`}
           />
           <button type="button" onClick={() => remove(index)}>x</button>
+          {errors.ingredients?.[index]?.amount && (
+            <p className="text-red-500 text-sm"
+              data-cy={`amount${index}_error`}>
+              {errors.ingredients[index].amount.message}
+            </p>
+          )}
         </div>
+        
       ))}
       {errors.ingredients && (
-        <p className="text-red-500 text-sm mt-2">{errors.ingredients.message}</p>
+        <p className="text-red-500 text-sm mt-2"
+          data-cy="ingredients_error">{errors.ingredients.message}</p>
       )}
       {/* ingredienten registeren en valideren*/}
       <input

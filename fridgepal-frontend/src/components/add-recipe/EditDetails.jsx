@@ -18,7 +18,8 @@ const validationRules = {
   },
   time: {
     required: 'Bereidingstijd is verplicht',
-    pattern: { value: /^[0-9]+$/, message: 'Enkel cijfers' },
+    min:{value:1, message: 'Bereidingstijd moet minstens 1 minuut zijn'},
+    //pattern: { value: /^[0-9]+$/, message: 'Enkel cijfers' },
   },
   categories:{
     required: 'Kies minstens 1 categorie',
@@ -108,7 +109,8 @@ export default function EditDetails(){
             data-cy="recipename-input"
           />
           {errors.name && (
-            <p className="text-red-500 text-sm">{errors.name.message}</p>
+            <p className="text-red-500 text-sm"
+              data-cy="name_input_error">{errors.name.message}</p>
           )}
         </div>
 
@@ -127,7 +129,9 @@ export default function EditDetails(){
             data-cy="description-input"
           />
           {errors.description && (
-            <p className="text-red-500 text-sm">{errors.description.message}</p>
+            <p className="text-red-500 text-sm"
+              data-cy="description_input_error">
+              {errors.description.message}</p>
           )}
         </div>
         <div className="flex flex-col gap-1 mt-5">
@@ -146,7 +150,8 @@ export default function EditDetails(){
             data-cy="time-input"
           />
           {errors.time && (
-            <p className="text-red-500 text-sm">{errors.time.message}</p>
+            <p className="text-red-500 text-sm"
+              data-cy="time_input_error">{errors.time.message}</p>
           )}
         </div>
         
@@ -215,7 +220,8 @@ export default function EditDetails(){
           
               </div>
               {errors.categories && (
-                <p className="text-red-500 text-sm">{errors.categories.message}</p>
+                <p className="text-red-500 text-sm"
+                  data-cy="categories_error">{errors.categories.message}</p>
               )}
             </div>
           </AsyncData>

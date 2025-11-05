@@ -146,7 +146,9 @@ export default function AddOrEditRecipe(){
           <form onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col items-center w-full">
         
-            <div className="bg-[var(--brand-light)] w-2/3 border border-[#e5e7eb] rounded-xl p-6">
+            <div 
+              className="bg-[var(--brand-light)] w-2/3 border border-[#e5e7eb] rounded-xl p-6"
+              data-cy={`step-${currentStep}`}>
               {currentStep==1 ? <EditDetails recipe={recipe}/> 
                 :currentStep==2 ? <EditIngredients recipe={recipe}/> 
                   :currentStep==3 && <EditInstructions recipe={recipe}/>}
