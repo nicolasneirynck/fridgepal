@@ -158,10 +158,14 @@ export default function AddOrEditRecipe(){
                 onClick={() => setCurrentStep(currentStep-1)}>Vorige Stap</button>}
               {currentStep < 3 && <button type="button" 
                 className="bg-[var(--brand-dark)] rounded-xl px-10 py-3 text-white font-medium hover:cursor-pointer"
-                onClick={handleNextStep}>Volgende Stap</button>
+                onClick={handleNextStep}
+                data-cy="next-step">
+                Volgende Stap
+              </button>
               }
               {currentStep == 3 && <button disabled={isSubmitting} type="submit" 
                 className="bg-[var(--brand-dark)] rounded-xl px-10 py-3 text-white font-medium hover:cursor-pointer"
+                data-cy="submit_recipe"
               >{recipe?.id?'Opslaan':'Toevoegen'}</button>
               }
             </div>

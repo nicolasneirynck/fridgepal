@@ -1,6 +1,6 @@
 export default function InstructionsSection({instructions}){
   
-  const InstructionBadge = ({instruction}) => {
+  const InstructionBadge = ({instruction,cy}) => {
     const {stepNumber, description} = instruction;
     return(
     
@@ -10,7 +10,8 @@ export default function InstructionsSection({instructions}){
           <span>{stepNumber}</span>
         </div>
      
-        <p className="text-sm text-[var(--brand-gray-dark)]">{description}</p>
+        <p className="text-sm text-[var(--brand-gray-dark)]"
+          data-cy={cy}>{description}</p>
       </div>
     );
   };
@@ -18,8 +19,11 @@ export default function InstructionsSection({instructions}){
   return(
     <div>
       <h3 className="text-[var(--brand-gray-dark)] text-lg font-bold mb-5" >Stap-voor-stap</h3>
-      {instructions.map((instr) => <InstructionBadge key={instr.id} instruction={instr}/>)}
-      
+      {instructions.map((instr,index) => 
+        <InstructionBadge 
+          key={instr.id} 
+          instruction={instr} 
+          cy={`instruction${index}`}/>)}   
     </div>
   );
 }

@@ -11,7 +11,7 @@ export default function RecipeInformation({recipe, onDelete}){
   const [isFavorite, setIsFavorite] = useState(false);
   const [showRatingDialog, setShowRatingDialog] = useState(false);
 
-  const CategoryButton = ({categoryName}) => {
+  const CategoryBadge = ({categoryName}) => {
     return(
       <span className='border-2 border-[var(--brand-dark)] rounded-md
                           text-[var(--brand-dark)] px-2 py-1 text-sm'>
@@ -35,11 +35,13 @@ export default function RecipeInformation({recipe, onDelete}){
     console.log('-> API!', tempRating);
   };
 
+  // TODO bereidingstijd!
   return(
     <div>
       <main>
         <div className='flex justify-between'>
-          <h2 className='mb-3 text-3xl text-[var(--brand-gray-dark)] font-bold'>{name}</h2>
+          <h2 className='mb-3 text-3xl text-[var(--brand-gray-dark)] font-bold'
+            data-cy="recipe_name">{name}</h2>
           <div className='flex gap-2'>
             <Link to={`/recipes/edit/${id}`}
               className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
@@ -50,7 +52,8 @@ export default function RecipeInformation({recipe, onDelete}){
             <button
               onClick={() => onDelete(recipe.id)}
               className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
-                          border-2 border-[var(--brand-dark)]/20'>
+                          border-2 border-[var(--brand-dark)]/20'
+              data-cy="recipe_remove_btn">
               <Trash className='h-4 w-4 text-[var(--brand-dark)]'></Trash>
             </button>
           </div>
@@ -106,7 +109,7 @@ export default function RecipeInformation({recipe, onDelete}){
 
         <div className='mt-2 flex gap-4'>
           {categories.map((cat) => 
-            <CategoryButton 
+            <CategoryBadge 
               key={cat.id} 
               categoryName={cat.name}/>,
           )}
@@ -114,7 +117,8 @@ export default function RecipeInformation({recipe, onDelete}){
           
         <p className='mt-10 grow
                         text-[var(--brand-gray-light)] text-sm p-3
-                        border border-[var(--brand-dark)]/10 rounded-xl'>{description}</p>
+                        border border-[var(--brand-dark)]/10 rounded-xl'
+        data-cy="description">{description}</p>
 
       </main>
       {showRatingDialog &&(

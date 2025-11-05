@@ -57,11 +57,13 @@ export default function EditIngredients(){
             {...register(`ingredients.${index}.amount`)}
             className="w-28 bg-white border p-1 rounded"
             placeholder="hoeveelheid..."
+            data-cy={`amount${index}-input`}
           />
           <input
             {...register(`ingredients.${index}.unit`)}
             className="w-20 bg-white border p-1 rounded"
             placeholder="gr, liter..."
+            data-cy={`unit${index}-input`}
           />
           <button type="button" onClick={() => remove(index)}>x</button>
         </div>

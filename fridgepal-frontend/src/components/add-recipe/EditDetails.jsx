@@ -105,6 +105,7 @@ export default function EditDetails(){
             className='bg-[var(--input)] rounded-lg border border-gray-300 
             text-sm p-2 outline-none focus:border-[var(--brand-orange)]'
             placeholder='Geef de naam van je recept in...'
+            data-cy="recipename-input"
           />
           {errors.name && (
             <p className="text-red-500 text-sm">{errors.name.message}</p>
@@ -123,6 +124,7 @@ export default function EditDetails(){
             className='bg-[var(--input)] rounded-lg border border-gray-300 
             text-sm p-2 outline-none focus:border-[var(--brand-orange)] h-30 resize-none'
             placeholder='Geef een korte beschrijving van het recept..'
+            data-cy="description-input"
           />
           {errors.description && (
             <p className="text-red-500 text-sm">{errors.description.message}</p>
@@ -141,6 +143,7 @@ export default function EditDetails(){
             className='bg-[var(--input)] rounded-lg border border-gray-300 
             text-sm p-2 outline-none focus:border-[var(--brand-orange)]'
             placeholder='Bijvoorbeeld "30"'
+            data-cy="time-input"
           />
           {errors.time && (
             <p className="text-red-500 text-sm">{errors.time.message}</p>
@@ -176,6 +179,7 @@ export default function EditDetails(){
                 </span>
               </>
             )}
+            {/* TODO dit ook nog testen?  */}
             <input
               id="recipeImage"
               name="recipeImage"
@@ -188,6 +192,7 @@ export default function EditDetails(){
         </div>
 
         <div>
+          {/* TODO AsyncData miss ook niet al hoger leggen? want preview image ook async data he? */}
           <AsyncData loading={isLoading} error={error}>
             <div className="flex flex-col gap-1 mt-5">
               <label className="text-[var(--brand-gray-dark)] text-sm mb-1">
@@ -204,6 +209,7 @@ export default function EditDetails(){
       ? 'bg-[var(--brand-orange)] text-white border-[var(--brand-orange)]'
       : 'bg-white text-[var(--brand-orange)] border-[var(--brand-dark)]'
     }`}
+                    data-cy={`category${cat.id}-input`}
                   >{cat.name}</button>,
                 )}
           

@@ -5,7 +5,7 @@ export default function RecipeCard({recipe,MatchingIngredients}){
   const {id,imageUrl,name, createdBy} = recipe;
 
   return(
-    <Link to={`/recipes/${id}`}>
+    <Link to={`/recipes/${id}`} data-cy={name.replaceAll(' ','').toLowerCase()}>
       <div className="bg-[var(--brand-light)] border-[#e5e7eb] border rounded-xl
     hover:shadow-lg transition-all duration-200 cursor-pointer"
       >

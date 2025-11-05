@@ -13,6 +13,7 @@ export default function SearchBar({
           rounded-lg text-sm p-2 outline-none focus:ring-1 focus:ring-[var(--brand-orange)]"
         value={searchText}
         onChange={onChange}
+        data-cy="ingredient-input"
       />
       {/*  <button
           type="button"
@@ -31,6 +32,7 @@ export default function SearchBar({
               key={suggestion.id}
               onClick={() => handleSelect(suggestion)}
               className="px-3 py-2 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+              data-cy="ingredient-suggestion"
             >
               {suggestion.name}
             </li>

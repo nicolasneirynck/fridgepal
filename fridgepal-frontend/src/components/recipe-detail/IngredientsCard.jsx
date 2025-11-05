@@ -6,8 +6,9 @@ const IngredientBadge = ({ingredient,servings}) => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <span className="text-[var(--brand-orange)] text-lg leading-none">•</span>
-          <span className="text-[var(--brand-gray-dark)]">{ingredient.name}</span>
+          <span className="text-[var(--brand-gray-dark)]" data-cy="ingredient_name">{ingredient.name}</span>
         </div>
+        {/* TODO amount en unit testing -> 2 spans? */}
         <span>{(ingredient.amount / 4) * servings} {ingredient.unit}</span>
       </div>
     </li>
@@ -35,7 +36,7 @@ export default function IngredientsCard({ingredients}){
         <div className="flex items-center gap-2 ">
           <p className="text-sm text-[var(--brand-gray-light)]">Aantal personen</p>
 
-          {/** voor de categorieen gebruik ik een gelijkaardige Badge dus miss component van maken? */}
+          {/** TODO voor de categorieen gebruik ik een gelijkaardige Badge dus miss component van maken? */}
           <div className='w-20 border-2 border-[var(--brand-dark)] rounded-md
                           text-[var(--brand-dark)] px-2 py-1 text bg-white
                           flex justify-between'>
@@ -46,7 +47,7 @@ export default function IngredientsCard({ingredients}){
         </div>
       </div>
       <div>
-        <ul className="mt-2 list-none">
+        <ul className="mt-2 list-none" data-cy="ingredients">
           {ingredients.map((ing) => 
             <IngredientBadge key={ing.name} ingredient={ing} servings={servings}/>,
           )}

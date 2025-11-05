@@ -11,7 +11,8 @@ export default function RecipeCardList({ recipes = [] ,countMatchingIngredients}
 
   return (
     <div className="grid gap-6 p-6 
-                    [grid-template-columns:repeat(auto-fit,minmax(250px,330px))]">
+                    [grid-template-columns:repeat(auto-fit,minmax(250px,330px))]"
+    >
       {recipes.map((recipe) => (
         <RecipeCard 
           key={recipe.id} 
