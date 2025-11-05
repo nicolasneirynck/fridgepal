@@ -1,0 +1,18 @@
+{
+  "items":[
+  {
+    "id": 1,
+    "name": "Spaghetti Bolognese",
+    "imageUrl": "https://www.flora.com/en-gb/-/media/Project/Upfield/Brands/Flora/Flora-UK-New/Assets/Recipes/Sync-Images/008d0080-e15e-431e-ada0-d962c3cc073b.jpg",
+    "createdBy": { "userName": "nicolas" },
+    "ingredients": ["Spaghetti", "Rundergehakt", "Tomatensaus"]
+  },
+  {
+    "id": 2,
+    "name": "Vegetarische Curry",
+    "imageUrl": "https://hips.hearstapps.com/hmg-prod/images/chicken-curry-lead-65a1629b408b0.jpg",
+    "createdBy": { "userName": "sofie" },
+    "ingredients": ["Kikkererwten", "Kokosmelk"]
+  }
+]
+}

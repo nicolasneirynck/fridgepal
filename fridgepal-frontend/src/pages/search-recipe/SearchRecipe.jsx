@@ -18,7 +18,9 @@ export default function SearchRecipe() {
   const [ingredients, setIngredients] = useState([]);
 
   // auto-suggestie ingredienten (zoekbalk)
-  const{data:ingSuggested = []} = useSWR(
+  const{data:ingSuggested = [],
+    error: ingredientsError,
+    isLoading: ingredientsLoading} = useSWR(
     debouncedSearch ? ['ingredients', { search: debouncedSearch }] : null,
     ([url, params]) => getAll(url, params));
 
@@ -29,8 +31,8 @@ export default function SearchRecipe() {
 
   const {
     data: recipes = [],
-    isLoading,
-    error,
+    isLoading: recipesLoading,
+    error: recipesError,
   } = useSWR(
     ['recipes', ingredients.length ? { ingredient: ingredients } : {}],
     ([url, params]) => getAll(url, params),
@@ -82,22 +84,23 @@ export default function SearchRecipe() {
 
   return (
     <div>
-      <IngredientSection 
-        onChange={handleSearch} 
-        searchText={searchText}
-        ingredients={ingredients}
-        handleAddIngredient={handleAddIngredient}
-        handleDeleteIngredient={handleDeleteIngredient}
-        ingredientSuggestions={suggestions}
-        handleSelect={handleSelect}/>
+      <AsyncData loading={ingredientsLoading} error={ingredientsError}>
+        <IngredientSection 
+          onChange={handleSearch} 
+          searchText={searchText}
+          ingredients={ingredients}
+          handleAddIngredient={handleAddIngredient}
+          handleDeleteIngredient={handleDeleteIngredient}
+          ingredientSuggestions={suggestions}
+          handleSelect={handleSelect}/>
+      </AsyncData>
       {/*<FilterSection />*/}
-      <AsyncData loading={isLoading} error={error}>
-        {!error
+      <AsyncData loading={recipesLoading} error={recipesError}>
+        {!recipesError
           ?(<RecipeCardList 
             recipes={recipes} 
             countMatchingIngredients={countMatchingIngredients}/>)
           :null}
-        
       </AsyncData>
     </div>
   );

@@ -3,9 +3,10 @@ import RecipeCard from '../../components/search-recipe/RecipeCard';
 export default function RecipeCardList({ recipes = [] ,countMatchingIngredients}) {
   if (recipes.length === 0) {
     return (
-      <p className="text-gray-400 text-sm italic p-6">
+      <p className="text-gray-400 text-sm italic p-6"
+        data-cy="no_recipes">
         No recipes found
-      </p>
+      </p> // TODO -> mooier maken he
     );
   }
 

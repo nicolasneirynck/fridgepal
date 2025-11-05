@@ -5,7 +5,7 @@ export default function Error({ error }) {
 
   if (isAxiosError(error)) {
     return (
-      <div className='bg-red-50 border border-red-200 rounded-lg p-4 mb-4'>
+      <div className='bg-red-50 border border-red-200 rounded-lg p-4 mb-4' data-cy="axios_error_message">
         <h4 className='text-red-800 font-semibold text-lg mb-2'>Oops, something went wrong</h4>
         <p className='text-red-700'>
   
