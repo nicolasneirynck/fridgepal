@@ -44,10 +44,13 @@ Check of de website draait op http://localhost:5137 en of de backend database se
 Maak een .env bestand aan in de roots met volgende gegevens:
 
  ```
- NODE_ENV=development
- PORT=3000
- CORS_ORIGINS=["http://localhost:5173"]
- CORS_MAX_AGE=10800
+NODE_ENV=development
+PORT=3000
+CORS_ORIGINS=["http://localhost:5173"]
+CORS_MAX_AGE=10800
+DATABASE_URL=mysql://devusr:devpwd@localhost:3306/fridgepal
+LOG_LEVELS=["log","error","warn","debug"]
+AUTH_JWT_SECRET=eensuperveiligsecretvoorindevelopment
 ```
 In terminal:
 ````
