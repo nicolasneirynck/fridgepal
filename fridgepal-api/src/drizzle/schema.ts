@@ -5,6 +5,8 @@ import {
   text,
   timestamp,
   primaryKey,
+  json,
+  uniqueIndex,
 } from 'drizzle-orm/mysql-core';
 import { relations } from 'drizzle-orm';
 
@@ -92,15 +94,20 @@ export const userRecipeRatings = mysqlTable(
   (table) => [primaryKey({ columns: [table.recipeId, table.userId] })],
 );
 
-export const users = mysqlTable('users', {
-  id: int('id', { unsigned: true }).primaryKey().autoincrement(),
-  userName: varchar('userName', { length: 255 }).notNull(),
-  passwordHash: varchar('password_hash', { length: 255 }).notNull(),
-  firstName: varchar('firstName', { length: 255 }).notNull(),
-  lastName: varchar('lastName', { length: 255 }).notNull(),
-  country: varchar('country', { length: 255 }).notNull(),
-  email: varchar('email', { length: 255 }).notNull(),
-});
+export const users = mysqlTable(
+  'users',
+  {
+    id: int('id', { unsigned: true }).primaryKey().autoincrement(),
+    userName: varchar('userName', { length: 255 }).notNull(),
+    passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+    firstName: varchar('firstName', { length: 255 }).notNull(),
+    lastName: varchar('lastName', { length: 255 }).notNull(),
+    country: varchar('country', { length: 255 }).notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    roles: json('roles').notNull(),
+  },
+  (table) => [uniqueIndex('idx_user_email_unique').on(table.email)],
+);
 
 // Relaties
 export const recipesRelations = relations(recipes, ({ many, one }) => ({
