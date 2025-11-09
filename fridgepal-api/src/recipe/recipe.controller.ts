@@ -42,6 +42,7 @@ export class RecipeController {
   getAllRecipes(@Query() filters: RecipeFilterQuery)
 }*/
 
+  // TODO routes beschermen voor geauthoriseerde toegang
   // TODO nog niet dringend maar miss wel zorgen dat je paginationQuery kan doen hier
   @Get()
   async getAllRecipes(
@@ -51,7 +52,6 @@ export class RecipeController {
   }
 
   // TODO eigen geuploade recepten ophalen?
-
   @Get(':id')
   async getRecipeById(
     @Param('id', ParseIntPipe) id: number,
@@ -84,5 +84,22 @@ export class RecipeController {
     @CurrentUser() user: Session,
   ): Promise<void> {
     await this.recipeService.deleteById(id, user.id, user.roles);
+  }
+
+  @Get('/:recipeId/isFavorite')
+  async isFavorite(
+    @Param('recipeId', ParseIntPipe) recipeId: number,
+    @CurrentUser() user: Session,
+  ): Promise<{ isFavorite: boolean }> {
+    const isFav = await this.recipeService.isRecipeFavorite(recipeId, user.id);
+    return { isFavorite: isFav };
+  }
+
+  @Post('/:id/toggleFavorite')
+  async toggleFavorite(
+    @Param('id', ParseIntPipe) recipeId: number,
+    @CurrentUser() user: Session,
+  ): Promise<{ isFavorite: boolean }> {
+    return this.recipeService.toggleFavorite(recipeId, user.id);
   }
 }

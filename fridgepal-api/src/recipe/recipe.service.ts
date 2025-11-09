@@ -64,7 +64,8 @@ export class RecipeService {
       time: recipe.time,
       createdBy: {
         id: recipe.createdBy.id,
-        userName: recipe.createdBy.userName,
+        firstName: recipe.createdBy.firstName,
+        lastName: recipe.createdBy.lastName,
       },
       ingredients: recipe.recipeIngredients.map((ri) => ri.ingredient.name),
       categories: [],
@@ -100,7 +101,8 @@ export class RecipeService {
       time: rawRecipe.time,
       createdBy: {
         id: rawRecipe.createdBy.id,
-        userName: rawRecipe.createdBy.userName,
+        firstName: rawRecipe.createdBy.firstName,
+        lastName: rawRecipe.createdBy.lastName,
       },
       createdAt: rawRecipe.createdAt,
       ingredients: rawRecipe.recipeIngredients.map((ri) => ({
@@ -294,6 +296,56 @@ export class RecipeService {
   }
   // async getRecipeIdsByCategory(category: string[]): Promise<number[]> {  } // LATER
 
+  async isRecipeFavorite(recipeId: number, userId: number): Promise<boolean> {
+    const favorite = await this.db.query.userFavoriteRecipes.findFirst({
+      where: and(
+        eq(userFavoriteRecipes.recipeId, recipeId),
+        eq(userFavoriteRecipes.userId, userId),
+      ),
+    });
+
+    return favorite ? true : false;
+  }
+
+  async addFavorite(recipeId: number, userId: number): Promise<void> {
+    await this.db.insert(userFavoriteRecipes).values({
+      recipeId,
+      userId,
+    });
+  }
+
+  async removeFavorite(recipeId: number, userId: number): Promise<void> {
+    await this.db
+      .delete(userFavoriteRecipes)
+      .where(
+        and(
+          eq(userFavoriteRecipes.recipeId, recipeId),
+          eq(userFavoriteRecipes.userId, userId),
+        ),
+      );
+  }
+
+  async toggleFavorite(
+    recipeId: number,
+    userId: number,
+  ): Promise<{ isFavorite: boolean }> {
+    const existing = await this.db.query.userFavoriteRecipes.findFirst({
+      where: and(
+        eq(userFavoriteRecipes.recipeId, recipeId),
+        eq(userFavoriteRecipes.userId, userId),
+      ),
+    });
+
+    if (existing) {
+      await this.removeFavorite(recipeId, userId);
+      return { isFavorite: false };
+    } else {
+      await this.addFavorite(recipeId, userId);
+      return { isFavorite: true };
+    }
+  }
+
+  // TODO beschermen
   async getFavoriteRecipesByUserId(
     userId: number,
   ): Promise<RecipeShortResponseDto[]> {
@@ -318,7 +370,8 @@ export class RecipeService {
       time: fav.recipe.time,
       createdBy: {
         id: fav.recipe.createdBy.id,
-        userName: fav.recipe.createdBy.userName,
+        firstName: fav.recipe.createdBy.firstName,
+        lastName: fav.recipe.createdBy.lastName,
       },
       ingredients: fav.recipe.recipeIngredients.map((ri) => ri.ingredient.name),
       categories: fav.recipe.recipeCategories.map((rc) => rc.category.id),

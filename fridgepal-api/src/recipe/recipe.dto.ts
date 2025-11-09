@@ -59,7 +59,8 @@ export class RecipeShortResponseDto {
   imageUrl: string | null; // niet verplicht -> front-end voorziet default afbeelding
   createdBy: {
     id: number; // id  nodig?
-    userName: string;
+    firstName: string;
+    lastName: string;
   };
   ingredients: string[];
   time: number; // voor later filter
@@ -87,7 +88,8 @@ export class RecipeDetailResponseDto {
   time: number;
   createdBy: {
     id: number; // id miss zinvol later?
-    userName: string;
+    firstName: string;
+    lastName: string;
   };
   createdAt: Date;
   ingredients: {

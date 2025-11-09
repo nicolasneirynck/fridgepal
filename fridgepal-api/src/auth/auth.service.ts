@@ -83,10 +83,8 @@ export class AuthService {
   }
 
   async register({
-    userName,
     firstName,
     lastName,
-    country,
     email,
     password,
   }: RegisterUserRequestDto): Promise<string> {
@@ -95,10 +93,8 @@ export class AuthService {
     const [newUser] = await this.db
       .insert(users)
       .values({
-        userName,
         firstName,
         lastName,
-        country,
         email,
         passwordHash: passwordHash,
         roles: [Role.USER],

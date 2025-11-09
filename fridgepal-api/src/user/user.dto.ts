@@ -10,16 +10,10 @@ export class PublicUserResponseDto {
   id: number;
 
   @Expose()
-  userName: string;
-
-  @Expose()
   firstName: string;
 
   @Expose()
   lastName: string;
-
-  @Expose()
-  country: string;
 
   @Expose()
   email: string;
@@ -29,22 +23,12 @@ export class UpdateUserRequestDto {
   @IsString()
   @MinLength(2)
   @MaxLength(255)
-  userName: string;
-
-  @IsString()
-  @MinLength(2)
-  @MaxLength(255)
   firstName: string;
 
   @IsString()
   @MinLength(2)
   @MaxLength(255)
   lastName: string;
-
-  @IsString()
-  @MinLength(2)
-  @MaxLength(255)
-  country: string;
 
   @IsString()
   @IsEmail()
@@ -55,22 +39,12 @@ export class RegisterUserRequestDto {
   @IsString()
   @MinLength(2)
   @MaxLength(255)
-  userName: string;
-
-  @IsString()
-  @MinLength(2)
-  @MaxLength(255)
   firstName: string;
 
   @IsString()
   @MinLength(2)
   @MaxLength(255)
   lastName: string;
-
-  @IsString()
-  @MinLength(2)
-  @MaxLength(255)
-  country: string;
 
   @IsString()
   @IsEmail()
