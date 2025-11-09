@@ -6,3 +6,7 @@ export class CategoryResponseDto {
 export class CategoryListResponseDto {
   items: CategoryResponseDto[];
 }
+
+export class CreateCategoryRequestDto {
+  name: string;
+}

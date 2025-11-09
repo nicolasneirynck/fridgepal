@@ -16,6 +16,7 @@ export default () => ({
       : ['log', 'error', 'warn'],
   },
   auth: {
+    maxDelay: parseInt(process.env.AUTH_MAX_DELAY || '5000'),
     hashLength: parseInt(process.env.AUTH_HASH_LENGTH || '32'),
     timeCost: parseInt(process.env.AUTH_HASH_TIME_COST || '6'),
     memoryCost: parseInt(process.env.AUTH_HASH_MEMORY_COST || '65536'),

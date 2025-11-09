@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { IngredientListResponseDto } from './ingredient.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  IngredientListResponseDto,
+  IngredientResponseDto,
+  CreateIngredientRequestDto,
+} from './ingredient.dto';
 
 import {
   type DatabaseProvider,
   InjectDrizzle,
 } from '../drizzle/drizzle.provider';
+import { eq } from 'drizzle-orm';
 
 import { like } from 'drizzle-orm';
 import { ingredients } from '../drizzle/schema';
@@ -30,4 +35,29 @@ export class IngredientService {
     });
     return { items };
   }
+
+  async create(
+    ingredient: CreateIngredientRequestDto,
+  ): Promise<IngredientResponseDto> {
+    const [newIngredient] = await this.db
+      .insert(ingredients)
+      .values(ingredient)
+      .$returningId();
+
+    return this.getById(newIngredient.id);
+  }
+
+  async getById(id: number): Promise<IngredientResponseDto> {
+    const ingredient = await this.db.query.ingredients.findFirst({
+      where: eq(ingredients.id, id),
+    });
+
+    if (!ingredient) {
+      throw new NotFoundException('No ingredient with this id exists');
+    }
+
+    return ingredient;
+  }
+
+  // TODO PUT EN DELETE
 }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 
 import {
   recipes,
@@ -22,7 +26,7 @@ import {
   InjectDrizzle,
 } from '../drizzle/drizzle.provider';
 
-import { eq, inArray, sql, desc } from 'drizzle-orm';
+import { eq, inArray, sql, desc, and } from 'drizzle-orm';
 
 @Injectable()
 export class RecipeService {
@@ -124,7 +128,10 @@ export class RecipeService {
     return recipe;
   }
 
-  async create(dto: CreateRecipeRequestDto): Promise<RecipeDetailResponseDto> {
+  async create(
+    userId: number,
+    dto: CreateRecipeRequestDto,
+  ): Promise<RecipeDetailResponseDto> {
     const [newRecipe] = await this.db
       .insert(recipes)
       .values({
@@ -132,7 +139,7 @@ export class RecipeService {
         description: dto.description,
         imageUrl: dto.imageUrl,
         time: Number(dto.time),
-        createdBy: dto.createdBy.id,
+        createdBy: userId,
       })
       .$returningId();
 
@@ -167,8 +174,16 @@ export class RecipeService {
 
   async update(
     id: number,
+    userId: number,
+    roles: string[],
     recipe: UpdateRecipeRequestDto,
   ): Promise<RecipeDetailResponseDto> {
+    const isAdmin = roles.includes('ADMIN');
+
+    const whereClause = isAdmin
+      ? eq(recipes.id, id)
+      : and(eq(recipes.id, id), eq(recipes.createdBy, userId));
+
     await this.db
       .update(recipes)
       .set({
@@ -177,7 +192,9 @@ export class RecipeService {
         imageUrl: recipe.imageUrl,
         time: Number(recipe.time),
       })
-      .where(eq(recipes.id, id));
+      .where(whereClause);
+
+    // TODO foutmelding als iemand recept probeert te veranderen zonder bevoegdheid?
 
     // voelt wat omslachtig aan maar vind momenteel geen betere oplossing
     await this.db
@@ -218,21 +235,27 @@ export class RecipeService {
     return this.getById(id);
   }
 
-  async delete(id: number): Promise<void> {
-    const [result] = await this.db.delete(recipes).where(eq(recipes.id, id));
+  // async delete(id: number): Promise<void> {
+  //   const [result] = await this.db.delete(recipes).where(eq(recipes.id, id));
 
-    if (result.affectedRows === 0) {
-      throw new NotFoundException('No recipe with this id exists');
-    }
-  }
+  //   if (result.affectedRows === 0) {
+  //     throw new NotFoundException('No recipe with this id exists');
+  //   }
+  // }
 
-  async deleteById(id: number): Promise<void> {
+  async deleteById(id: number, userId: number, roles: string[]): Promise<void> {
+    const isAdmin = roles.includes('ADMIN');
+
     const existingRecipe = await this.db.query.recipes.findFirst({
       where: eq(recipes.id, id),
     });
 
     if (!existingRecipe) {
       throw new NotFoundException('No recipe with this id exists');
+    }
+
+    if (!isAdmin && existingRecipe.createdBy !== userId) {
+      throw new ForbiddenException('You can only delete your own recipes');
     }
 
     await this.db

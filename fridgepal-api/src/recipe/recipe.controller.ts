@@ -20,6 +20,8 @@ import {
   RecipeListResponseDto,
   RecipeDetailResponseDto,
 } from './recipe.dto';
+import { CurrentUser } from '../auth/decorators/currentUser.decorator';
+import { type Session } from '../types/auth';
 
 @Controller('recipes')
 export class RecipeController {
@@ -42,14 +44,16 @@ export class RecipeController {
 
   // TODO nog niet dringend maar miss wel zorgen dat je paginationQuery kan doen hier
   @Get()
-  getAllRecipes(
+  async getAllRecipes(
     @Query('ingredient') ingredient?: string[],
   ): Promise<RecipeListResponseDto> {
     return this.recipeService.getAll({ ingredient });
   }
 
+  // TODO eigen geuploade recepten ophalen?
+
   @Get(':id')
-  getRecipeById(
+  async getRecipeById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<RecipeDetailResponseDto> {
     return this.recipeService.getById(id);
@@ -57,24 +61,28 @@ export class RecipeController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  createRecipe(
+  async createRecipe(
+    @CurrentUser() user: Session,
     @Body() createRecipeDto: CreateRecipeRequestDto,
   ): Promise<RecipeDetailResponseDto> {
-    console.log(createRecipeDto instanceof CreateRecipeRequestDto);
-    return this.recipeService.create(createRecipeDto);
+    return this.recipeService.create(user.id, createRecipeDto);
   }
 
   @Put(':id')
-  updateRecipe(
+  async updateRecipe(
     @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: Session,
     @Body() updateRecipeDto: UpdateRecipeRequestDto,
   ): Promise<RecipeDetailResponseDto> {
-    return this.recipeService.update(id, updateRecipeDto);
+    return this.recipeService.update(id, user.id, user.roles, updateRecipeDto);
   }
 
   //TODO validatie?
   @Delete(':id')
-  async deleteRecipe(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.recipeService.deleteById(id);
+  async deleteRecipe(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: Session,
+  ): Promise<void> {
+    await this.recipeService.deleteById(id, user.id, user.roles);
   }
 }

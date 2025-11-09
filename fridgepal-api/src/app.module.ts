@@ -12,6 +12,9 @@ import configuration from './config/configuration';
 import { LoggerMiddleware } from './lib/logger.middleware';
 import { AuthModule } from './auth/auth.module';
 import { SessionModule } from './session/session.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/guards/auth.guard';
+import { RolesGuard } from './auth/guards/roles.guard';
 
 @Module({
   imports: [
@@ -28,7 +31,17 @@ import { SessionModule } from './session/session.module';
     SessionModule,
   ],
   controllers: [AppController, HealthController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

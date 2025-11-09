@@ -1,6 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Post, Body } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
-import { IngredientListResponseDto } from './ingredient.dto';
+import {
+  IngredientListResponseDto,
+  CreateIngredientRequestDto,
+  IngredientResponseDto,
+} from './ingredient.dto';
 
 @Controller('ingredients')
 export class IngredientController {
@@ -12,4 +16,13 @@ export class IngredientController {
   ): Promise<IngredientListResponseDto> {
     return this.ingredientService.getAll({ input });
   }
+
+  @Post()
+  async createIngredient(
+    @Body() createIngredientDto: CreateIngredientRequestDto,
+  ): Promise<IngredientResponseDto> {
+    return await this.ingredientService.create(createIngredientDto);
+  }
+
+  // TODO PUT EN DELETE
 }

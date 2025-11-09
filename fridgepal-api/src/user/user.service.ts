@@ -56,4 +56,12 @@ export class UserService {
 
     return this.getById(id);
   }
+
+  async deleteById(id: number): Promise<void> {
+    const [result] = await this.db.delete(users).where(eq(users.id, id));
+
+    if (result.affectedRows === 0) {
+      throw new NotFoundException('No user with this id exists');
+    }
+  }
 }

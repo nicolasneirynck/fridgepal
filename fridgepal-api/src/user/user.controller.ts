@@ -6,6 +6,8 @@ import {
   Put,
   Body,
   Post,
+  UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { RecipeService } from '../recipe/recipe.service';
 import { UserService } from './user.service';
@@ -20,6 +22,10 @@ import { LoginResponseDto } from '../session/session.dto';
 import { AuthService } from '../auth/auth.service';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../auth/roles';
+import { CheckUserAccessGuard } from '../auth/guards/userAccess.guard';
+import { type Session } from '../types/auth';
+import { CurrentUser } from '../auth/decorators/currentUser.decorator';
+import { ParseUserIdPipe } from '../auth/pipes/parseUserId.pipe';
 
 @Controller('users')
 export class UserController {
@@ -36,17 +42,13 @@ export class UserController {
   }
 
   @Get(':id')
+  @UseGuards(CheckUserAccessGuard)
   async getUserById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUserIdPipe) id: 'me' | number,
+    @CurrentUser() user: Session,
   ): Promise<PublicUserResponseDto> {
-    return this.userService.getById(id);
-  }
-
-  @Get('/:id/favoriterecipes')
-  async getFavoritePlaces(
-    @Param('id') id: string,
-  ): Promise<RecipeShortResponseDto[]> {
-    return await this.recipeService.getFavoriteRecipesByUserId(Number(id));
+    const userId = id === 'me' ? user.id : id;
+    return this.userService.getById(userId);
   }
 
   @Post()
@@ -58,10 +60,35 @@ export class UserController {
   }
 
   @Put(':id')
-  updateUser(
-    @Param('id', ParseIntPipe) id: number,
+  @UseGuards(CheckUserAccessGuard)
+  async updateUser(
+    @Param('id', ParseIntPipe) id: 'me' | number,
+    @CurrentUser() user: Session,
     @Body() updateUserRequestDto: UpdateUserRequestDto,
   ): Promise<PublicUserResponseDto> {
-    return this.userService.updateById(id, updateUserRequestDto);
+    return await this.userService.updateById(
+      id === 'me' ? user.id : id,
+      updateUserRequestDto,
+    );
+  }
+
+  @Delete(':id')
+  @UseGuards(CheckUserAccessGuard)
+  async deleteUserById(
+    @Param('id', ParseUserIdPipe) id: 'me' | number,
+    @CurrentUser() user: Session,
+  ): Promise<void> {
+    return await this.userService.deleteById(id === 'me' ? user.id : id);
+  }
+
+  @Get('/:id/favoriterecipes')
+  @UseGuards(CheckUserAccessGuard)
+  async getFavoritePlaces(
+    @Param('id', ParseUserIdPipe) id: number | 'me',
+    @CurrentUser() user: Session,
+  ): Promise<RecipeShortResponseDto[]> {
+    return await this.recipeService.getFavoriteRecipesByUserId(
+      id === 'me' ? user.id : id,
+    );
   }
 }
