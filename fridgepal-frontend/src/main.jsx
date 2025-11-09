@@ -8,43 +8,62 @@ import './index.css';
 import {createBrowserRouter, Navigate} from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import Layout from './pages/Layout.jsx';
+import { AuthProvider } from './contexts/Auth.context';
+import Login from './pages/Login.jsx';
+import PrivateRoute from './components/PrivateRoute.jsx';
+import Logout from './pages/Logout.jsx';
 
 const router = createBrowserRouter([
-  {Component: Layout,
-    children:[
+  {
+    Component: Layout,
+    children: [
+      // Publieke routes
       {
-        path: '/',
-        element: <Navigate to='/search' replace />,
+        path: '/login',
+        Component: Login,
       },
       {
-        path: '/search',
-        Component: SearchRecipe,
+        path: '/logout',
+        Component: Logout,
+      },
+      // Private routes
+      {
+        Component: PrivateRoute,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/search" replace />, 
+          },
+          {
+            path: '/search',
+            Component: SearchRecipe,
+          },
+          {
+            path: '/recipes/:recipeId',
+            Component: RecipeDetail,
+          },
+          {
+            path: '/add-recipe',
+            Component: AddOrEditRecipe,
+          },
+          {
+            path: '/recipes/edit/:id',
+            Component: AddOrEditRecipe,
+          },
+        ],
       },
       {
-        path: '/recipes',
-        element: <Navigate to='/' replace />,
+        path: '*',
+        Component: NotFound,
       },
-      {
-        path: 'recipes/:recipeId',
-        Component: RecipeDetail,
-      },
-      {
-        path: 'add-recipe',
-        Component: AddOrEditRecipe, 
-      },
-      {
-        path: 'recipes/edit/:id',
-        Component: AddOrEditRecipe, 
-      },
-      {
-        path: '*', 
-        Component: NotFound ,
-      },
-    ]},
+    ],
+  },
 ]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 );

@@ -62,7 +62,7 @@ export default function AddOrEditRecipe(){
       description: values.description || null,
       imageUrl: values.imageUrl || null,
       time: parseInt(values.time),
-      createdBy: { id: 1 },
+      //createdBy: { id: 1 },
 
       ingredients: values.ingredients.map((i) => ({
         id: i.id,
