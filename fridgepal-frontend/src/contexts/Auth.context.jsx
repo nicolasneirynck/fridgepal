@@ -24,6 +24,20 @@ export const AuthProvider = ({ children }) => {
     error: loginError,
   } = useSWRMutation('sessions', api.post);
 
+  const {
+    isMutating: registerLoading,
+    error: registerError,
+    trigger: doRegister,
+  } = useSWRMutation('users', api.post);
+
+  const setSession = useCallback(
+    (token) => {
+      setToken(token);
+      localStorage.setItem(JWT_TOKEN_KEY, token);
+    },
+    [],
+  );
+
   const login = useCallback(
     async (email, password) => {
       try {
@@ -32,7 +46,7 @@ export const AuthProvider = ({ children }) => {
           password,
         });
 
-        setToken(token);
+        setSession(token);
 
         localStorage.setItem(JWT_TOKEN_KEY, token); 
 
@@ -42,7 +56,23 @@ export const AuthProvider = ({ children }) => {
         return false;
       }
     },
-    [doLogin],
+    [doLogin,setSession],
+  );
+
+  const register = useCallback(
+    async (data) => {
+      try {
+        const { token } = await doRegister(data);
+        setSession(token);
+
+        localStorage.setItem(JWT_TOKEN_KEY, token); 
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    },
+    [doRegister,setSession],
   );
 
   const logout = useCallback(() => {
@@ -55,12 +85,13 @@ export const AuthProvider = ({ children }) => {
     () => ({
       token,
       user,
-      error: loginError || userError,
-      loading: loginLoading || userLoading,
+      error: loginError || userError||registerError,
+      loading: loginLoading || userLoading||registerLoading,
       isAuthed: Boolean(token),
       ready: !userLoading,
       login,
       logout,
+      register,
     }),
     [
       token,
@@ -69,8 +100,11 @@ export const AuthProvider = ({ children }) => {
       loginLoading,
       userError,
       userLoading,
+      registerError,
+      registerLoading,
       login,
       logout,
+      register,
     ],
   );
 

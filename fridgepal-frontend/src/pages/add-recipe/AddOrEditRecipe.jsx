@@ -143,7 +143,8 @@ export default function AddOrEditRecipe(){
       <AsyncData error={recipeError} loading={recipeLoading}>
         {/* Formprovider zorgt dat de subcomponenten kunnen praten met gedeelde formstate */}
         <FormProvider {...methods}>
-          <form onSubmit={handleSubmit(onSubmit)}
+          <form 
+            onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col items-center w-full">
         
             <div 

@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 
 export default function RecipeCard({recipe,MatchingIngredients}){
 
-  const {id,imageUrl,name, createdBy} = recipe;
+  const {id,imageUrl,name, createdBy:{firstName, lastName}} = recipe;
 
   return(
     <Link to={`/recipes/${id}`}>
@@ -14,7 +14,7 @@ export default function RecipeCard({recipe,MatchingIngredients}){
           className="w-full h-55 object-cover rounded-t-xl"/>
         <h3 className="text-[var(--brand-gray-dark)] text-lg font-bold pl-3 pt-3" 
           data-cy={name.replaceAll(' ','').toLowerCase()}>{name}</h3>
-        <p className="ml-3 text-sm text-[var(--brand-gray-light)]">by {createdBy.userName}</p>
+        <p className="ml-3 text-sm text-[var(--brand-gray-light)]">by {firstName + ' ' + lastName}</p>
         <p className="p-3 text-[var(--brand-orange)] font-semibold">
           {MatchingIngredients}/{recipe.ingredients.length} ingredients in your fridge!
         </p>

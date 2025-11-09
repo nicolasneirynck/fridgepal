@@ -12,12 +12,17 @@ import { AuthProvider } from './contexts/Auth.context';
 import Login from './pages/Login.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import Logout from './pages/Logout.jsx';
+import Register from './pages/Register.jsx';
 
 const router = createBrowserRouter([
   {
     Component: Layout,
     children: [
       // Publieke routes
+      {
+        path: '/register',
+        Component: Register,
+      },
       {
         path: '/login',
         Component: Login,

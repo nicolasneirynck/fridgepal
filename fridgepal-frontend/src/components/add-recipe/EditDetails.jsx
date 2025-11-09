@@ -6,6 +6,7 @@ import { getAll } from '../../api';
 import useSWR from 'swr';
 import AsyncData from '../../components/AsyncData';
 import { useEffect } from 'react';
+import LabelInput from '../../components/LabelInput';
 
 const validationRules = {
   name: {
@@ -95,10 +96,15 @@ export default function EditDetails(){
     <div className="flex justify-around w-full">
       <div className="w-2/5">
         <div className="flex flex-col gap-1">
-          <label htmlFor='name' className="text-[var(--brand-gray-dark)] text-sm">
-            Recept Naam*
-          </label>
-          <input
+          <LabelInput
+            label='Recept Naam*'
+            type='text'
+            name='name'
+            placeholder='Geef de naam van je recept in...'
+            validationRules={validationRules.name}
+            data-cy="recipename-input"
+          />
+          {/* <input
             {...register('name',validationRules.name)}
             id='name'
             name='name'
@@ -107,14 +113,14 @@ export default function EditDetails(){
             text-sm p-2 outline-none focus:border-[var(--brand-orange)]'
             placeholder='Geef de naam van je recept in...'
             data-cy="recipename-input"
-          />
-          {errors.name && (
+          /> */}
+          {/* {errors.name && (
             <p className="text-red-500 text-sm"
               data-cy="name_input_error">{errors.name.message}</p>
-          )}
+          )} */}
         </div>
 
-        <div className="flex flex-col gap-1 mt-5">
+        <div className="flex flex-col gap-1 mt-5 mb-4">
           <label htmlFor='description' className="text-[var(--brand-gray-dark)] text-sm">
             Beschrijving*
           </label>
@@ -134,7 +140,7 @@ export default function EditDetails(){
               {errors.description.message}</p>
           )}
         </div>
-        <div className="flex flex-col gap-1 mt-5">
+        {/* <div className="flex flex-col gap-1 mt-5">
           <label htmlFor='time' className="text-[var(--brand-gray-dark)] text-sm">
             Bereidingstijd*
           </label>
@@ -153,7 +159,15 @@ export default function EditDetails(){
             <p className="text-red-500 text-sm"
               data-cy="time_input_error">{errors.time.message}</p>
           )}
-        </div>
+        </div> */}
+        <LabelInput
+          label='Bereidingstijd*'
+          type='number'
+          name='time'
+          placeholder='Geef aantal minuten in..'
+          validationRules={validationRules.name}
+          data-cy="time-input"
+        />
         
       </div>
      

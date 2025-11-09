@@ -49,6 +49,16 @@ export const post = async (url, { arg }) => {
   return data;
 };
 
+export async function getIsFavorite(recipeId) {
+  const { data } = await axios.get(`/recipes/${recipeId}/isFavorite`);
+  return data.isFavorite;
+}
+
+export async function toggleFavorite(recipeId) {
+  const { data } = await axios.post(`/recipes/${recipeId}/toggleFavorite`);
+  return data.isFavorite;
+}
+
 // voor later -> interessant bij opgeslagen recepten 
 // HFDST 4
 export const deleteById = async (url, { arg: id }) => {

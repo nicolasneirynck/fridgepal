@@ -11,10 +11,16 @@ export default function Navbar(){
         Logout
       </Link>
     ) : (
-      <Link className="text-[var(--brand-gray-light)] px-3 py-1 rounded-xl
+      <div>
+        <Link className="text-[var(--brand-gray-light)] px-3 py-1 rounded-xl
                         hover:bg-[var(--brand-orange)] hover:text-white" to='/login'>
-        Login
-      </Link>
+          Login
+        </Link>
+        <Link className="text-[var(--brand-gray-light)] px-3 py-1 rounded-xl
+                        hover:bg-[var(--brand-orange)] hover:text-white" to='/register'>
+          Registreer
+        </Link>
+      </div>
     );
   };
 
@@ -29,7 +35,8 @@ export default function Navbar(){
         <Link className="text-[var(--brand-gray-light)] px-3 py-1 rounded-xl
                         hover:bg-[var(--brand-orange)] hover:text-white"
         to='/add-recipe'>+ Voeg Recept Toe</Link>
-        <div className="hidden lg:flex lg:items-center lg:space-x-4">
+        
+        <div className="mr-4 hidden lg:flex lg:items-center lg:space-x-4">
           <AuthButtons/>
         </div>
       </nav>

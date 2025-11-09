@@ -1,15 +1,30 @@
 import { ChefHat, Heart, Star,Pencil, Trash} from 'lucide-react';
 import Rating from '@mui/material/Rating';
-import {useState} from 'react';
+// import {useState} from 'react';
 import { Link } from 'react-router'; 
 import AsyncData from '../AsyncData';
+import useSWR from 'swr';
+import { getIsFavorite, toggleFavorite } from '../../api';
 
 export default function RecipeInformation({recipe, onDelete}){
-  const {id,name, createdBy:{userName}, categories, description} = recipe;  
+  const {id,name, createdBy:{firstName, lastName}, categories, description} = recipe;  
+ 
+  const { data: isFavorite, mutate } = useSWR(
+    `/recipes/${id}/isFavorite`,
+    () => getIsFavorite(id),
+  );
 
-  const [tempRating, setTempRating] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [showRatingDialog, setShowRatingDialog] = useState(false);
+  // const [tempRating, setTempRating] = useState(0);
+  // const [showRatingDialog, setShowRatingDialog] = useState(false);
+  async function handleFavorite() {
+    try {
+      mutate(!isFavorite, false);
+      await toggleFavorite(id);
+    } catch (err) {
+      console.error('Error favorite toggle:', err);
+      mutate(isFavorite, false);
+    }
+  }
 
   const CategoryBadge = ({categoryName}) => {
     return(
@@ -21,19 +36,19 @@ export default function RecipeInformation({recipe, onDelete}){
   };
 
   //TODO apart zetten buiten component?
-  const Button = (element)=> {
-    return(
-      <button className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
-                          border-2 border-[var(--brand-dark)]/20'
-      onClick={() => setIsFavorite(!isFavorite)}>
-        {element}
-      </button>
-    );
-  };
+  // const Button = (element)=> {
+  //   return(
+  //     <button className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
+  //                         border-2 border-[var(--brand-dark)]/20'
+  //     onClick={() => setIsFavorite(!isFavorite)}>
+  //       {element}
+  //     </button>
+  //   );
+  // };
 
-  const handleRatingSubmit = () => {
-    console.log('-> API!', tempRating);
-  };
+  // const handleRatingSubmit = () => {
+  //   console.log('-> API!', tempRating);
+  // };
 
   // TODO bereidingstijd!
   return(
@@ -61,7 +76,7 @@ export default function RecipeInformation({recipe, onDelete}){
         <div className='flex gap-3 mb-2'>
           <button className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
                           border-2 border-[var(--brand-dark)]/20'
-          onClick={() => setIsFavorite(!isFavorite)}>
+          onClick={handleFavorite}>
             <Heart className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500':'text-[var(--brand-dark)]'}`} />
           </button>
           
@@ -93,7 +108,7 @@ export default function RecipeInformation({recipe, onDelete}){
                           flex justify-center items-center'>
             <ChefHat className="h-4 w-4 text-[var(--brand-orange)]" />
           </div>
-          <span className='text-sm text-[var(--brand-gray-light)]'>by {userName}</span>
+          <span className='text-sm text-[var(--brand-gray-light)]'>by {firstName + ' ' + lastName}</span>
         </div>
 
         {/* <div className='mt-2 flex items-center gap-1 
@@ -121,7 +136,7 @@ export default function RecipeInformation({recipe, onDelete}){
         data-cy="description">{description}</p>
 
       </main>
-      {showRatingDialog &&(
+      {/* {showRatingDialog &&(
         <div className='fixed inset-0 bg-black/50 flex items-center justify-center'>
           <div className='bg-white rounded-lg p-6 w-full max-w-sm'>
             <h2 className='text-[var(--brand-gray-dark)] text-lg font-bold text-center'>
@@ -164,8 +179,7 @@ export default function RecipeInformation({recipe, onDelete}){
               </button>
             </div>
           </div>
-        </div>
-      )}
+        </div>)} */}
     </div>
   );
 };

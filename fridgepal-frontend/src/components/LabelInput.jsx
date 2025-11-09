@@ -16,8 +16,8 @@ const LabelInput  = ({
   const hasError = name in errors;
 
   return (
-    <div className='mb-3'>
-      <label htmlFor={name} className="block text-sm/6 font-medium text-gray-900 dark:text-white">
+    <div className='flex flex-col gap-1 mb-2'>
+      <label htmlFor={name} className="text-[var(--brand-gray-dark)] text-sm">
         {label}
       </label>
       <input
@@ -26,9 +26,8 @@ const LabelInput  = ({
         name={name}
         type={type}
         disabled={isSubmitting}
-        className='rounded bg-white p-1
-         text-gray-900 placeholder:text-gray-400 outline-1 outline-gray-300
-          focus:outline-blue-600 w-full  dark:bg-gray-800 dark:text-white'
+        className='bg-[var(--input)] rounded-lg border border-gray-300 
+            text-sm p-2 outline-none focus:border-[var(--brand-orange)]'
         placeholder={placeholder}
         {...rest}
       />
