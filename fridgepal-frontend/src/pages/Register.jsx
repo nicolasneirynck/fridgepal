@@ -41,17 +41,17 @@ export default function Register(){
   );
 
   const validationRules = useMemo(() => ({
-    firstName: { required: 'First name is required' },
-    lastName: { required: 'Last name is required' },
-    email: { required: 'Email is required', pattern:{value:
+    firstName: { required: 'Voornaam is verplicht' },
+    lastName: { required: 'Familienaam is verplicht' },
+    email: { required: 'E-mail is verplicht', pattern:{value:
       /^[a-zA-Z0–9._%+-]+@[a-zA-Z0–9.-]+\.[a-zA-Z]{2,}$/,
-    message:'invalid email'} },
-    password: { required: 'Password is required' },
+    message:'Invalide e-mail'} },
+    password: { required: 'Wachtwoord is verplicht' },
     confirmPassword: {
-      required: 'Password confirmation is required',
+      required: 'Wachtwoord confirmatie is verplicht',
       validate: (value) => {
         const password = getValues('password');
-        return password === value || 'Passwords do not match';
+        return password === value || 'Wachtwoorden matchen niet';
       },
     },
   }), [getValues]);
@@ -65,20 +65,20 @@ export default function Register(){
         <div 
           className="bg-[var(--brand-light)] w-1/3 border border-[#e5e7eb] rounded-xl p-6"
         >
-          <h1 className="mb-4 text-[var(--brand-gray-dark)]">Register</h1>
+          <h1 className="mb-4 text-[var(--brand-gray-dark)] text-center">Registreren</h1>
           <Error error={error} />
           <LabelInput
-            label='First Name'
+            label='Voornaam'
             type='text'
             name='firstName'
-            placeholder='Your First Name'
+            placeholder='Je voornaam'
             validationRules={validationRules.firstName}
           />
           <LabelInput
-            label='Last Name'
+            label='Familienaam'
             type='text'
             name='lastName'
-            placeholder='Your Last Name'
+            placeholder='Je familienaam'
             validationRules={validationRules.lastName}
           />
           <LabelInput

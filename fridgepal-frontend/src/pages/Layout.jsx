@@ -1,6 +1,6 @@
 import { Outlet, ScrollRestoration } from 'react-router';
 
-import Navbar from '../components/Header';
+import Navbar from '../components/Navbar';
 
 export default function Layout() {
   return (
