@@ -3,18 +3,16 @@ import SelectedIngredients from '../../components/search-recipe/SelectedIngredie
 import AsyncData from '../../components/AsyncData';
 
 export default function IngredientSection({searchText,onChange,ingredients,handleDeleteIngredient,
-  ingredientSuggestions, handleSelect,loading, error}) {
+  ingredientSuggestions, handleSelect}) {
 
   return (
     <section className="ml-4">
-      <AsyncData loading={loading} error={error}>
-        <SearchBar
-          onChange={onChange}
-          searchText={searchText}
-          ingredientSuggestions={ingredientSuggestions}
-          handleSelect={handleSelect}
-        />
-      </AsyncData>
+      <SearchBar
+        onChange={onChange}
+        searchText={searchText}
+        ingredientSuggestions={ingredientSuggestions}
+        handleSelect={handleSelect}
+      />
       <SelectedIngredients ingredients={ingredients} handleDeleteIngredient={handleDeleteIngredient}/>
     </section>
   );

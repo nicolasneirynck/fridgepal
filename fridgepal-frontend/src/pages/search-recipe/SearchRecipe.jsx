@@ -3,6 +3,7 @@ import '../../index.css';
 import IngredientSection from './IngredientSection';
 import RecipeCardList from './RecipeCardList';
 import AsyncData from '../../components/AsyncData';
+import FilterSection from '../../components/search-recipe/FilterSection';
 
 import {useState, useMemo} from 'react';
 import useSWR from 'swr';
@@ -16,6 +17,8 @@ export default function SearchRecipe() {
   const [debouncedSearch] = useDebounce(searchText, 400);
   // ingrediënten om recepten te filteren
   const [ingredients, setIngredients] = useState([]);
+  // categorieen om recepten te filteren
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   // auto-suggestie ingredienten (zoekbalk)
   const{data:ingSuggested = [],
@@ -29,12 +32,20 @@ export default function SearchRecipe() {
     [ingSuggested],
   );
 
+  // useMemo hier gebruiken anders gaat hij {ingredient:.., category:..} object bij elke 
+  // render opnieuw maken en schokt het scherm
+  const recipeParams = useMemo(() => ({
+    ingredient: ingredients.length ? ingredients : undefined,
+    category: selectedCategories.length ? selectedCategories : undefined,
+  }), [ingredients, selectedCategories]);
+
   const {
     data: recipes = [],
     isLoading: recipesLoading,
     error: recipesError,
   } = useSWR(
-    ['recipes', ingredients.length ? { ingredient: ingredients } : {}],
+    ['recipes', 
+      recipeParams],
     ([url, params]) => getAll(url, params),
   );
 
@@ -94,7 +105,8 @@ export default function SearchRecipe() {
           ingredientSuggestions={suggestions}
           handleSelect={handleSelect}/>
       </AsyncData>
-      {/*<FilterSection />*/}
+      <FilterSection onFilterChange={setSelectedCategories} />
+
       <AsyncData loading={recipesLoading} error={recipesError}>
         {!recipesError
           ?(<RecipeCardList 
