@@ -7,6 +7,7 @@ import {
 import {
   recipes,
   ingredients,
+  categories,
   recipeIngredients,
   instructions,
   recipeCategories,
@@ -37,20 +38,31 @@ export class RecipeService {
 
   async getAll({
     ingredient,
+    category,
   }: {
     ingredient?: string[];
+    category?: string[];
   }): Promise<RecipeListResponseDto> {
+    const [ingredientIds, categoryIds] = await Promise.all([
+      ingredient?.length
+        ? this.getRecipeIdsByIngredient(ingredient)
+        : undefined,
+      category?.length ? this.getRecipeIdsByCategory(category) : undefined,
+    ]);
+
     let recipeIds: number[] | undefined;
 
-    if (ingredient) {
-      recipeIds = await this.getRecipeIdsByIngredient(ingredient);
+    // duplicate ID's er uit halen
+    if (ingredientIds && categoryIds) {
+      recipeIds = ingredientIds.filter((id) => categoryIds.includes(id));
+    } else {
+      recipeIds = ingredientIds ?? categoryIds;
     }
-
-    // ALS IK NOG TIJD HEB: later hier bv categorie filter -> vergeet niet dan te checken of dubbele ID's he
 
     const results = await this.db.query.recipes.findMany({
       with: {
         recipeIngredients: { with: { ingredient: true } },
+        recipeCategories: { with: { category: true } },
         createdBy: true,
       },
       where: recipeIds ? inArray(recipes.id, recipeIds) : undefined,
@@ -68,11 +80,34 @@ export class RecipeService {
         lastName: recipe.createdBy.lastName,
       },
       ingredients: recipe.recipeIngredients.map((ri) => ri.ingredient.name),
-      categories: [],
+      categories: recipe.recipeCategories.map((rc) => rc.category.name),
       //ratingSummary: { average: 0, count: 0 },
     }));
 
     return { items };
+  }
+
+  private async getRecipeIdsByIngredient(names: string[]): Promise<number[]> {
+    const rows = await this.db
+      .selectDistinct({ recipeId: recipeIngredients.recipeId })
+      .from(recipeIngredients)
+      .innerJoin(
+        ingredients,
+        eq(recipeIngredients.ingredientId, ingredients.id),
+      )
+      .where(inArray(ingredients.name, names));
+
+    return rows.map((r) => r.recipeId);
+  }
+
+  private async getRecipeIdsByCategory(names: string[]): Promise<number[]> {
+    const rows = await this.db
+      .selectDistinct({ recipeId: recipeCategories.recipeId })
+      .from(recipeCategories)
+      .innerJoin(categories, eq(recipeCategories.categoryId, categories.id))
+      .where(inArray(categories.name, names));
+
+    return rows.map((r) => r.recipeId);
   }
 
   async getById(id: number): Promise<RecipeDetailResponseDto> {
@@ -275,25 +310,25 @@ export class RecipeService {
     await this.db.delete(recipes).where(eq(recipes.id, id));
   }
 
-  async getRecipeIdsByIngredient(ingredient: string[]): Promise<number[]> {
-    const ingredientsArray = Array.isArray(ingredient) // checken of in array zit. Is pas vanaf 2 ingredienten.
-      ? ingredient
-      : [ingredient]; // als er maar 1 ingredient in zit -> in array steken
+  // async getRecipeIdsByIngredient(ingredient: string[]): Promise<number[]> {
+  //   const ingredientsArray = Array.isArray(ingredient) // checken of in array zit. Is pas vanaf 2 ingredienten.
+  //     ? ingredient
+  //     : [ingredient]; // als er maar 1 ingredient in zit -> in array steken
 
-    const results = await this.db
-      .select({
-        recipeId: recipes.id,
-        matchCount: sql<number>`COUNT(${ingredients.id})`,
-      })
-      .from(recipes)
-      .leftJoin(recipeIngredients, eq(recipeIngredients.recipeId, recipes.id))
-      .leftJoin(ingredients, eq(ingredients.id, recipeIngredients.ingredientId))
-      .where(inArray(ingredients.name, ingredientsArray)) // WHERE {input,..} IN ingredients.name
-      .groupBy(recipes.id)
-      .orderBy(desc(sql`COUNT(${ingredients.id})`));
+  //   const results = await this.db
+  //     .select({
+  //       recipeId: recipes.id,
+  //       matchCount: sql<number>`COUNT(${ingredients.id})`,
+  //     })
+  //     .from(recipes)
+  //     .leftJoin(recipeIngredients, eq(recipeIngredients.recipeId, recipes.id))
+  //     .leftJoin(ingredients, eq(ingredients.id, recipeIngredients.ingredientId))
+  //     .where(inArray(ingredients.name, ingredientsArray)) // WHERE {input,..} IN ingredients.name
+  //     .groupBy(recipes.id)
+  //     .orderBy(desc(sql`COUNT(${ingredients.id})`));
 
-    return results.map((recipe) => recipe.recipeId);
-  }
+  //   return results.map((recipe) => recipe.recipeId);
+  // }
   // async getRecipeIdsByCategory(category: string[]): Promise<number[]> {  } // LATER
 
   async isRecipeFavorite(recipeId: number, userId: number): Promise<boolean> {
@@ -374,7 +409,7 @@ export class RecipeService {
         lastName: fav.recipe.createdBy.lastName,
       },
       ingredients: fav.recipe.recipeIngredients.map((ri) => ri.ingredient.name),
-      categories: fav.recipe.recipeCategories.map((rc) => rc.category.id),
+      categories: fav.recipe.recipeCategories.map((rc) => rc.category.name),
     }));
   }
 }

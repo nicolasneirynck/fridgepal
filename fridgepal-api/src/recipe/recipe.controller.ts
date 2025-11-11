@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 
 import { RecipeService } from './recipe.service';
-
+import { RecipeFilterQueryDto } from './recipe.filter-query.dto';
 import {
   CreateRecipeRequestDto,
   UpdateRecipeRequestDto,
@@ -46,9 +46,9 @@ export class RecipeController {
   // TODO nog niet dringend maar miss wel zorgen dat je paginationQuery kan doen hier
   @Get()
   async getAllRecipes(
-    @Query('ingredient') ingredient?: string[],
+    @Query() filters: RecipeFilterQueryDto,
   ): Promise<RecipeListResponseDto> {
-    return this.recipeService.getAll({ ingredient });
+    return this.recipeService.getAll(filters);
   }
 
   // TODO eigen geuploade recepten ophalen?

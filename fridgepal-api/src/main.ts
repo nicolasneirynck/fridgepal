@@ -20,7 +20,7 @@ async function bootstrap() {
       whitelist: true, // verwijdert de properties die niet in de DTO staan
       forbidNonWhitelisted: true, // gooit fout als er foute properties binnenkomen
       forbidUnknownValues: true, // gooit fout bij onbekende types/waarden
-      transform: true,
+      transform: true, // zett types automatisch om volgens mijn DTO types met @Transform
 
       exceptionFactory: (errors: ValidationError[] = []) => {
         const formattedErrors = errors.reduce(

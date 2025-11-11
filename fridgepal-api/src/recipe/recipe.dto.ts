@@ -64,7 +64,7 @@ export class RecipeShortResponseDto {
   };
   ingredients: string[];
   time: number; // voor later filter
-  categories: number[]; // voor later filter;
+  categories: string[]; // voor later filter;
   // ratings?:
   //   | {
   //       userId: number;
