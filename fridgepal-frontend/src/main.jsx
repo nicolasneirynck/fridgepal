@@ -13,6 +13,7 @@ import Login from './pages/Login.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import Logout from './pages/Logout.jsx';
 import Register from './pages/Register.jsx';
+import FavoriteRecipes from './pages/FavoriteRecipes.jsx';
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
           {
             path: '/recipes/:recipeId',
             Component: RecipeDetail,
+          },
+          {
+            path: '/favorites',
+            Component: FavoriteRecipes,
           },
           {
             path: '/add-recipe',

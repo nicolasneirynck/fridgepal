@@ -49,13 +49,18 @@ export const post = async (url, { arg }) => {
   return data;
 };
 
+export async function getFavorites() {
+  const { data } = await axios.get('/recipes/favorites');
+  return data.items;
+}
+
 export async function getIsFavorite(recipeId) {
-  const { data } = await axios.get(`/recipes/${recipeId}/isFavorite`);
+  const { data } = await axios.get(`/recipes/${recipeId}/favorite`);
   return data.isFavorite;
 }
 
 export async function toggleFavorite(recipeId) {
-  const { data } = await axios.post(`/recipes/${recipeId}/toggleFavorite`);
+  const { data } = await axios.post(`/recipes/${recipeId}/favorite`);
   return data.isFavorite;
 }
 

@@ -1,6 +1,6 @@
 import RecipeCard from '../../components/search-recipe/RecipeCard';
 
-export default function RecipeCardList({ recipes = [] ,countMatchingIngredients}) {
+export default function RecipeCardList({ recipes = [] ,countMatchingIngredients,showFavoriteToggle=false}) {
   if (recipes.length === 0) {
     return (
       <p className="text-gray-400 text-sm italic p-6"
@@ -18,7 +18,10 @@ export default function RecipeCardList({ recipes = [] ,countMatchingIngredients}
         <RecipeCard 
           key={recipe.id} 
           recipe={recipe} 
-          MatchingIngredients={countMatchingIngredients(recipe.ingredients)}/>
+          MatchingIngredients={countMatchingIngredients
+            ?countMatchingIngredients(recipe.ingredients)
+            :undefined}
+          showFavoriteToggle={showFavoriteToggle}/>
       ))}
     </div>
   );
