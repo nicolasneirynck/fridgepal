@@ -110,6 +110,45 @@ export class RecipeService {
     return rows.map((r) => r.recipeId);
   }
 
+  async getFavorites(userId: number): Promise<RecipeListResponseDto> {
+    const favoRecipes = await this.db.query.userFavoriteRecipes.findMany({
+      where: eq(userFavoriteRecipes.userId, userId),
+    });
+
+    const recipeIds = favoRecipes.map((r) => r.recipeId);
+
+    if (recipeIds.length === 0) {
+      return { items: [] };
+    }
+
+    const results = await this.db.query.recipes.findMany({
+      with: {
+        recipeIngredients: { with: { ingredient: true } },
+        recipeCategories: { with: { category: true } },
+        createdBy: true,
+      },
+      where: recipeIds ? inArray(recipes.id, recipeIds) : undefined,
+    });
+
+    const items: RecipeShortResponseDto[] = results.map((recipe) => ({
+      id: recipe.id,
+      name: recipe.name,
+      description: recipe.description,
+      imageUrl: recipe.imageUrl,
+      time: recipe.time,
+      createdBy: {
+        id: recipe.createdBy.id,
+        firstName: recipe.createdBy.firstName,
+        lastName: recipe.createdBy.lastName,
+      },
+      ingredients: recipe.recipeIngredients.map((ri) => ri.ingredient.name),
+      categories: recipe.recipeCategories.map((rc) => rc.category.name),
+      //ratingSummary: { average: 0, count: 0 },
+    }));
+
+    return { items };
+  }
+
   async getById(id: number): Promise<RecipeDetailResponseDto> {
     const rawRecipe = await this.db.query.recipes.findFirst({
       where: eq(recipes.id, id),

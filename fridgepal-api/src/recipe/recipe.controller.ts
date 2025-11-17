@@ -51,6 +51,13 @@ export class RecipeController {
     return this.recipeService.getAll(filters);
   }
 
+  @Get('favorites')
+  async getFavoriteRecipes(
+    @CurrentUser() user: Session,
+  ): Promise<RecipeListResponseDto> {
+    return this.recipeService.getFavorites(user.id);
+  }
+
   // TODO eigen geuploade recepten ophalen?
   @Get(':id')
   async getRecipeById(
@@ -86,16 +93,16 @@ export class RecipeController {
     await this.recipeService.deleteById(id, user.id, user.roles);
   }
 
-  @Get('/:recipeId/isFavorite')
+  @Get('/:id/favorite')
   async isFavorite(
-    @Param('recipeId', ParseIntPipe) recipeId: number,
+    @Param('id', ParseIntPipe) recipeId: number,
     @CurrentUser() user: Session,
   ): Promise<{ isFavorite: boolean }> {
     const isFav = await this.recipeService.isRecipeFavorite(recipeId, user.id);
     return { isFavorite: isFav };
   }
 
-  @Post('/:id/toggleFavorite')
+  @Post('/:id/favorite')
   async toggleFavorite(
     @Param('id', ParseIntPipe) recipeId: number,
     @CurrentUser() user: Session,
