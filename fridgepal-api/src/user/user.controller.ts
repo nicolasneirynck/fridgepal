@@ -26,6 +26,7 @@ import { CheckUserAccessGuard } from '../auth/guards/userAccess.guard';
 import { type Session } from '../types/auth';
 import { CurrentUser } from '../auth/decorators/currentUser.decorator';
 import { ParseUserIdPipe } from '../auth/pipes/parseUserId.pipe';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('users')
 export class UserController {
@@ -51,6 +52,7 @@ export class UserController {
     return this.userService.getById(userId);
   }
 
+  @Public()
   @Post()
   async registerUser(
     @Body() registerDto: RegisterUserRequestDto,

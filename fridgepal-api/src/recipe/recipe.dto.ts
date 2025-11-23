@@ -106,10 +106,11 @@ export class RecipeDetailResponseDto {
     name: string;
   }[]; // voor later filter; id nodig?
   //rating: xx
-  // ratingSummary: {
-  //   average: number | null;
-  //   count: number;
-  // };
+  ratingSummary: {
+    average: number | null;
+    count: number;
+  };
+  isFavorite: boolean;
 }
 
 // REQUESTS

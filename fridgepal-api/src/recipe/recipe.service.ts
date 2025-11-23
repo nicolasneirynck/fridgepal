@@ -12,6 +12,7 @@ import {
   instructions,
   recipeCategories,
   userFavoriteRecipes,
+  userRecipeRatings,
 } from '../drizzle/schema';
 
 import {
@@ -166,6 +167,16 @@ export class RecipeService {
       throw new NotFoundException('No recipe with this id exists');
     }
 
+    const [{ avg, count }] = await this.db
+      .select({
+        avg: sql<number>`ROUND(AVG(${userRecipeRatings.rating}), 1)`,
+        count: sql<number>`COUNT(*)`,
+      })
+      .from(userRecipeRatings)
+      .where(eq(userRecipeRatings.recipeId, id));
+
+    const isFavorite = rawRecipe.userFavoriteRecipes.length > 0 ? true : false;
+
     const recipe: RecipeDetailResponseDto = {
       // omzetten om frontend makkelijker te maken
       id: rawRecipe.id,
@@ -190,15 +201,11 @@ export class RecipeService {
         id: rc.categoryId,
         name: rc.category.name,
       })),
-      //    ratings:  -> voor later, want eerst moet alles rond users en inloggen geregeld worden
-      // ratingSummary: {
-      //   average:
-      //     recipe.userRecipeRating.length > 0
-      //       ? recipe.userRecipeRating.reduce((sum, r) => sum + r.rating, 0) /
-      //         recipe.userRecipeRating.length
-      //       : null,
-      //   count: recipe.userRecipeRating.length,
-      // },
+      ratingSummary: {
+        average: avg ?? null,
+        count: count,
+      },
+      isFavorite,
     };
 
     return recipe;
