@@ -1,5 +1,5 @@
 import { getFavorites } from '../api';
-import RecipeCardList from './search-recipe/RecipeCardList';
+import RecipeCardList from '../components/RecipeCardList';
 import AsyncData from '../components/AsyncData';
 import useSWR from 'swr';
 

@@ -75,24 +75,26 @@ export default function Navbar(){
 
   return(
     <header>
-      <nav className="flex items-center w-full justify-between relative min-h-18  border-b-1 border-gray-300">
+      <nav className="flex items-center justify-between
+       w-full relative min-h-18  border-b-1 border-gray-300">
         <Link className='ml-4'>
           <h1 
             className="text-xl font-bold text-[var(--brand-dark)] font-display cursor-pointer"
             to='/'
           >FridgePal</h1>
-        </Link>   
-        {isAuthed? (
-          <Link className="text-[var(--brand-gray-light)] px-3 py-1 rounded-xl
+        </Link>  
+        <div className='flex'>
+          {isAuthed? (
+            <Link className="text-[var(--brand-gray-light)] px-3 py-1 rounded-xl
                         hover:bg-[var(--brand-orange)] hover:text-white"
-          to='/add-recipe'>+ Voeg Recept Toe
-          </Link>): null}
-        {isAuthed?(
-          <div className="mr-4 hidden lg:flex lg:items-center lg:space-x-4">
-            <UserNav/>
-          </div>)
-          :null}
-      
+            to='/add-recipe'>+ Voeg Recept Toe
+            </Link>): null}
+          {isAuthed?(
+            <div className="mr-4 lg:flex lg:items-center lg:space-x-4">
+              <UserNav/>
+            </div>)
+            :null}
+        </div> 
       </nav>
     </header>
   );

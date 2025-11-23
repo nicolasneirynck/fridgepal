@@ -1,7 +1,7 @@
 import '../../index.css';
 import IngredientsCard from '../../components/recipe-detail/IngredientsCard';
-import InstructionsSection from '../../components/recipe-detail/InstructionsSection';
-import RecipeInformation from '../../components/recipe-detail/RecipeInformation';
+import InstructionsSection from './InstructionsSection';
+import RecipeInformation from './RecipeInformation';
 import { useParams } from 'react-router';
 import useSWR from 'swr';
 import AsyncData from '../../components/AsyncData';

@@ -1,4 +1,4 @@
-import SearchBar from '../../components/search-recipe/SearchBar';
+import SearchBar from '../../components/SearchBar';
 import SelectedIngredients from '../../components/search-recipe/SelectedIngredients';
 import AsyncData from '../../components/AsyncData';
 
@@ -6,7 +6,7 @@ export default function IngredientSection({searchText,onChange,ingredients,handl
   ingredientSuggestions, handleSelect}) {
 
   return (
-    <section className="ml-4">
+    <section className='flex flex-col items-center w-full'>
       <SearchBar
         onChange={onChange}
         searchText={searchText}

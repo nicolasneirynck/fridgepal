@@ -18,6 +18,18 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
+// als token expired is
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem(JWT_TOKEN_KEY);
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  },
+);
+
 export async function getAll(url,params ={}){
   const {data} = await axios.get(url, {
     params,

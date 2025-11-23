@@ -165,7 +165,7 @@ export default function EditDetails(){
           type='number'
           name='time'
           placeholder='Geef aantal minuten in..'
-          validationRules={validationRules.name}
+          validationRules={validationRules.time}
           data-cy="time-input"
         />
         

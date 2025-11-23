@@ -1,4 +1,4 @@
-import RecipeCard from '../../components/search-recipe/RecipeCard';
+import RecipeCard from './search-recipe/RecipeCard';
 
 export default function RecipeCardList({ recipes = [] ,countMatchingIngredients,showFavoriteToggle=false}) {
   if (recipes.length === 0) {

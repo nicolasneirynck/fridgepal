@@ -2,27 +2,28 @@ import { ChefHat, Heart, Star,Pencil, Trash} from 'lucide-react';
 import Rating from '@mui/material/Rating';
 // import {useState} from 'react';
 import { Link } from 'react-router'; 
-import AsyncData from '../AsyncData';
+import AsyncData from '../../components/AsyncData';
 import useSWR from 'swr';
 import { getIsFavorite, toggleFavorite } from '../../api';
 
 export default function RecipeInformation({recipe, onDelete}){
-  const {id,name, createdBy:{firstName, lastName}, categories, description} = recipe;  
+  const {id,name, createdBy:{firstName, lastName}, categories, description,isFavorite: initialFavorite} = recipe;  
  
-  const { data: isFavorite, mutate } = useSWR(
-    `/recipes/${id}/isFavorite`,
+  const { data: favStatus, mutate } = useSWR(
+    ['recipe', id, 'isFavorite'],
     () => getIsFavorite(id),
+    { fallbackData: initialFavorite },
   );
 
   // const [tempRating, setTempRating] = useState(0);
   // const [showRatingDialog, setShowRatingDialog] = useState(false);
   async function handleFavorite() {
     try {
-      mutate(!isFavorite, false);
+      mutate(!favStatus, false);
       await toggleFavorite(id);
     } catch (err) {
       console.error('Error favorite toggle:', err);
-      mutate(isFavorite, false);
+      mutate(favStatus, false);
     }
   }
 
@@ -77,7 +78,7 @@ export default function RecipeInformation({recipe, onDelete}){
           <button className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
                           border-2 border-[var(--brand-dark)]/20'
           onClick={handleFavorite}>
-            <Heart className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500':'text-[var(--brand-dark)]'}`} />
+            <Heart className={`h-4 w-4 ${favStatus ? 'fill-red-500 text-red-500':'text-[var(--brand-dark)]'}`} />
           </button>
           
           {/* TODO RATING eerst back-end implementeren -> user nodig */}

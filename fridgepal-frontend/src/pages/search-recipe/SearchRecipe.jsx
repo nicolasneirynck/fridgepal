@@ -1,9 +1,9 @@
 import '../../index.css';
 
 import IngredientSection from './IngredientSection';
-import RecipeCardList from './RecipeCardList';
+import RecipeCardList from '../../components/RecipeCardList';
 import AsyncData from '../../components/AsyncData';
-import FilterSection from '../../components/search-recipe/FilterSection';
+import FilterSection from './FilterSection';
 
 import {useState, useMemo} from 'react';
 import useSWR from 'swr';
@@ -45,8 +45,8 @@ export default function SearchRecipe() {
     error: recipesError,
   } = useSWR(
     ['recipes', 
-      recipeParams],
-    ([url, params]) => getAll(url, params),
+      JSON.stringify(recipeParams)],
+    ([url, params]) => getAll(url, JSON.parse(params)),
   );
 
   const handleSearch = (e) =>{
@@ -95,16 +95,15 @@ export default function SearchRecipe() {
 
   return (
     <div>
-      <AsyncData loading={ingredientsLoading} error={ingredientsError}>
-        <IngredientSection 
-          onChange={handleSearch} 
-          searchText={searchText}
-          ingredients={ingredients}
-          handleAddIngredient={handleAddIngredient}
-          handleDeleteIngredient={handleDeleteIngredient}
-          ingredientSuggestions={suggestions}
-          handleSelect={handleSelect}/>
-      </AsyncData>
+      <IngredientSection 
+        onChange={handleSearch} 
+        searchText={searchText}
+        ingredients={ingredients}
+        handleAddIngredient={handleAddIngredient}
+        handleDeleteIngredient={handleDeleteIngredient}
+        ingredientSuggestions={suggestions}
+        handleSelect={handleSelect}/>
+      
       <FilterSection onFilterChange={setSelectedCategories} />
 
       <AsyncData loading={recipesLoading} error={recipesError}>

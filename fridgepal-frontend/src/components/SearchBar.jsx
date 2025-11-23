@@ -5,7 +5,7 @@ export default function SearchBar({
   handleSelect,
 }) {
   return (
-    <div className="relative max-w-xl pt-4 flex">
+    <div className="relative max-w-xl pt-4 flex w-full">
       <input
         type="text"
         placeholder="Voeg je ingrediënten toe..."
