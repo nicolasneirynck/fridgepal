@@ -29,6 +29,7 @@ import {
 } from '../drizzle/drizzle.provider';
 
 import { eq, inArray, sql, desc, and } from 'drizzle-orm';
+import { Role } from '../auth/roles';
 
 @Injectable()
 export class RecipeService {
@@ -157,7 +158,18 @@ export class RecipeService {
         recipeCategories: { with: { category: true } },
         recipeIngredients: { with: { ingredient: true } },
         instructions: true,
-        userRecipeRating: { with: { user: true } },
+        userRecipeRating: {
+          with: {
+            user: {
+              columns: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+        },
         userFavoriteRecipes: true,
         createdBy: true,
       },
@@ -261,7 +273,7 @@ export class RecipeService {
     roles: string[],
     recipe: UpdateRecipeRequestDto,
   ): Promise<RecipeDetailResponseDto> {
-    const isAdmin = roles.includes('ADMIN');
+    const isAdmin = roles.includes(Role.ADMIN);
 
     const whereClause = isAdmin
       ? eq(recipes.id, id)
@@ -327,7 +339,7 @@ export class RecipeService {
   // }
 
   async deleteById(id: number, userId: number, roles: string[]): Promise<void> {
-    const isAdmin = roles.includes('ADMIN');
+    const isAdmin = roles.includes(Role.ADMIN);
 
     const existingRecipe = await this.db.query.recipes.findFirst({
       where: eq(recipes.id, id),
@@ -429,7 +441,7 @@ export class RecipeService {
   // TODO beschermen
   async getFavoriteRecipesByUserId(
     userId: number,
-  ): Promise<RecipeShortResponseDto[]> {
+  ): Promise<RecipeListResponseDto> {
     const favoriteRecipes = await this.db.query.userFavoriteRecipes.findMany({
       where: eq(userFavoriteRecipes.userId, userId),
       with: {
@@ -443,7 +455,7 @@ export class RecipeService {
       },
     });
 
-    return favoriteRecipes.map((fav) => ({
+    const items = favoriteRecipes.map((fav) => ({
       id: fav.recipe.id,
       name: fav.recipe.name,
       description: fav.recipe.description,
@@ -457,5 +469,7 @@ export class RecipeService {
       ingredients: fav.recipe.recipeIngredients.map((ri) => ri.ingredient.name),
       categories: fav.recipe.recipeCategories.map((rc) => rc.category.name),
     }));
+
+    return { items };
   }
 }

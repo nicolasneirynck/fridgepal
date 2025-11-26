@@ -1,11 +1,10 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsString } from 'nestjs-swagger-dto';
 
 export class LoginRequestDto {
-  @IsString()
-  @IsEmail()
+  @IsString({ minLength: 2, maxLength: 255 })
   email: string;
 
-  @IsString()
+  @IsString({ minLength: 2, maxLength: 255 })
   password: string;
 }
 

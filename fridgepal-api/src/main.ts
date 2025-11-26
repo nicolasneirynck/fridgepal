@@ -9,6 +9,8 @@ import CustomLogger from './core/customLogger';
 import { ConfigService } from '@nestjs/config';
 import { ServerConfig, CorsConfig, LogConfig } from './config/configuration';
 import { HttpExceptionFilter } from './lib/http-exception.filter';
+import helmet from 'helmet';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -51,10 +53,23 @@ async function bootstrap() {
     }),
   );
 
+  app.use(helmet());
+
   app.enableCors({
     origins: cors.origins,
     maxAge: cors.maxAge,
   });
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('FridgePal')
+    .setDescription('The FridgePal API application')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(port);
 }

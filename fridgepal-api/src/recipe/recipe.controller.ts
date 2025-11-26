@@ -22,28 +22,23 @@ import {
 } from './recipe.dto';
 import { CurrentUser } from '../auth/decorators/currentUser.decorator';
 import { type Session } from '../types/auth';
+import { ApiTags, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('recipes')
+@ApiBearerAuth()
+@ApiResponse({
+  status: 401,
+  description: 'Unauthorized - you need to be signed in',
+})
 @Controller('recipes')
 export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
-  /*  @Get()
-  getAllRecipes(@Query() paginationQuery: PaginationQuery): string {
-    const { page = 1, limit = 10 } = paginationQuery;
-    return `This action returns all recipes. Limit ${limit}, page: ${page}`;
-  } */
-  /*TODO ik kan hier voor de query's ook een DTO filter maken
- bv export class RecipeFilterQuery {
-  category?: string;
-  ingredient?: string;
-  search?: string;
-
-  en dan:
-  getAllRecipes(@Query() filters: RecipeFilterQuery)
-}*/
-
-  // TODO routes beschermen voor geauthoriseerde toegang
-  // TODO nog niet dringend maar miss wel zorgen dat je paginationQuery kan doen hier
+  @ApiResponse({
+    status: 200,
+    description: 'Get all recipes',
+    type: RecipeListResponseDto,
+  })
   @Get()
   async getAllRecipes(
     @Query() filters: RecipeFilterQueryDto,
@@ -51,6 +46,12 @@ export class RecipeController {
     return this.recipeService.getAll(filters);
   }
 
+  // TODO MISS DEZE ONNODIG? -> al endpoint in users
+  @ApiResponse({
+    status: 200,
+    description: 'Get all favorite recipes of user',
+    type: RecipeListResponseDto,
+  })
   @Get('favorites')
   async getFavoriteRecipes(
     @CurrentUser() user: Session,
@@ -58,7 +59,15 @@ export class RecipeController {
     return this.recipeService.getFavorites(user.id);
   }
 
-  // TODO eigen geuploade recepten ophalen?
+  @ApiResponse({
+    status: 200,
+    description: 'Get recipes by id',
+    type: RecipeDetailResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Recipe not found',
+  })
   @Get(':id')
   async getRecipeById(
     @Param('id', ParseIntPipe) id: number,
@@ -66,6 +75,15 @@ export class RecipeController {
     return this.recipeService.getById(id);
   }
 
+  @ApiResponse({
+    status: 201,
+    description: 'Create recipe',
+    type: RecipeDetailResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data',
+  })
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createRecipe(
@@ -75,6 +93,15 @@ export class RecipeController {
     return this.recipeService.create(user.id, createRecipeDto);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Edit recipe',
+    type: RecipeDetailResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data',
+  })
   @Put(':id')
   async updateRecipe(
     @Param('id', ParseIntPipe) id: number,
@@ -84,7 +111,14 @@ export class RecipeController {
     return this.recipeService.update(id, user.id, user.roles, updateRecipeDto);
   }
 
-  //TODO validatie?
+  @ApiResponse({
+    status: 204,
+    description: 'Recipe successfully deleted',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Recipe not found',
+  })
   @Delete(':id')
   async deleteRecipe(
     @Param('id', ParseIntPipe) id: number,
@@ -93,6 +127,12 @@ export class RecipeController {
     await this.recipeService.deleteById(id, user.id, user.roles);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Is recipe with this id a favorite of current user?',
+    type: RecipeListResponseDto,
+    isArray: true,
+  })
   @Get('/:id/favorite')
   async isFavorite(
     @Param('id', ParseIntPipe) recipeId: number,
@@ -102,6 +142,20 @@ export class RecipeController {
     return { isFavorite: isFav };
   }
 
+  @ApiResponse({
+    status: 201,
+    description: 'Add recipe to user favorites',
+    schema: {
+      type: 'object',
+      properties: {
+        isFavorite: { type: 'boolean', example: true },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid input data',
+  })
   @Post('/:id/favorite')
   async toggleFavorite(
     @Param('id', ParseIntPipe) recipeId: number,

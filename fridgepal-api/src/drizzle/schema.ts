@@ -35,10 +35,14 @@ export const recipeIngredients = mysqlTable('recipe_ingredients', {
     .notNull(),
 });
 
-export const ingredients = mysqlTable('ingredients', {
-  id: int('id', { unsigned: true }).primaryKey().autoincrement(),
-  name: varchar('name', { length: 255 }).notNull(),
-});
+export const ingredients = mysqlTable(
+  'ingredients',
+  {
+    id: int('id', { unsigned: true }).primaryKey().autoincrement(),
+    name: varchar('name', { length: 255 }).notNull(),
+  },
+  (table) => [uniqueIndex('ingredients_name_unique').on(table.name)],
+);
 
 export const recipeCategories = mysqlTable(
   'recipe_categories',
