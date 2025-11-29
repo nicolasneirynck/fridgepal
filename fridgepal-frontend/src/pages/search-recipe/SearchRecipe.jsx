@@ -9,6 +9,7 @@ import {useState, useMemo} from 'react';
 import useSWR from 'swr';
 import { getAll } from '../../api';
 import { useDebounce } from 'use-debounce';
+import { useCallback } from 'react';
 
 export default function SearchRecipe() {
 
@@ -73,13 +74,14 @@ export default function SearchRecipe() {
     setIngredients(newIngredientsList);
   };
 
-  const countMatchingIngredients = (recipeIngredients) => {
-    recipeIngredients = recipeIngredients.map((ing) => ing.toLowerCase().trim());
+  const countMatchingIngredients = useCallback(
+    (recipeIngredients) => {
+      recipeIngredients = recipeIngredients.map((ing) => ing.toLowerCase().trim());
 
-    return ingredients.reduce((count, ing) => (
-      recipeIngredients.includes(ing) ? count + 1 : count
-    ), 0);
-  }; 
+      return ingredients.reduce((count, ing) => (
+        recipeIngredients.includes(ing) ? count + 1 : count
+      ), 0);
+    },[ingredients]);
   
   // const sortedRecipes = useMemo(() => {
    
@@ -103,6 +105,15 @@ export default function SearchRecipe() {
         handleDeleteIngredient={handleDeleteIngredient}
         ingredientSuggestions={suggestions}
         handleSelect={handleSelect}/>
+
+      {ingredientsError && (
+        <div
+          data-cy="axios_error_message"
+          className="text-red-600 bg-red-100 border border-red-300 p-2 mt-2 rounded"
+        >
+          Er ging iets mis bij het zoeken naar ingrediënten.
+        </div>
+      )}
       
       <FilterSection onFilterChange={setSelectedCategories} />
 

@@ -1,4 +1,8 @@
 describe('Add and remove recipe', () => {
+  beforeEach(() => {
+    cy.login('thomas.aelbrecht@hogent.be','12345678');
+  });
+  
   it('should add a recipe', () => {
     cy.visit('http://localhost:5173/add-recipe');
     //TOEVOEGEN
@@ -44,7 +48,7 @@ describe('Add and remove recipe', () => {
     cy.visit('http://localhost:5173/add-recipe');
     cy.get('[data-cy=recipename-input]').click();
     cy.get('[data-cy=recipename-input]').blur();
-    cy.get('[data-cy=name_input_error]').contains('Receptnaam is verplicht');
+    cy.get('[data-cy=label_input_error]').contains('Receptnaam is verplicht');
   });
 
   it('should show the error message for empty recipe description', () => {
@@ -65,14 +69,14 @@ describe('Add and remove recipe', () => {
     cy.visit('http://localhost:5173/add-recipe');
     cy.get('[data-cy=time-input]').click();
     cy.get('[data-cy=time-input]').blur();
-    cy.get('[data-cy=time_input_error]').contains('Bereidingstijd is verplicht');
+    cy.get('[data-cy=label_input_error]').contains('Bereidingstijd is verplicht');
   });
   
   it('should show the error message for negative time', () => {
     cy.visit('http://localhost:5173/add-recipe');
     cy.get('[data-cy=time-input]').type(-5);
     cy.get('[data-cy=time-input]').blur();
-    cy.get('[data-cy=time_input_error]').contains('Bereidingstijd moet minstens 1 minuut zijn');
+    cy.get('[data-cy=label_input_error]').contains('Bereidingstijd moet minstens 1 minuut zijn');
   });
 
   it('should show the error message for when not selecting category', () => {
@@ -84,9 +88,9 @@ describe('Add and remove recipe', () => {
     cy.visit('http://localhost:5173/add-recipe');
     cy.get('[data-cy=next-step]').click();
 
-    cy.get('[data-cy=name_input_error]').should('be.visible');
+    cy.get('[data-cy=label_input_error]').should('be.visible');
     cy.get('[data-cy=description_input_error]').should('be.visible');
-    cy.get('[data-cy=time_input_error]').should('be.visible');
+    cy.get('[data-cy=label_input_error]').should('be.visible');
     cy.get('[data-cy=categories_error]').should('be.visible');
 
     cy.get('[data-cy=step-1]').should('exist');

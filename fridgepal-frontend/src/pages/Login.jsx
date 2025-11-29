@@ -66,6 +66,7 @@ export default function Login() {
               name='email'
               placeholder='your@email.com'
               validationRules={validationRules.email}
+              data-cy='email_input'
             />
 
             <LabelInput
@@ -74,12 +75,14 @@ export default function Login() {
               placeholder='password'
               name='password'
               validationRules={validationRules.password}
+              data-cy='password_input'
             />
 
             <div className="flex gap-4 mt-6 justify-center">
               <button type="submit" 
                 className="bg-[var(--brand-dark)] rounded-xl px-10 py-3 text-white font-medium hover:cursor-pointer"
                 disabled={loading}
+                data-cy='submit_btn'
               >Login</button>
               <button type="button" 
                 className="bg-white rounded-xl px-10 py-3 text-[var(--brand-dark)] 

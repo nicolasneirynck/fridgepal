@@ -1,4 +1,8 @@
 describe('Recipes list', () => {
+
+  beforeEach(() => {
+    cy.login('thomas.aelbrecht@hogent.be','12345678');
+  });
   it('should show the recipes', () => {
     cy.intercept(
       'GET',

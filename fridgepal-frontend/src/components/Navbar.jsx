@@ -48,6 +48,7 @@ export default function Navbar(){
               to="/logout"
               className="block w-full px-4 py-2 rounded-lg text-[var(--brand-gray-dark)] text-sm 
                          hover:cursor-pointer"
+              data-cy='logout_btn'
             >
               Logout
             </Link>

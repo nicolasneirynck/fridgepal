@@ -2,7 +2,7 @@ import { useState, useMemo} from 'react';
 import { useDebounce } from 'use-debounce';
 import { getAll } from '../../api';
 import useSWR from 'swr';
-import SearchBar from '../SearchBar';
+import SearchBar from '../../components/SearchBar';
 import { useFormContext,useFieldArray } from 'react-hook-form';
 
 export default function EditIngredients(){

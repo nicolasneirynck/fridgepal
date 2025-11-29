@@ -1,8 +1,8 @@
 import {useState,useEffect} from 'react';
 import StepsBar from '../../components/add-recipe/StepsBar';
-import EditDetails from '../../components/add-recipe/EditDetails';
-import EditIngredients from '../../components/add-recipe/EditIngredients';
-import EditInstructions from '../../components/add-recipe/EditInstructions';
+import EditDetails from './EditDetails';
+import EditIngredients from './EditIngredients';
+import EditInstructions from './EditInstructions';
 import { save, getById } from '../../api';
 import { useNavigate, useParams } from 'react-router';
 import AsyncData from '../../components/AsyncData';

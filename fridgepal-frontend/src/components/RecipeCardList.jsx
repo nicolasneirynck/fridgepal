@@ -18,7 +18,7 @@ export default function RecipeCardList({ recipes = [] ,countMatchingIngredients,
         <RecipeCard 
           key={recipe.id} 
           recipe={recipe} 
-          MatchingIngredients={countMatchingIngredients
+          matchingIngredients={countMatchingIngredients
             ?countMatchingIngredients(recipe.ingredients)
             :undefined}
           showFavoriteToggle={showFavoriteToggle}/>

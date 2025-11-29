@@ -27,7 +27,7 @@ export default function SearchBar({
       {searchText.length > 0 && (
         <ul className="absolute top-full left-0 w-full bg-white border border-gray-300 
         border-t-0 rounded-b-md shadow-md list-none p-0 m-0 z-50">
-          {ingredientSuggestions.map((suggestion, index) => (
+          {ingredientSuggestions.map((suggestion) => (
             <li
               key={suggestion.id}
               onClick={() => handleSelect(suggestion)}

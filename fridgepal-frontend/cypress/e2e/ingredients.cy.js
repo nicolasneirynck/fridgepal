@@ -1,6 +1,10 @@
 describe('Ingredient search and suggestions', () => {
+  // beforeEach(() => {
+  //   cy.visit('http://localhost:5173');
+    
+  // });
   beforeEach(() => {
-    cy.visit('http://localhost:5173');
+    cy.login('thomas.aelbrecht@hogent.be','12345678');
   });
 
   it('shows ingredient suggestions when typing', () => {
