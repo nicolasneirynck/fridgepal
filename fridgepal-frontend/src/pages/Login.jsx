@@ -20,13 +20,7 @@ export default function Login() {
   const { error, loading, login } = useAuth();
   const navigate = useNavigate();
 
-  // TODO -> dit afzetten in productie
-  const methods = useForm({
-    defaultValues: {
-      email: 'thomas.aelbrecht@hogent.be',
-      password: '12345678',
-    },
-  });
+  const methods = useForm();
 
   // const methods = useForm();
   const { handleSubmit, reset } = methods;
