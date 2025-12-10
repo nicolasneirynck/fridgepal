@@ -22,6 +22,14 @@ export class DrizzleQueryErrorFilter implements ExceptionFilter {
           throw new ConflictException(
             'There is already a user with this email address',
           );
+        } else if (message.includes('idx_category_name_unique')) {
+          throw new ConflictException(
+            'A category with this name already exists',
+          );
+        } else if (message.includes('ingredients_name_unique')) {
+          throw new ConflictException(
+            'An ingredient with this name already exists',
+          );
         } else {
           throw new ConflictException('This item already exists');
         }

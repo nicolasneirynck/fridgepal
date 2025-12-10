@@ -7,6 +7,7 @@ import {
   Delete,
   Param,
   ParseIntPipe,
+  HttpCode,
 } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import {
@@ -70,6 +71,7 @@ export class IngredientController {
     description: 'Forbidden - only admins can delete ingredients',
   })
   @Delete(':id')
+  @HttpCode(204)
   @Roles(Role.ADMIN)
   async deleteIngredient(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.ingredientService.deleteById(id);

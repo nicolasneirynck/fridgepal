@@ -47,5 +47,15 @@ export class CategoryService {
     return category;
   }
 
-  // TODO -> edit en delete
+  async delete(id: number) {
+    const existing = await this.db.query.categories.findFirst({
+      where: eq(categories.id, id),
+    });
+
+    if (!existing) {
+      throw new NotFoundException('No category with this id exists');
+    }
+
+    await this.db.delete(categories).where(eq(categories.id, id));
+  }
 }

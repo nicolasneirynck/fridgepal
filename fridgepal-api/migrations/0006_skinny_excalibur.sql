@@ -1,0 +1,1 @@
+ALTER TABLE `categories` ADD CONSTRAINT `idx_category_name_unique` UNIQUE(`name`);

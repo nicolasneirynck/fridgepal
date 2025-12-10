@@ -28,4 +28,14 @@ export class RecipeFilterQueryDto {
   @IsArray()
   @IsString({ each: true })
   ingredient?: string[];
+
+  @IsOptional()
+  // ?search= → '' → .trim() → '' → undefined
+  //  ?search=pasta → 'pasta'
+  //?search= pasta → 'pasta'
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim() || undefined : undefined,
+  )
+  @IsString()
+  search?: string;
 }

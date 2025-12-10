@@ -10,6 +10,10 @@ import {
   Delete,
   Query,
   ParseIntPipe,
+  UploadedFile,
+  UseInterceptors,
+  BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 
 import { RecipeService } from './recipe.service';
@@ -24,7 +28,12 @@ import { CurrentUser } from '../auth/decorators/currentUser.decorator';
 import { type Session } from '../types/auth';
 import { ApiTags, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import { AuthGuard } from '../auth/guards/auth.guard';
+
 @ApiTags('recipes')
+@UseGuards(AuthGuard)
 @ApiBearerAuth()
 @ApiResponse({
   status: 401,
@@ -120,6 +129,7 @@ export class RecipeController {
     description: 'Recipe not found',
   })
   @Delete(':id')
+  @HttpCode(204)
   async deleteRecipe(
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: Session,
@@ -162,5 +172,25 @@ export class RecipeController {
     @CurrentUser() user: Session,
   ): Promise<{ isFavorite: boolean }> {
     return this.recipeService.toggleFavorite(recipeId, user.id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post(':id/upload-image')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: 3 * 1024 * 1024 },
+    }),
+  )
+  async uploadImage(
+    @Param('id', ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentUser() user: Session,
+  ) {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    return this.recipeService.uploadImage(id, file, user);
   }
 }

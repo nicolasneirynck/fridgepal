@@ -1,0 +1,1 @@
+ALTER TABLE `recipes` ADD CONSTRAINT `idx_recipe_name_unique` UNIQUE(`name`);

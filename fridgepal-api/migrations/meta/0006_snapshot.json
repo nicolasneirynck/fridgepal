@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "51f794d7-06f0-4a19-a725-eef07d079204",
-  "prevId": "a908b4e3-619d-4e00-9769-ba3410f68659",
+  "id": "823efebc-d32f-4e01-8a6b-bb5cbdd9e0b3",
+  "prevId": "149de82e-3afd-4824-842c-8bef033bfba2",
   "tables": {
     "categories": {
       "name": "categories",
@@ -22,7 +22,15 @@
           "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_category_name_unique": {
+          "name": "idx_category_name_unique",
+          "columns": [
+            "name"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "categories_id": {
@@ -53,7 +61,15 @@
           "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "ingredients_name_unique": {
+          "name": "ingredients_name_unique",
+          "columns": [
+            "name"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "ingredients_id": {
@@ -76,8 +92,8 @@
           "notNull": true,
           "autoincrement": true
         },
-        "amount": {
-          "name": "amount",
+        "stepNumber": {
+          "name": "stepNumber",
           "type": "int unsigned",
           "primaryKey": false,
           "notNull": true,
@@ -128,13 +144,6 @@
     "recipe_categories": {
       "name": "recipe_categories",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "int unsigned",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
         "recipe_id": {
           "name": "recipe_id",
           "type": "int unsigned",
@@ -180,10 +189,11 @@
         }
       },
       "compositePrimaryKeys": {
-        "recipe_categories_id": {
-          "name": "recipe_categories_id",
+        "recipe_categories_recipe_id_category_id_pk": {
+          "name": "recipe_categories_recipe_id_category_id_pk",
           "columns": [
-            "id"
+            "recipe_id",
+            "category_id"
           ]
         }
       },
@@ -207,8 +217,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "firstName": {
-          "name": "firstName",
+        "unit": {
+          "name": "unit",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false,
@@ -290,7 +300,7 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "imageUrl": {
@@ -304,7 +314,7 @@
           "name": "time",
           "type": "int unsigned",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "created_by": {
@@ -323,7 +333,15 @@
           "default": "(now())"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_recipe_name_unique": {
+          "name": "idx_recipe_name_unique",
+          "columns": [
+            "name"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {
         "recipes_created_by_users_id_fk": {
           "name": "recipes_created_by_users_id_fk",
@@ -350,11 +368,18 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
-    "saved_recipes": {
-      "name": "saved_recipes",
+    "user_favorite_recipes": {
+      "name": "user_favorite_recipes",
       "columns": {
         "recipe_id": {
           "name": "recipe_id",
+          "type": "int unsigned",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
           "type": "int unsigned",
           "primaryKey": false,
           "notNull": true,
@@ -370,12 +395,25 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "saved_recipes_recipe_id_recipes_id_fk": {
-          "name": "saved_recipes_recipe_id_recipes_id_fk",
-          "tableFrom": "saved_recipes",
+        "user_favorite_recipes_recipe_id_recipes_id_fk": {
+          "name": "user_favorite_recipes_recipe_id_recipes_id_fk",
+          "tableFrom": "user_favorite_recipes",
           "tableTo": "recipes",
           "columnsFrom": [
             "recipe_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_favorite_recipes_user_id_users_id_fk": {
+          "name": "user_favorite_recipes_user_id_users_id_fk",
+          "tableFrom": "user_favorite_recipes",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -464,13 +502,6 @@
           "notNull": true,
           "autoincrement": true
         },
-        "userName": {
-          "name": "userName",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "password_hash": {
           "name": "password_hash",
           "type": "varchar(255)",
@@ -492,22 +523,30 @@
           "notNull": true,
           "autoincrement": false
         },
-        "country": {
-          "name": "country",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "email": {
           "name": "email",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "roles": {
+          "name": "roles",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_user_email_unique": {
+          "name": "idx_user_email_unique",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "users_id": {

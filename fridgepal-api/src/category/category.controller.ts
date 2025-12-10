@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Delete,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CategoryListResponseDto } from './category.dto';
 import { CategoryService } from './category.service';
 import { CreateCategoryRequestDto, CategoryResponseDto } from './category.dto';
@@ -50,5 +59,10 @@ export class CategoryController {
     return await this.categoryService.create(createCategoryDto);
   }
 
-  // TODO PUT en DELETE
+  @Delete(':id')
+  @Roles(Role.ADMIN)
+  @HttpCode(204)
+  async deleteCategory(@Param('id', ParseIntPipe) id: number) {
+    return this.categoryService.delete(id);
+  }
 }

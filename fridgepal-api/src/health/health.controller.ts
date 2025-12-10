@@ -5,7 +5,7 @@ import { Public } from '../auth/decorators/public.decorator';
 export class HealthController {
   @Get('ping')
   @Public()
-  ping(): string {
-    return 'pong';
+  ping(): { pong: boolean } {
+    return { pong: true };
   }
 }

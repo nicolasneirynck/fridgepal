@@ -4,6 +4,7 @@ import {
   NotFoundException,
   BadRequestException,
   InternalServerErrorException,
+  ConflictException,
 } from '@nestjs/common';
 import {
   IngredientListResponseDto,
@@ -64,12 +65,12 @@ export class IngredientService {
       const errno = err.cause?.errno;
 
       if (code === 'ER_DUP_ENTRY' || errno === 1062) {
-        throw new BadRequestException(
-          `Het ingrediënt '${ingredient.name}' bestaat al.`,
+        throw new ConflictException(
+          'An ingredient with this name already exists',
         );
       }
 
-      throw new InternalServerErrorException('Kon ingrediënt niet aanmaken.');
+      throw new InternalServerErrorException('Could not create ingredient.');
     }
   }
 
@@ -79,7 +80,7 @@ export class IngredientService {
     });
 
     if (!ingredient) {
-      throw new NotFoundException('Er bestaat geen ingrediënt met dit id');
+      throw new NotFoundException('No ingredient with this id exists');
     }
 
     return ingredient;
@@ -92,7 +93,7 @@ export class IngredientService {
     });
 
     if (!existingIngredient) {
-      throw new NotFoundException('Er bestaat geen ingrediënt met dit id');
+      throw new NotFoundException('No ingredient with this id exists');
     }
 
     await this.db.delete(ingredients).where(eq(ingredients.id, id));

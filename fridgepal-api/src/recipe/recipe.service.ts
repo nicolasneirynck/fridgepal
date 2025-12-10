@@ -2,6 +2,9 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  BadRequestException,
+  ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 
 import {
@@ -28,22 +31,26 @@ import {
   InjectDrizzle,
 } from '../drizzle/drizzle.provider';
 
-import { eq, inArray, sql, desc, and } from 'drizzle-orm';
+import { eq, inArray, sql, and, ne } from 'drizzle-orm';
 import { Role } from '../auth/roles';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class RecipeService {
   constructor(
     @InjectDrizzle()
     private readonly db: DatabaseProvider,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   async getAll({
     ingredient,
     category,
+    search,
   }: {
     ingredient?: string[];
     category?: string[];
+    search?: string;
   }): Promise<RecipeListResponseDto> {
     const [ingredientIds, categoryIds] = await Promise.all([
       ingredient?.length
@@ -61,7 +68,7 @@ export class RecipeService {
       recipeIds = ingredientIds ?? categoryIds;
     }
 
-    const results = await this.db.query.recipes.findMany({
+    let results = await this.db.query.recipes.findMany({
       with: {
         recipeIngredients: { with: { ingredient: true } },
         recipeCategories: { with: { category: true } },
@@ -69,6 +76,11 @@ export class RecipeService {
       },
       where: recipeIds ? inArray(recipes.id, recipeIds) : undefined,
     });
+
+    if (search) {
+      const lower = search.toLowerCase();
+      results = results.filter((r) => r.name.toLowerCase().includes(lower));
+    }
 
     const items: RecipeShortResponseDto[] = results.map((recipe) => ({
       id: recipe.id,
@@ -227,6 +239,14 @@ export class RecipeService {
     userId: number,
     dto: CreateRecipeRequestDto,
   ): Promise<RecipeDetailResponseDto> {
+    const existing = await this.db.query.recipes.findFirst({
+      where: eq(recipes.name, dto.name),
+    });
+
+    if (existing) {
+      throw new ConflictException('A recipe with this name already exists');
+    }
+
     const [newRecipe] = await this.db
       .insert(recipes)
       .values({
@@ -273,7 +293,28 @@ export class RecipeService {
     roles: string[],
     recipe: UpdateRecipeRequestDto,
   ): Promise<RecipeDetailResponseDto> {
+    const existing = await this.db.query.recipes.findFirst({
+      where: eq(recipes.id, id),
+    });
+
+    if (!existing) {
+      throw new NotFoundException('No recipe with this id exists');
+    }
+
+    const existingWithSameName = await this.db.query.recipes.findFirst({
+      where: and(eq(recipes.name, recipe.name), ne(recipes.id, id)),
+    });
+
+    if (existingWithSameName) {
+      throw new ConflictException('A recipe with this name already exists');
+    }
+
+    const isOwner = existing.createdBy === userId;
     const isAdmin = roles.includes(Role.ADMIN);
+
+    if (!isOwner && !isAdmin) {
+      throw new ForbiddenException('Forbidden resource');
+    }
 
     const whereClause = isAdmin
       ? eq(recipes.id, id)
@@ -471,5 +512,53 @@ export class RecipeService {
     }));
 
     return { items };
+  }
+
+  async uploadImage(
+    id: number,
+    file: Express.Multer.File,
+    user: { id: number; roles: string[] },
+  ) {
+    const recipe = await this.db.query.recipes.findFirst({
+      where: eq(recipes.id, id),
+      with: {
+        createdBy: true,
+      },
+    });
+
+    if (!recipe) {
+      throw new NotFoundException('Recipe not found');
+    }
+
+    const isAdmin = user.roles.includes(Role.ADMIN);
+    const isOwner = recipe.createdBy?.id === user.id;
+
+    if (!isAdmin && !isOwner) {
+      throw new ForbiddenException('Not allowed to change this recipe image');
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Invalid file type');
+    }
+
+    const folder = process.env.CLOUDINARY_FOLDER ?? 'fridgepal-recipes';
+
+    let result;
+    try {
+      result = await this.cloudinaryService.uploadImage(file.buffer, folder);
+    } catch (err) {
+      console.error('CLOUDINARY ERROR:', err);
+      throw new InternalServerErrorException('Upload failed');
+    }
+
+    await this.db
+      .update(recipes)
+      .set({ imageUrl: result.secure_url })
+      .where(eq(recipes.id, id));
+
+    return {
+      imageUrl: result.secure_url,
+    };
   }
 }

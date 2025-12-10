@@ -23,9 +23,9 @@ class CreatedByDto {
 
 class IngredientDto {
   //@IsInt()
-  @IsNumber({ name: 'id', min: 1, type: 'integer', format: 'int32' })
-  //@Min(1)
-  id: number;
+  // @IsNumber({ name: 'id', min: 1, type: 'integer', format: 'int32' })
+  // //@Min(1)
+  // id: number;
 
   @IsString({ name: 'name', maxLength: 255 })
   @IsNotEmpty()
@@ -47,6 +47,19 @@ class IngredientDto {
   @IsOptional()
   @IsString({ name: 'unit', maxLength: 20, nullable: true })
   //@MaxLength(20)
+  unit?: string | null;
+}
+
+class IngredientInputDto {
+  @IsNumber({ name: 'id', type: 'integer', min: 1 })
+  id: number;
+
+  @IsOptional()
+  @IsNumber({ name: 'amount', type: 'integer', min: 0 })
+  amount?: number | null;
+
+  @IsOptional()
+  @IsString({ name: 'unit', maxLength: 20 })
   unit?: string | null;
 }
 
@@ -176,11 +189,7 @@ export class RecipeDetailResponseDto {
     type: () => [IngredientDto],
     description: 'List of ingredients required for the recipe.',
   })
-  ingredients: {
-    name: string;
-    amount: number | null;
-    unit: string | null;
-  }[];
+  ingredients: IngredientDto[];
   @ApiProperty({
     type: () => [InstructionDto],
     description: 'Sequential steps explaining how to prepare the recipe.',
@@ -229,8 +238,8 @@ export class CreateRecipeRequestDto {
   @IsNotEmpty()
   name: string;
 
-  @IsOptional()
   @IsString({ name: 'description', maxLength: 1000, nullable: true })
+  @IsNotEmpty()
   description?: string | null;
 
   @IsOptional()
@@ -240,15 +249,21 @@ export class CreateRecipeRequestDto {
   @IsNumber({ name: 'time', min: 0, type: 'integer', format: 'int32' })
   time: number;
 
-  @ValidateNested()
-  @Type(() => CreatedByDto)
-  createdBy: CreatedByDto;
+  // @ValidateNested()
+  // @Type(() => CreatedByDto)
+  // createdBy: CreatedByDto;
+
+  // @IsArray()
+  // @ArrayMinSize(1)
+  // @ValidateNested({ each: true })
+  // @Type(() => IngredientDto)
+  // ingredients: IngredientDto[];
 
   @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })
-  @Type(() => IngredientDto)
-  ingredients: IngredientDto[];
+  @Type(() => IngredientInputDto)
+  ingredients: IngredientInputDto[];
 
   @IsArray()
   @ArrayMinSize(1)

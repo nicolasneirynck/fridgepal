@@ -9,11 +9,14 @@ import CustomLogger from './core/customLogger';
 import { ConfigService } from '@nestjs/config';
 import { ServerConfig, CorsConfig, LogConfig } from './config/configuration';
 import { HttpExceptionFilter } from './lib/http-exception.filter';
+import { DrizzleQueryErrorFilter } from './drizzle/drizzle-query-error.filter';
 import helmet from 'helmet';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: process.env.LOG_DISABLED === 'true' ? false : undefined,
+  });
 
   app.setGlobalPrefix('api');
 
@@ -41,17 +44,20 @@ async function bootstrap() {
   );
 
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new DrizzleQueryErrorFilter());
 
   const config = app.get(ConfigService<ServerConfig | CorsConfig>);
   const port = config.get<number>('port')!;
   const cors = config.get<CorsConfig>('cors')!;
   const log = config.get<LogConfig>('log')!;
 
-  app.useLogger(
-    new CustomLogger({
-      logLevels: log.levels,
-    }),
-  );
+  if (!log.disabled) {
+    app.useLogger(
+      new CustomLogger({
+        logLevels: log.levels,
+      }),
+    );
+  }
 
   app.use(helmet());
 

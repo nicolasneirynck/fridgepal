@@ -36,6 +36,20 @@
       "when": 1764139875951,
       "tag": "0004_aromatic_scarlet_spider",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1765351665233,
+      "tag": "0005_exotic_pretty_boy",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1765354734511,
+      "tag": "0006_skinny_excalibur",
+      "breakpoints": true
     }
   ]
 }

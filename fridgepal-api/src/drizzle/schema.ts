@@ -11,17 +11,21 @@ import {
 import { relations } from 'drizzle-orm';
 
 // Entiteiten
-export const recipes = mysqlTable('recipes', {
-  id: int('id', { unsigned: true }).primaryKey().autoincrement(),
-  name: varchar('name', { length: 255 }).notNull(),
-  description: text('description'),
-  imageUrl: varchar('imageUrl', { length: 255 }),
-  time: int('time', { unsigned: true }).notNull(),
-  createdBy: int('created_by', { unsigned: true })
-    .references(() => users.id, { onDelete: 'cascade' })
-    .notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
+export const recipes = mysqlTable(
+  'recipes',
+  {
+    id: int('id', { unsigned: true }).primaryKey().autoincrement(),
+    name: varchar('name', { length: 255 }).notNull(),
+    description: text('description'),
+    imageUrl: varchar('imageUrl', { length: 255 }),
+    time: int('time', { unsigned: true }).notNull(),
+    createdBy: int('created_by', { unsigned: true })
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex('idx_recipe_name_unique').on(table.name)],
+);
 
 export const recipeIngredients = mysqlTable('recipe_ingredients', {
   id: int('id', { unsigned: true }).primaryKey().autoincrement(),
@@ -57,10 +61,14 @@ export const recipeCategories = mysqlTable(
   (table) => [primaryKey({ columns: [table.recipeId, table.categoryId] })],
 );
 
-export const categories = mysqlTable('categories', {
-  id: int('id', { unsigned: true }).primaryKey().autoincrement(),
-  name: varchar('name', { length: 255 }).notNull(),
-});
+export const categories = mysqlTable(
+  'categories',
+  {
+    id: int('id', { unsigned: true }).primaryKey().autoincrement(),
+    name: varchar('name', { length: 255 }).notNull(),
+  },
+  (table) => [uniqueIndex('idx_category_name_unique').on(table.name)],
+);
 
 export const instructions = mysqlTable('instructions', {
   id: int('id', { unsigned: true }).primaryKey().autoincrement(),

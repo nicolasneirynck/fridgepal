@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "8a707d9a-5466-437b-9f35-f87f1934a4cb",
-  "prevId": "51f794d7-06f0-4a19-a725-eef07d079204",
+  "id": "149de82e-3afd-4824-842c-8bef033bfba2",
+  "prevId": "635cec24-19ac-4b19-af17-453fda45677f",
   "tables": {
     "categories": {
       "name": "categories",
@@ -53,7 +53,15 @@
           "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "ingredients_name_unique": {
+          "name": "ingredients_name_unique",
+          "columns": [
+            "name"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "ingredients_id": {
@@ -76,8 +84,8 @@
           "notNull": true,
           "autoincrement": true
         },
-        "amount": {
-          "name": "amount",
+        "stepNumber": {
+          "name": "stepNumber",
           "type": "int unsigned",
           "primaryKey": false,
           "notNull": true,
@@ -317,7 +325,15 @@
           "default": "(now())"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_recipe_name_unique": {
+          "name": "idx_recipe_name_unique",
+          "columns": [
+            "name"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {
         "recipes_created_by_users_id_fk": {
           "name": "recipes_created_by_users_id_fk",
@@ -478,13 +494,6 @@
           "notNull": true,
           "autoincrement": true
         },
-        "userName": {
-          "name": "userName",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "password_hash": {
           "name": "password_hash",
           "type": "varchar(255)",
@@ -506,22 +515,30 @@
           "notNull": true,
           "autoincrement": false
         },
-        "country": {
-          "name": "country",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "email": {
           "name": "email",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "roles": {
+          "name": "roles",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "idx_user_email_unique": {
+          "name": "idx_user_email_unique",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "users_id": {
@@ -538,12 +555,8 @@
   "views": {},
   "_meta": {
     "schemas": {},
-    "tables": {
-      "\"saved_recipes\"": "\"user_favorite_recipes\""
-    },
-    "columns": {
-      "\"recipe_ingredients\".\"firstName\"": "\"recipe_ingredients\".\"unit\""
-    }
+    "tables": {},
+    "columns": {}
   },
   "internal": {
     "tables": {},
