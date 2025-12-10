@@ -1,4 +1,3 @@
-// import FilterSelect from './FilterSelect';
 import useSWR from 'swr';
 import { getAll } from '../../api';
 import { useState } from 'react';
@@ -9,7 +8,7 @@ const FilterSelect = ({options,onSelect}) => {
   const handleChange = (e) => {
     const selected = e.target.value;
     if (selected) {
-      onSelect(selected); // stuur de keuze door naar parentcomp
+      onSelect(selected);
       setValue(''); // reset naar “Categorieën”
     }
   };

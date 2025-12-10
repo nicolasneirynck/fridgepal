@@ -8,12 +8,15 @@ import { useNavigate, useParams } from 'react-router';
 import AsyncData from '../../components/AsyncData';
 import useSWR from 'swr';
 import { useForm,FormProvider } from 'react-hook-form';
+import { uploadRecipeImage } from '../../api';
 
 export default function AddOrEditRecipe(){
+  
   const { id } = useParams();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-
+  const [imageFile, setImageFile] = useState(null);
+  
   const {
     data: recipe,
     error: recipeError,
@@ -56,19 +59,18 @@ export default function AddOrEditRecipe(){
   }, [recipe, reset]); // zodra eventueel recept is binnengehaald api -> reset van formvormulieren met die waardes
 
   const onSubmit = async (values) => {
+    
     // conversie van gevalideerde gegevens
     const body = {
       name: values.name,
       description: values.description || null,
-      imageUrl: values.imageUrl || null,
       time: parseInt(values.time),
       //createdBy: { id: 1 },
 
       ingredients: values.ingredients.map((i) => ({
         id: i.id,
-        name: i.name,
-        amount: i.amount ? parseInt(i.amount) : null,
-        unit: i.unit || null,
+        amount: i.amount ? Number(i.amount) : null,
+        unit: i.unit?.trim() || null,
       })),
 
       instructions: values.instructions.map((s, index) => ({
@@ -77,12 +79,20 @@ export default function AddOrEditRecipe(){
       })),
 
       categories: values.categories.map(Number),
+      imageUrl: values.imageUrl || null,
+
     };
 
     try{
-      await save(
+      const saved = await save(
         'recipes',{arg:body},
       );
+
+      // afbeelding uploaden via backend
+      if (imageFile) {
+        await uploadRecipeImage(saved.id, imageFile);
+      }
+    
       reset(); 
       navigate('/search');  
     } catch (error) {
@@ -150,9 +160,9 @@ export default function AddOrEditRecipe(){
             <div 
               className="bg-[var(--brand-light)] w-2/3 border border-[#e5e7eb] rounded-xl p-6"
               data-cy={`step-${currentStep}`}>
-              {currentStep==1 ? <EditDetails recipe={recipe}/> 
-                :currentStep==2 ? <EditIngredients recipe={recipe}/> 
-                  :currentStep==3 && <EditInstructions recipe={recipe}/>}
+              {currentStep==1 ? <EditDetails setImageFile={setImageFile}/> 
+                :currentStep==2 ? <EditIngredients/> 
+                  :currentStep==3 && <EditInstructions/>}
             </div>
         
             <div className="flex gap-4 mt-6 justify-center">

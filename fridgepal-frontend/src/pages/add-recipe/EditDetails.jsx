@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
-import { useFormContext } from 'react-hook-form'; // ✅ gedeelde formcontext
+import { useFormContext } from 'react-hook-form';
 
 import { getAll } from '../../api';
 import useSWR from 'swr';
@@ -27,21 +27,22 @@ const validationRules = {
   },
 };
 
-export default function EditDetails(){
+export default function EditDetails({setImageFile}){
 
   // alles rond form
   const { register,setValue,watch,formState: { errors } } = useFormContext();
   //afbeeldingen uploaden
   const [preview, setPreview] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  // const [uploading, setUploading] = useState(false);
+  
   // categorieën ophalen
   const { data, error, isLoading } = useSWR('categories', getAll);
 
-  // AFBEELDINGEN VIA CLOUDINARY
+  // AFBEELDINGEN VIA CLOUDINARY en Backend
   const imageUrl = watch('imageUrl');
 
-  const CLOUD_NAME = 'dyssxogz5';
-  const UPLOAD_PRESET = 'fridgepal';
+  // const CLOUD_NAME = 'dyssxogz5';
+  // const UPLOAD_PRESET = 'fridgepal';
 
   useEffect(() => {
     if (imageUrl && !preview) {
@@ -49,34 +50,42 @@ export default function EditDetails(){
     }
   }, [imageUrl, preview]);
 
-  async function handleFileChange(e) {
+  function handleFileChange(e) {
     const file = e.target.files[0];
     if (!file) return;
 
-    setPreview(URL.createObjectURL(file));
-    setUploading(true);
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', UPLOAD_PRESET);
-
-    try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
-      const data = await res.json();
-      setValue('imageUrl', data.secure_url);
-    } catch (err) {
-      console.error('Upload mislukt:', err);
-      alert('Uploaden is mislukt. Probeer opnieuw.');
-    } finally {
-      setUploading(false);
-    }
+    setImageFile(file);  // bewaren voor upload bij submit
+    setPreview(URL.createObjectURL(file)); // preview tonen
   }
+
+  // async function handleFileChange(e) {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   setPreview(URL.createObjectURL(file));
+  //   setUploading(true);
+
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   formData.append('upload_preset', UPLOAD_PRESET);
+
+  //   try {
+  //     const res = await fetch(
+  //       `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+  //       {
+  //         method: 'POST',
+  //         body: formData,
+  //       },
+  //     );
+  //     const data = await res.json();
+  //     setValue('imageUrl', data.secure_url);
+  //   } catch (err) {
+  //     console.error('Upload mislukt:', err);
+  //     alert('Uploaden is mislukt. Probeer opnieuw.');
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // }
 
   // CATEGORIEEN
 
@@ -182,9 +191,7 @@ export default function EditDetails(){
               bg-[var(--input)]/40 flex flex-col justify-center items-center 
               rounded-md cursor-pointer transition hover:bg-[var(--input)]/60`}
           >
-            {uploading ? (
-              <span className="text-[var(--brand-gray-dark)]">Uploaden...</span>
-            ) : preview ? (
+            {preview ? (
               <img
                 src={preview}
                 alt="Preview"

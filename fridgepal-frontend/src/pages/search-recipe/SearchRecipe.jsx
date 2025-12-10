@@ -24,7 +24,7 @@ export default function SearchRecipe() {
   // auto-suggestie ingredienten (zoekbalk)
   const{data:ingSuggested = [],
     error: ingredientsError,
-    isLoading: ingredientsLoading} = useSWR(
+  } = useSWR(
     debouncedSearch ? ['ingredients', { search: debouncedSearch }] : null,
     ([url, params]) => getAll(url, params));
 
@@ -55,17 +55,11 @@ export default function SearchRecipe() {
   };
 
   const handleSelect = (suggestion) => {
-    handleAddIngredient(suggestion.name); // TODO nog nodig of rechtstreeks fixen? 
-    
+    handleAddIngredient(suggestion.name);
   };
 
-  const handleAddIngredient = (ingredientName) => {
-    // const name = ingredientName.trim() || searchText.trim(); 
-    // if (!name) return;
-    
-    //  if(!ingredients.includes(name.toLowerCase()))
-    setIngredients([...ingredients, ingredientName]); // TODO is dit nog nodig?
-    
+  const handleAddIngredient = (ingredientName) => { // TODO nu enkel select -> uitbreiden met keys
+    setIngredients([...ingredients, ingredientName]);
     setSearchText(''); 
   };
 
@@ -82,18 +76,6 @@ export default function SearchRecipe() {
         recipeIngredients.includes(ing) ? count + 1 : count
       ), 0);
     },[ingredients]);
-  
-  // const sortedRecipes = useMemo(() => {
-   
-  //   const sorted = [...recipes].sort((r1, r2) => {
-  //     const a = countMatchingIngredients(r1.ingredients);
-  //     const b = countMatchingIngredients(r2.ingredients);
-  //     return b - a;
-  //   });
-
-  //   return sorted;
-    
-  // }, [ingredients,recipes]);
 
   return (
     <div>
@@ -101,7 +83,7 @@ export default function SearchRecipe() {
         onChange={handleSearch} 
         searchText={searchText}
         ingredients={ingredients}
-        handleAddIngredient={handleAddIngredient}
+        //handleAddIngredient={handleAddIngredient} -> eventueel later als keys gebruikt?
         handleDeleteIngredient={handleDeleteIngredient}
         ingredientSuggestions={suggestions}
         handleSelect={handleSelect}/>

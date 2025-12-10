@@ -14,7 +14,6 @@ axios.interceptors.request.use((config) => {
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
-
   return config;
 });
 
@@ -48,15 +47,17 @@ export async function getById(url) {
 }
 
 export async function save(url, { arg: { id, ...data } }) {
-  await axios({
+  const result = await axios({
     method: id ? 'PUT' : 'POST',
     url: `${url}/${id ?? ''}`,
     data,
   });
+
+  return result.data;
 }
 
 export const post = async (url, { arg }) => {
-  const { data } = await axios.post(`${baseUrl}/${url}`, arg);
+  const { data } = await axios.post(url, arg);
 
   return data;
 };
@@ -80,4 +81,23 @@ export async function toggleFavorite(recipeId) {
 // HFDST 4
 export const deleteById = async (url, { arg: id }) => {
   await axios.delete(`${url}/${id}`);
+  
 };
+
+export async function uploadRecipeImage(recipeId, file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const { data } = await axios.post(
+    `/recipes/${recipeId}/upload-image`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    },
+  );
+
+  return data; // { imageUrl: 'https://res.cloudinary.com/...'}
+}
