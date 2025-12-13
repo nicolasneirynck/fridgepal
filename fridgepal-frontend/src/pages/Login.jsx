@@ -73,11 +73,18 @@ export default function Login() {
             />
 
             <div className="flex flex-col gap-3 mt-6 sm:flex-row sm:gap-4 sm:justify-center">
-              <button type="submit" 
-                className="bg-[var(--brand-dark)] rounded-xl px-10 py-3 text-white font-medium hover:cursor-pointer"
+              <button
+                type="submit"
                 disabled={loading}
-                data-cy='submit_btn'
-              >Login</button>
+                data-cy="submit_btn"
+                className={`rounded-xl px-10 py-3 font-medium text-white transition
+                  ${loading
+      ? 'bg-[var(--brand-dark)]/60 cursor-not-allowed'
+      : 'bg-[var(--brand-dark)] hover:cursor-pointer'}
+                  `}
+              >
+                {loading ? 'Laden…' : 'Login'}
+              </button>
               <button type="button" 
                 className="bg-white rounded-xl px-10 py-3 text-[var(--brand-dark)] 
                 border border-[var(--brand-dark)] font-medium hover:cursor-pointer"
