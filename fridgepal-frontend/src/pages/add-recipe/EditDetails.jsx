@@ -102,8 +102,8 @@ export default function EditDetails({setImageFile}){
   }
 
   return(
-    <div className="flex justify-around w-full">
-      <div className="w-2/5">
+    <div className="flex flex-col gap-6 w-full md:flex-row md:justify-between">
+      <div className="w-full md:w-[45%]">
         <div className="flex flex-col gap-1">
           <LabelInput
             label='Recept Naam*'
@@ -180,7 +180,7 @@ export default function EditDetails({setImageFile}){
         
       </div>
      
-      <div className="flex flex-col gap-1 w-2/5">
+      <div className="flex flex-col gap-1 w-full md:w-[45%]">
         <div>
           <label className="text-[var(--brand-gray-dark)] text-sm">
             Recept Afbeelding

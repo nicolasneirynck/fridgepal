@@ -1,4 +1,4 @@
-import { ChefHat, Heart, Star,Pencil, Trash} from 'lucide-react';
+import { ChefHat, Clock, Heart, Star,Pencil, Trash} from 'lucide-react';
 import Rating from '@mui/material/Rating';
 // import {useState} from 'react';
 import { Link } from 'react-router'; 
@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import { getIsFavorite, toggleFavorite } from '../../api';
 
 export default function RecipeInformation({recipe, onDelete}){
-  const {id,name, createdBy:{firstName, lastName}, categories, description,isFavorite: initialFavorite} = recipe;  
+  const {id,name, createdBy:{firstName, lastName}, categories, description,time,isFavorite: initialFavorite} = recipe;  
  
   const { data: favStatus, mutate } = useSWR(
     ['recipe', id, 'isFavorite'],
@@ -55,9 +55,17 @@ export default function RecipeInformation({recipe, onDelete}){
   return(
     <div>
       <main>
-        <div className='flex justify-between'>
-          <h2 className='mb-3 text-3xl text-[var(--brand-gray-dark)] font-bold'
-            data-cy="recipe_name">{name}</h2>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <h2 className='text-3xl font-bold text-[var(--brand-gray-dark)]'
+              data-cy="recipe_name">{name}</h2>
+            <button className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
+                          border-2 border-[var(--brand-dark)]/20'
+            onClick={handleFavorite}>
+              <Heart className={`h-4 w-4 ${favStatus ? 'fill-red-500 text-red-500':'text-[var(--brand-dark)]'}`} />
+            </button>
+          </div>
+
           <div className='flex gap-2'>
             <Link to={`/recipes/edit/${id}`}
               className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
@@ -74,15 +82,24 @@ export default function RecipeInformation({recipe, onDelete}){
             </button>
           </div>
         </div>
-        <div className='flex gap-3 mb-2'>
-          <button className='flex justify-center items-center rounded-full h-9 w-9 hover:bg-[var(--brand-dark)]/10 
-                          border-2 border-[var(--brand-dark)]/20'
-          onClick={handleFavorite}>
-            <Heart className={`h-4 w-4 ${favStatus ? 'fill-red-500 text-red-500':'text-[var(--brand-dark)]'}`} />
-          </button>
+        
+        <div className='flex gap-3 mb-2 mt-2'>
+          <div className="flex items-center gap-2">
+            <div
+              className="w-8 h-8 bg-[var(--brand-orange)]/10 rounded-full
+                 flex justify-center items-center"
+            >
+              <Clock className="h-4 w-4 text-[var(--brand-orange)]" />
+            </div>
+            <span className="text-sm text-[var(--brand-gray-light)]">
+              {time} min
+            </span>
+          </div>
+  
+        </div>
           
-          {/* TODO RATING eerst back-end implementeren -> user nodig */}
-          {/* {tempRating === 0
+        {/* TODO RATING eerst back-end implementeren -> user nodig */}
+        {/* {tempRating === 0
             ? <button className='text-[var(--brand-dark)] text-sm
                         rounded-full hover:bg-[var(--brand-dark)]/5 px-4 py-2'
             onClick={() => setShowRatingDialog(true)}>
@@ -103,7 +120,6 @@ export default function RecipeInformation({recipe, onDelete}){
           
                 <span className='text-m ml-2 pt-0.5'></span>
               </div></button>} */}
-        </div>
         <div className='flex items-center gap-2'>
           <div className='w-8 h-8 bg-[var(--brand-orange)]/10 rounded-full
                           flex justify-center items-center'>
@@ -123,7 +139,7 @@ export default function RecipeInformation({recipe, onDelete}){
           <span className='text-m ml-2 pt-0.5'>{average} ({count} votes)</span>
         </div> */}
 
-        <div className='mt-2 flex gap-4'>
+        <div className='mt-4 flex gap-4'>
           {categories.map((cat) => 
             <CategoryBadge 
               key={cat.id} 
@@ -131,9 +147,8 @@ export default function RecipeInformation({recipe, onDelete}){
           )}
         </div>
           
-        <p className='mt-10 grow
-                        text-[var(--brand-gray-light)] text-sm p-3
-                        border border-[var(--brand-dark)]/10 rounded-xl'
+        <p className='mt-4 grow
+                        text-[var(--brand-gray-light)] text-sm'
         data-cy="description">{description}</p>
 
       </main>

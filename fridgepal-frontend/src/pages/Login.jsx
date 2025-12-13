@@ -50,7 +50,7 @@ export default function Login() {
         <form className="flex flex-col items-center w-full"
           onSubmit={handleSubmit(handleLogin)}>
           <div 
-            className="bg-[var(--brand-light)] w-1/3 border border-[#e5e7eb] rounded-xl p-6"
+            className="bg-[var(--brand-light)] w-full max-w-sm sm:max-w-md border border-[#e5e7eb] rounded-xl p-6"
           >
             <h1 className='mb-6 text-[var(--brand-gray-dark)] text-center'>Log in</h1>
             <Error error={error} />
@@ -72,7 +72,7 @@ export default function Login() {
               data-cy='password_input'
             />
 
-            <div className="flex gap-4 mt-6 justify-center">
+            <div className="flex flex-col gap-3 mt-6 sm:flex-row sm:gap-4 sm:justify-center">
               <button type="submit" 
                 className="bg-[var(--brand-dark)] rounded-xl px-10 py-3 text-white font-medium hover:cursor-pointer"
                 disabled={loading}

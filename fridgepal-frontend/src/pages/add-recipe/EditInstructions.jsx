@@ -22,14 +22,15 @@ export default function EditInstructions() {
           <label className="text-[var(--brand-gray-dark)] text-sm mb-1">
             Stap {index + 1}
           </label>
-          <div className="flex">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
             <textarea
               {...register(`instructions.${index}.description`, {
                 validate: (v) =>
                   (v && v.trim().length > 0) || 'Vul een beschrijving in',
               })}
               className="bg-[var(--input)] rounded-lg border border-gray-300 
-                         text-sm p-2 outline-none focus:border-[var(--brand-orange)] w-3/5"
+                         text-sm p-2 outline-none focus:border-[var(--brand-orange)] w-full sm:w-3/5
+                        h-28 sm:h-32 resize-none"
               placeholder="Voer de instructies in..."
               data-cy={`instruction${index}-input`}
             />
@@ -38,7 +39,7 @@ export default function EditInstructions() {
               <button
                 type="button"
                 onClick={() => remove(index)}
-                className="text-gray-400 hover:text-red-500 ml-5"
+                className="self-start sm:self-center text-gray-400 hover:text-red-500 px-2"
               >
                 ✕
               </button>

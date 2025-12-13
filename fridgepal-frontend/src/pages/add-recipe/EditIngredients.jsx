@@ -49,29 +49,34 @@ export default function EditIngredients(){
         handleSelect={handleSelect}
       />
       {fields.map((field, index) => (
-        <div key={field.id} className="flex items-center gap-4 mt-2">
-          <span className="w-32 font-medium text-[var(--brand-gray-dark)]">
+        <div key={field.id} className="flex flex-col gap-2 mt-3 sm:flex-row sm:items-center sm:gap-4">
+          <span className="sm:w-32 font-medium text-[var(--brand-gray-dark)]">
             {field.name}
           </span>
-          <input
-            {...register(`ingredients.${index}.amount`, {
-              validate: (value) =>
-                value === '' || value === null || Number(value) > 0 || 'Hoeveelheid moet groter dan 0 zijn',
-            })}
-            className="w-28 bg-white border p-1 rounded"
-            type='number'
-            placeholder="hoeveelheid..."
-            data-cy={`amount${index}-input`}
-          />
-          <input
-            {...register(`ingredients.${index}.unit`)}
-            className="w-20 bg-white border p-1 rounded"
-            placeholder="gr, liter..."
-            data-cy={`unit${index}-input`}
-          />
-          <button type="button" onClick={() => remove(index)}>x</button>
+          <div className="flex gap-2 items-center">
+            <input
+              {...register(`ingredients.${index}.amount`, {
+                validate: (value) =>
+                  value === '' || value === null || Number(value) > 0 || 'Hoeveelheid moet groter dan 0 zijn',
+              })}
+              className="w-full sm:w-28 bg-white border p-1 rounded"
+              type='number'
+              placeholder="hoeveelheid..."
+              data-cy={`amount${index}-input`}
+            />
+            <input
+              {...register(`ingredients.${index}.unit`)}
+              className="w-full sm:w-20 bg-white border p-1 rounded"
+              placeholder="gr, liter..."
+              data-cy={`unit${index}-input`}
+            />
+            <button 
+              type="button" 
+              className="px-2 py-1 text-lg hover:cursor-pointer"
+              onClick={() => remove(index)}>x</button>
+          </div>
           {errors.ingredients?.[index]?.amount && (
-            <p className="text-red-500 text-sm"
+            <p className="text-red-500 text-sm mt-1"
               data-cy={`amount${index}_error`}>
               {errors.ingredients[index].amount.message}
             </p>

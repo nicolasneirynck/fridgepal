@@ -14,16 +14,31 @@ const FilterSelect = ({options,onSelect}) => {
   };
 
   return(
-    <select 
-      value={value}
-      className='border rounded-lg p-2 border-gray-200'
-      onChange={handleChange}>
-      <option value=''>
-        Categorieën</option>
-      {options.map((op) => {
-        return(<option key={op} value={op}>{op}</option>);
-      })}
-    </select>
+    <div className="relative inline-block">
+      <select 
+        value={value}
+        className='appearance-none border rounded-lg p-2 pr-10 border-gray-200 '
+        onChange={handleChange}>
+        <option value=''>
+          Categorieën</option>
+        {options.map((op) => {
+          return(<option key={op} value={op}>{op}</option>);
+        })}
+      </select>
+      <span
+        className="
+      pointer-events-none
+      absolute
+      right-3
+      top-1/2
+      -translate-y-1/2
+      text-gray-400
+      text-sm
+    "
+      >
+        ▼
+      </span>
+    </div>
   );
 };
 
