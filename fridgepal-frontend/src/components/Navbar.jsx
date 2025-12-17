@@ -9,7 +9,7 @@ export default function Navbar(){
 
   const UserNav = ()=> {
     return isAuthed? (<DropdownMenu.Root>
-      {/* // TRIGGER */}
+      {/* // TRIGGER -> knop*/}
       <DropdownMenu.Trigger asChild>
         <button
           className="group flex items-center justify-center rounded-full h-8 w-8
@@ -22,7 +22,7 @@ export default function Navbar(){
         </button>
       </DropdownMenu.Trigger>
 
-      {/* // DROPDOWN content */}
+      {/* // DROPDOWN -> inhoud */}
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           align="end"
@@ -57,21 +57,6 @@ export default function Navbar(){
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
     ):null;
-    // return  isAuthed ? (
-    //   <Link className="text-[var(--brand-gray-light)] px-3 py-1 rounded-xl
-    //                     hover:bg-[var(--brand-orange)] hover:text-white" to='/logout'>
-    //     Logout
-    //   </Link>
-    // ) : null;
-    //(
-    //   <div>
-    //     {/* <Link className="text-[var(--brand-gray-light)] px-3 py-1 rounded-xl
-    //                     hover:bg-[var(--brand-orange)] hover:text-white" to='/login'>
-    //       Login
-    //     </Link> */}
-        
-    //   </div>
-    // );
   };
 
   return(

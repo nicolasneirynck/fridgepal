@@ -13,21 +13,22 @@ import { useCallback } from 'react';
 
 export default function SearchRecipe() {
 
-  // automatische zoekbalk
+  // zoektext + vertragen
   const [searchText, setSearchText] = useState('');
   const [debouncedSearch] = useDebounce(searchText, 400);
-  // ingrediënten om recepten te filteren
+
   const [ingredients, setIngredients] = useState([]);
-  // categorieen om recepten te filteren
+  
   const [selectedCategories, setSelectedCategories] = useState([]);
 
-  // auto-suggestie ingredienten (zoekbalk)
+  // ingredientobjectjes ophalen
   const{data:ingSuggested = [],
     error: ingredientsError,
   } = useSWR(
     debouncedSearch ? ['ingredients', { search: debouncedSearch }] : null,
     ([url, params]) => getAll(url, params));
 
+  // autosuggestie vullen met lowcase naam, enkel veranderen bij nieuwe suggestie
   const suggestions = useMemo(
     () => ingSuggested.map((ing) => ({ id: ing.id, name: ing.name.toLowerCase() })),
     [ingSuggested],

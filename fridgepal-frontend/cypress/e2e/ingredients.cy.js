@@ -4,7 +4,7 @@ describe('Ingredient search and suggestions', () => {
     
   // });
   beforeEach(() => {
-    cy.login('thomas.aelbrecht@hogent.be','12345678');
+    cy.login('nicolas@example.com','12345678');
   });
 
   it('shows ingredient suggestions when typing', () => {
@@ -16,7 +16,7 @@ describe('Ingredient search and suggestions', () => {
     cy.wait('@getIngredients');
     cy.get('ul [data-cy=ingredient-suggestion]').each((el) => {
       const text = el.text().trim().toLowerCase();
-      expect(['rundergehakt', 'kipfilet', 'tofu', 'ahornsiroop']).to.include(text);
+      expect(['rundergehakt', 'kipfilet', 'tofu', 'ahornsiroop','aardappel']).to.include(text);
     });
   });
 

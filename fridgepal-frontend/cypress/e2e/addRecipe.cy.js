@@ -1,6 +1,6 @@
 describe('Add and remove recipe', () => {
   beforeEach(() => {
-    cy.login('thomas.aelbrecht@hogent.be','12345678');
+    cy.login('nicolas@example.com','12345678');
   });
   
   it('should add a recipe', () => {

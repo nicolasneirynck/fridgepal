@@ -1,7 +1,7 @@
 describe('Recipes list', () => {
 
   beforeEach(() => {
-    cy.login('thomas.aelbrecht@hogent.be','12345678');
+    cy.login('nicolas@example.com','12345678');
   });
   it('should show the recipes', () => {
     cy.intercept(
@@ -62,10 +62,10 @@ describe('Recipes list', () => {
     cy.visit('http://localhost:5173');
     cy.wait('@getRecipes');
 
-    cy.get('[data-cy=ingredient-input]').type('ahorn');
+    cy.get('[data-cy=ingredient-input]').type('aard');
     cy.wait('@getIngredients');
     cy.get('ul [data-cy=ingredient-suggestion]')
-      .contains('ahornsiroop')   // exact tekst, case-insensitive
+      .contains('aardappel')   // exact tekst, case-insensitive
       .click();
     cy.get('[data-cy=no_recipes]').should('exist');
   });

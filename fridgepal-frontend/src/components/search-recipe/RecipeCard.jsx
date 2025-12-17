@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { getIsFavorite, toggleFavorite } from '../../api';
 import { Heart } from 'lucide-react';
 
-export default function RecipeCard({recipe,MatchingIngredients,showFavoriteToggle = false}){
+export default function RecipeCard({recipe,matchingIngredients,showFavoriteToggle = false}){
 
   const {id,imageUrl,name, createdBy:{firstName, lastName}} = recipe;
 
@@ -42,7 +42,7 @@ export default function RecipeCard({recipe,MatchingIngredients,showFavoriteToggl
               {name}
             </h3>
             <p className="text-sm text-[var(--brand-gray-light)]">
-              by {firstName + ' ' + lastName}
+              {firstName + ' ' + lastName}
             </p>
           </div>
 
@@ -61,9 +61,9 @@ export default function RecipeCard({recipe,MatchingIngredients,showFavoriteToggl
           )}
         </div>
 
-        {MatchingIngredients !== undefined && (
+        {matchingIngredients !== undefined && (
           <p className="p-3 text-[var(--brand-orange)] font-semibold">
-            {MatchingIngredients}/{recipe.ingredients.length} ingredients in your fridge!
+            {matchingIngredients}/{recipe.ingredients.length} ingrediënten in je frigo!
           </p>
         )}
       </div>
