@@ -92,10 +92,7 @@ export async function uploadRecipeImage(recipeId, file) {
     `/recipes/${recipeId}/upload-image`,
     formData,
     {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
+      headers: {},
     },
   );
 
