@@ -39,7 +39,7 @@ Check of de website draait op http://localhost:5137 en of de backend database se
 ## Opstarten
 
 
-Maak een .env (development of een .env.test (testing) bestand aan in de roots met volgende gegevens:
+Maak een .env bestand aan in de roots met volgende gegevens:
 
  ```
 #GENERAL config
@@ -54,7 +54,6 @@ CORS_MAX_AGE=10800
 DATABASE_URL=mysql://devusr:devpwd@localhost:3306/fridgepal
 
 LOG_LEVELS=["log","error","warn","debug"]
-#LOG_DISABLED=false -> ZET DIT UIT COMMENTAAR BIJ TESTING
 
 #Auth config
 AUTH_JWT_SECRET=eensuperveiligsecretvoorindevelopment
@@ -65,6 +64,7 @@ CLOUDINARY_API_KEY=954644388937983
 CLOUDINARY_API_SECRET=Sny8QtB5EJz4hda9BNrkJ7rHPo4
 CLOUDINARY_FOLDER=fridgepal-recipes
 ```
+
 Maak een database aan met de naam die je in de .env file vindt.
 
 In terminal:
@@ -77,4 +77,32 @@ pnpm start:dev (development) of pnpm:start (production)
 
 ## Testen
 
-> Schrijf hier hoe we de testen uitvoeren (.env bestanden aanmaken, commando's om uit te voeren...)
+Maak een .env.test bestand aan in de roots met volgende gegevens:
+
+ ```
+# General configuration
+NODE_ENV=testing
+PORT=3000
+
+# CORS configuration
+CORS_ORIGINS=["http://localhost:5173"]
+CORS_MAX_AGE=10800
+
+# Auth configuration
+AUTH_JWT_SECRET=eenveeltemoeilijksecretdatniemandooitzalradenandersisdesitegehacked
+AUTH_JWT_AUDIENCE=fridgepal.hogent.be
+AUTH_JWT_ISSUER=fridgepal.hogent.be
+AUTH_HASH_LENGTH=32
+AUTH_HASH_TIME_COST=6
+AUTH_HASH_MEMORY_COST=65536
+AUTH_MAX_DELAY=2000
+
+# Logging configuration
+LOG_DISABLED=true 
+```
+
+In terminal:
+````
+pnpm install
+pnpm test:e2e
+````
