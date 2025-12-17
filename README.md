@@ -17,15 +17,26 @@ Ik verwacht dat volgende software reeds geïnstalleerd is:
 
 ## Opstarten
 
+Installeer dependencies
+ 
+ ```
+pnpm install
+ ```
+
 Maak een .env bestand aan in de roots met volgende gegevens:
  
  ```
  VITE_API_URL='http://localhost:3000/api'
  ```
-In terminal:
+Voor development in terminal:
 ````
 pnpm dev
 ````
+Voor production in terminal:
+````
+pnpm build
+````
+
 ## Testen
 
 Zorg dat de back-end draait, database is geseed + front-end draait. Dan in terminal:
