@@ -28,11 +28,11 @@ pnpm dev
 ````
 ## Testen
 
+Zorg dat de back-end draait, database is geseed + front-end draait. Dan in terminal:
+
 ```
 pnpm test
 ```
-
-Check of de website draait op http://localhost:5137 en of de backend database seeding is gebeurd
 
 ## Back-end
 
@@ -105,4 +105,6 @@ In terminal:
 ````
 pnpm install
 pnpm test:e2e
+
+pnpm test:e2e:cov (coverage opvragen)
 ````
