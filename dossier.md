@@ -13,11 +13,6 @@
 
 ## 🔐 Logingegevens
 
-> **Instructies:**
->
-> - Vul de logingegevens in voor test accounts.
-> - Zorg ervoor dat deze accounts representatieve data bevatten.
-> - Voeg hieronder eventueel extra accounts toe voor administrators of andere rollen.
 
 ### Lokale omgeving
 
@@ -70,8 +65,6 @@ Users kunnen zelf een recept toevoegen of recepten van zichzelf of anderen opsla
 - [x] Het project van Front-end Web Development voldoet aan **alle** ontvankelijkheidscriteria zoals beschreven in de rubrics.
 
 ## 🚀 Extra technologieën
-
-> **Instructie:** Beschrijf welke extra technologieën je hebt gebruikt. Vermeld waarom je deze hebt gekozen.
 
 ### Front-end Web Development
 
