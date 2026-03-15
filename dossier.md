@@ -59,11 +59,6 @@ Users kunnen zelf een recept toevoegen of recepten van zichzelf of anderen opsla
  **User** houdt de users bij
  **UserFavoriteRecipe** houdt de favoriete recepten bij van de user
 
-## ✅ Ontvankelijkheidscriteria
-
-- [x] Het project van Web Services voldoet aan **alle** ontvankelijkheidscriteria zoals beschreven in de rubrics.
-- [x] Het project van Front-end Web Development voldoet aan **alle** ontvankelijkheidscriteria zoals beschreven in de rubrics.
-
 ## 🚀 Extra technologieën
 
 ### Front-end Web Development
@@ -76,36 +71,5 @@ Users kunnen zelf een recept toevoegen of recepten van zichzelf of anderen opsla
 
 - [<Cloudinary_link>](https://www.npmjs.com/package/cloudinary)
   - Voor het toevoegen van recepten wou ik de optie om het uploaden van een afbeelding van het recept toe te laten. Om de back-end niet teveel te belasten met de werkelijke opslag ervan heb ik een externe opslag namelijk Cloudinary gebruikt. De back-end beperkt zich er dan toe om zich te richten op de authorisatie, beveiliging en de validatie van de image. Als dat allemaal in orde is zal hij de upload naar Cloudinary regelen en de link opslaan in onze database.
-
-
-## 🤔 Reflectie
-
-
-**Wat heb je geleerd?**
-
-[Beschrijf je belangrijkste leermoment...]
-
-Ik heb ontzettend veel geleerd want React en Typescript waren helemaal nieuw voor mij. Tegelijk was mijn grootste les om modulair te werken. Te beginnen met 1 functionaliteit en langzaam aan uit te bouwen. Zo begon ik met een nog uitgebreidere ERD voor mijn database (oa rating, eigen lijsten bijhouden,..) maar gaandeweg begon ik te merken dat ik daardoor erg veel werk had. Daarbovenop werd alles een heel stuk complexer. Bijvoorbeeld door de geneste recepten die heel wat relaties heeft met andere tabellen. Soms ben ik daardoor heel erg moeten deepdiven in complexe stukken die ik dan op het moment zelf (na veel frustraties) uiteindelijk geregeld kreeg maar ik merk als het enkele weken liet liggen ik al niet helemaal meer goed begreep hoe ik het alweer had opgelost. Ik heb gaandeweg het project veel geknipt en weggelaten maar een deel van het kwaad was al geschied.
-
-**Wat vond je goed aan dit project?**
-
-De programmeertalen (React en Typescript) zijn al doende en op een speelse manier wel meer eigen geworden. Ik vind het op deze manier minder vermoeiend om het aan te leren dan soms van die bootcamp oefeningen.
-
-Ook is voor mij de structuur van een website wel levendiger geworden. Het verschil tussen back-end en front-end kende ik nog niet en dat is voor mij nu een heel stuk duidelijker geworden.
-
-**Wat zou je anders doen?**
-
-Zoals ik al zei: simpel beginnen! Achteraf gezien had ik veel liever een eenvoudiger plan gehad om dat dan tot in de puntjes af te werken. Zo heb ik veel plezier gehad om wat van de theorie-filmpjes over React te bekijken van op de congressen. Die stof helemaal snappen ligt mij wel maar door de grootte van mijn project heb ik daar minder mee bezig geweest dan ik had gewild.
-
-**Wat waren de grootste uitdagingen?**
-
-Ik heb erg gevloekt op het toevoegen/wijzigen van een recept. In mijn koppigheid wou ik dat in 3 stappen doen bestaande uit 3 aparte componenten. Een eerste uitdaging was dan om alle informatie bij te houden, nadien kwam ik in de miserie met mijn validatie,.. In het vervolg zou ik simpel beginnen met een lang formulier, zorgen dat dit helemaal in orde is en pas als alles klaar is overwegen om het in 3 stappen te doen zoals nu.
-
-**Wat zou je behouden aan de cursus?**
-
-Het zit voor mij goed in elkaar. Het stap voor stap opbouwen van het project met als illustratie het voorbeeldproject. 
-
-**Wat zou je toevoegen/aanpassen?**
-
-Tegelijk is het best veel lesstof merk ik. Ik heb er enorm veel werk in gestoken, zeker in verhouding met de studiepunten die er voor staan. Maar aangezien ik het mijzelf zo moeilijk heb gemaakt zou het ook daar aan kunnen liggen. Maar ik vraag me af dit niet een andere studenten zoals mij die geen React kennen of nog geen ervaring met webdevelopment (op de schoolcursussen na) ook zo een grote brok is.
+ng met webdevelopment (op de schoolcursussen na) ook zo een grote brok is.
 
