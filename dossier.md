@@ -1,15 +1,9 @@
 # Dossier
 
-## 📋 Studentgegevens
-
-- **Student:** Nicolas Neirynck
-- **Studentennummer:** 201095919
-- **E-mailadres:** nicolas.neirynck2@student.hogent.be
-- **GitHub repository:** https://github.com/HOGENT-frontendweb/frontendweb-2526-neiryncknicolas
 - **Online versies:**
   - **Back-end:** https://frontendweb-2526-neiryncknicolas.onrender.com/docs
   - **Front-end:** https://frontendweb-2526-neiryncknicolas-frontend.onrender.com/
-- **Demo:** https://hogent.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=855a1a3b-e9c1-4b79-afe5-b3b600f4555f
+
 
 ## 🔐 Logingegevens
 
